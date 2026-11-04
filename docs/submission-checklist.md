@@ -12,8 +12,8 @@ before the live hackathon (14 November 2026).
       `docs/form-answers.md`.
 - [ ] GitHub repository is **public** and the URL is inserted in the proposal and
       the form.
-- [ ] `README.md` renders correctly on GitHub: images load, links resolve,
-      `<your-github-url>` is replaced.
+- [ ] `README.md` renders correctly on GitHub: images load, links resolve, and
+      the clone URL points to the public repository.
 - [ ] `results/demo.mp4` plays in a browser (H.264, 21 s, 1280×720).
 - [ ] `results/demo_pedestrians/contact_sheet.jpg` and the two annotated
       Bengaluru images are visible.
@@ -107,7 +107,7 @@ The portal may ask for some or all of these. Drafts are in
 - [ ] Backup of `results/demo.mp4` and `results/demo_pedestrians/`
 
 **Presentation**
-- [ ] Printed one-page `docs/judge-brief.md` (2 copies)
+- [ ] Printed `docs/judge-brief.pdf` (2 copies)
 - [ ] Printed `docs/proposal.pdf` (2 copies)
 - [ ] Printed mandatory-deliverable table
 - [ ] Laptop with the demo video and report

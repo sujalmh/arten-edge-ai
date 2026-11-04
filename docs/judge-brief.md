@@ -82,7 +82,7 @@ namma-drishti benchmark --input data/samples/bengaluru_traffic.jpg --runs 50
 
 ## Links
 
-- GitHub: `[insert URL]`
+- GitHub: https://github.com/sujalmh/namma-drishti
 - Proposal: `docs/proposal.md`
 - Technical report: `docs/report.md`
 - Two-minute pitch: `docs/pitch-2min.md`

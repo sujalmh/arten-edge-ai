@@ -109,7 +109,7 @@ measurements. The relevant comparison (all on Pi 5, from Arm model cards) is:
 | YOLOv8s INT8 | ExecuTorch, XNNPACK | 13.24 MB | 43.86% | 457.03 ms p50 | 2.19 FPS |
 | YOLOX-s INT8 | ExecuTorch, XNNPACK | 14.28 MB | 40.01% | 578.44 ms p50 | 1.73 FPS |
 | YOLO12l INT8 | ExecuTorch, XNNPACK | 33.81 MB | 52.29% | 2650.58 ms p50 | 0.38 FPS |
-| YOLO26n FP32 | Ultralytics ExecuTorch | 9.4 MB | 47.90% | ~142 ms | ~7.0 FPS |
+| YOLO26n FP32 | Ultralytics ExecuTorch | 9.4 MB | ~48.0% | ~142 ms | ~7.0 FPS |
 
 The YOLO26n FP32 export has a higher mAP but is roughly twice the size and has
 no INT8 optimization in the current Ultralytics export path. For a one-day

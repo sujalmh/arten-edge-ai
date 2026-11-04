@@ -75,7 +75,7 @@ No live camera, no tracking platform, no dashboard, no cloud. Those are explicit
 64-bit Raspberry Pi OS (Trixie or Bookworm), Python 3.10–3.13, ~2 GB free disk.
 
 ```bash
-git clone <your-github-url> namma-drishti
+git clone https://github.com/sujalmh/namma-drishti namma-drishti
 cd namma-drishti
 bash scripts/setup_pi.sh
 
@@ -171,7 +171,7 @@ against the expected transform.
 |---|---|---|
 | 1 | Process an organiser 10–20 s clip **or** 10–20 images on ExecuTorch + Pi | `data/samples/pedestrians_15s.mp4`; `namma-drishti run`; `results/demo_pedestrians/` |
 | 2 | Detect at least one category and display counts per frame | `counts.csv`, `summary.txt`, HUD in `annotated/` |
-| 3 | Submit category + counts + at least two sample outputs | `results/demo_pedestrians/contact_sheet.jpg`, `results/demo_traffic/annotated/…`, `results/demo_street/annotated/…` |
+| 3 | Submit category + counts + at least two sample outputs | `results/demo_pedestrians/contact_sheet.jpg`, `results/demo_traffic/annotated/bengaluru_traffic.jpg`, `results/demo_street/annotated/bengaluru_street.jpg` |
 | 4 | Report average inference time, model and approximate throughput | `results/demo_pedestrians/summary.json` → `latency`, `throughput`; `results/benchmark_dev.json` |
 | 5 | Explain societal issue, how counting helps, one practical application (≤2 min) | `docs/pitch-2min.md`; `docs/report.md` §1 and §7 |
 

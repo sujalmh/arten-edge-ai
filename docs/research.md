@@ -101,7 +101,7 @@ ExecuTorch, XNNPACK; the exact thread count and input size are in each card.
 | YOLOv8s INT8 | 13.24 MB | 43.86% | 457.03 ms | 2.19 | AGPL-3.0 | Better mAP but 3.4× slower; too slow for a snappy demo |
 | YOLOX-s INT8 | 14.28 MB | 40.01% | 578.44 ms | 1.73 | Apache-2.0 | Permissive, but slowest of the small models |
 | YOLO12l INT8 | 33.81 MB | 52.29% | 2650.58 ms | 0.38 | AGPL-3.0 | Far too heavy for CPU |
-| YOLO26n FP32 | 9.4 MB | 47.90% | ~142 ms | ~7.0 | AGPL-3.0 | Attractive accuracy, but FP32 export is ~2× larger and no INT8 in Ultralytics path |
+| YOLO26n FP32 | 9.4 MB | ~48.0% | ~142 ms | ~7.0 | AGPL-3.0 | Attractive accuracy, but FP32 export is ~2× larger and no INT8 in Ultralytics path |
 | DETR ResNet-50 INT8 | — | — | 2123.36 ms | 0.47 | Apache-2.0 | Transformer detector; far too heavy |
 
 **Decision:** YOLO11n INT8. It is the only candidate that combines a sub-5 MB

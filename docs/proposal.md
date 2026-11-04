@@ -209,9 +209,9 @@ runs on x86_64 too if the Pi fails.
 |---|---|
 | Process 10–20 s clip or 10–20 images | `data/samples/pedestrians_15s.mp4`; `namma-drishti run` |
 | Detect at least one category + per-frame counts | `counts.csv`, `summary.txt`, HUD |
-| Category + counts + 2 sample outputs | `results/demo_pedestrians/contact_sheet.jpg`, `results/demo_traffic/annotated/…`, `results/demo_street/annotated/…` |
+| Category + counts + 2 sample outputs | `results/demo_pedestrians/contact_sheet.jpg`, `results/demo_traffic/annotated/bengaluru_traffic.jpg`, `results/demo_street/annotated/bengaluru_street.jpg` |
 | Average inference time, model, throughput | `summary.json`, `summary.txt`, `benchmark_dev.json` |
 | 2-minute societal explanation | `docs/pitch-2min.md` |
 
-**Links:** GitHub `[insert URL]` · Demo video `results/demo.mp4` · Technical
+**Links:** GitHub https://github.com/sujalmh/namma-drishti · Demo video `results/demo.mp4` · Technical
 report `docs/report.md` · Research notes `docs/research.md`
