@@ -55,7 +55,8 @@ No live camera, no tracking platform, no dashboard, no cloud. Those are explicit
 | Reference accuracy | **mAP@0.5:0.95 38.90%**, mAP@0.5 54.66% (COCO val2017) | Arm model card |
 | Pi 5 reference latency | **134.10 ms p50**, **7.46 FPS**, 1 thread | Arm model card, ExecuTorch 1.1.0 |
 | Pi 5 reference peak memory | **59.17 MB** | Arm model card |
-| This repo, dev host (Apple Silicon) | **20.34 ms mean model-only**, 49.16 FPS | `results/benchmark_dev.json` — *not a Pi measurement* |
+| This repo, dev host (Apple Silicon, ExecuTorch 1.5.1) | **20.34 ms mean model-only**, 49.16 FPS | `results/benchmark_dev.json` — *not a Pi measurement* |
+| Exact Pi stack on dev host (1.1.0 + torch 2.10) | **23.83 ms mean**, 41.96 FPS | `results/benchmark_pi_stack_dev.json` — *still not a Pi* |
 | This repo, full pipeline (dev host) | **25.39 ms mean**, 39.38 FPS | `results/demo_pedestrians/summary.json` |
 | Sample clip result | 150 frames · peak 9 people/frame · **18 tracked people (indicative)** · 2 tracked vehicles | `results/demo_pedestrians/summary.json` |
 
