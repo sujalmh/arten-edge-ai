@@ -213,5 +213,5 @@ runs on x86_64 too if the Pi fails.
 | Average inference time, model, throughput | `summary.json`, `summary.txt`, `benchmark_dev.json` |
 | 2-minute societal explanation | `docs/pitch-2min.md` |
 
-**Links:** GitHub https://github.com/sujalmh/namma-drishti · Demo video https://github.com/sujalmh/namma-drishti/raw/main/results/demo.mp4 · Technical
+**Links:** GitHub https://github.com/sujalmh/namma-drishti · Demo video https://github.com/sujalmh/namma-drishti/releases/download/v1.0.0/demo.mp4 · Technical
 report `docs/report.md` · Research notes `docs/research.md`
