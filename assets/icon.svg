@@ -1,4 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#059669"/>
-  <text x="32" y="32" dy="0.35em" text-anchor="middle" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif" font-size="26" font-weight="600" fill="#ffffff">EA</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Namma Drishti eye icon">
+  <rect width="64" height="64" rx="14" fill="#0c2b1c"/>
+  <path d="M10 31 C19 18, 45 18, 54 31 C45 44, 19 44, 10 31 Z"
+        fill="none" stroke="#3cdc3c" stroke-width="3.2" stroke-linejoin="round"/>
+  <circle cx="32" cy="31" r="7.2" fill="#3cdc3c"/>
+  <circle cx="32" cy="31" r="2.8" fill="#0c2b1c"/>
+  <rect x="24" y="48" width="16" height="3.2" rx="1.6" fill="#ffdc78"/>
+  <rect x="36" y="53" width="7" height="2.4" rx="1.2" fill="#5d7a91"/>
 </svg>
