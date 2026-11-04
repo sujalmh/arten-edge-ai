@@ -166,7 +166,7 @@ movement, prioritise one intervention, measure again.
 ## GitHub / demo links
 
 - GitHub: https://github.com/sujalmh/namma-drishti
-- Demo video: `results/demo.mp4`
+- Demo video: https://github.com/sujalmh/namma-drishti/raw/main/results/demo.mp4
 - Proposal: `docs/proposal.md`
 - Technical report: `docs/report.md`
 - Two-minute pitch: `docs/pitch-2min.md`
