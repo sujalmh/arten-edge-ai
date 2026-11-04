@@ -436,7 +436,8 @@ These are projections from the reference latency, not measured clip runtimes.
 | Pi 5 memory | 59.17 MB peak | Arm model card |
 | COCO accuracy | 38.90% mAP@0.5:0.95 | Arm model card |
 | Committed clip counts | 150 frames, peak 9 people, 18 tracked people | This repo |
-| Dev-host model latency | 20.34 ms mean / 49.16 FPS (standalone); 20.71 ms in the 150-frame run | This repo, labelled dev |
+| Dev-host model latency (1.5.1) | 20.34 ms mean / 49.16 FPS (standalone); 20.71 ms in the 150-frame run | This repo, labelled dev |
+| Exact Pi stack on dev host (1.1.0) | 23.83 ms mean / 22.52 ms p50 / 41.96 FPS | `results/benchmark_pi_stack_dev.json` |
 | Tests | 21 passing | This repo |
 
 ## 8. Discussion
@@ -499,7 +500,10 @@ and prefer aggregate outputs. Power consumption was not measured; a Pi 5 with a
 
 - **Purpose limitation:** infrastructure planning and safety audits, not
   enforcement or individual tracking.
-- **Data minimisation:** aggregate counts by default; no identities; no cloud.
+- **Data minimisation:** aggregate counts by default; no identity extraction; no
+  cloud. Annotated frames still contain the original pixels, including faces and
+  plates; they should be treated as sensitive evidence and blurred before public
+  release.
 - **Transparency:** every number is traceable to a CSV/JSON file and a command;
   the report separates measured from reference values.
 - **Fairness and bias:** COCO is not representative of Indian streets; the report
@@ -618,7 +622,9 @@ python scripts/make_demo_video.py
 
 The Raspberry Pi deployment pins ExecuTorch 1.1.0 and torch 2.10.0. The prebuilt
 `.pte` loads in both runtimes in our tests; the 1.1.0 pin matches Arm's model
-card and the Pi setup script. The exact Pi stack was also smoke-tested on the
-development host: 3 frames processed end-to-end, same output shape and counts,
-with 21.67 ms mean model latency. That reduces the risk of discovering a
-runtime/model mismatch only at the event.
+card and the Pi setup script. The exact Pi stack was also exercised on the
+development host: a 20-run model-only benchmark measured 23.83 ms mean (22.52 ms
+p50, 41.96 FPS), and a 3-frame pipeline run produced the same output shape and
+counts. That reduces the risk of discovering a runtime/model mismatch only at
+the event. The measurement is in `results/benchmark_pi_stack_dev.json` and is
+still a dev-host number, not a Pi number.

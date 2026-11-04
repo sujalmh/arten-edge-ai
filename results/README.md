@@ -9,7 +9,8 @@ quoted in the docs come from Arm's model card, not from these runs.
 | `demo_traffic/` | `data/samples/bengaluru_traffic.jpg` | Dense-scene stress test: 17 cars, 1 bus, 1 truck, 2 people |
 | `demo_street/` | `data/samples/bengaluru_street.jpg` | Close-range scene: 8 people, 2 cars, 1 motorcycle; auto-rickshaw gap |
 | `demo.mp4` | title + pedestrian annotated clip + end card | 21-second demo video for the proposal |
-| `benchmark_dev.json` | `bengaluru_traffic.jpg` | 50-run model-only latency on the Apple Silicon dev host |
+| `benchmark_dev.json` | `bengaluru_traffic.jpg` | 50-run model-only latency on the Apple Silicon dev host (ExecuTorch 1.5.1) |
+| `benchmark_pi_stack_dev.json` | `bengaluru_traffic.jpg` | 20-run model-only latency with the exact Pi stack (ExecuTorch 1.1.0 + torch 2.10.0) on the dev host |
 
 ## What is measured where
 

@@ -115,6 +115,11 @@ apologise repeatedly; move to the impact line.
 > privacy-preserving output, and a concrete civic workflow — at a cost a school
 > can actually pay.
 
+**“Do you store faces or plates?”**
+> No. The model has no face or plate head, and the pipeline never extracts
+> identities. The annotated frames do contain the original pixels, so we treat
+> them as sensitive evidence and blur them before publishing.
+
 **“What would you do with two more weeks?”**
 > Fine-tune on Indian street data, add tiled inference for small objects, and
 > validate counts against manual ground truth on 20 clips. The architecture

@@ -142,7 +142,7 @@ technical and a trust decision.
 | OS | 64-bit Raspberry Pi OS Trixie/Bookworm | Setup script checks aarch64 and Python ≥ 3.10 |
 | Python | ExecuTorch 1.1.0 supports 3.10–3.13 | Pi OS Trixie's Python 3.13 is fine |
 | Install | PyPI aarch64 wheels now available; CPU torch index avoids CUDA; coremltools has no aarch64 wheel | `requirements-pi.txt` pins versions; `setup_pi.sh` installs ExecuTorch `--no-deps` and the runtime support set explicitly |
-| Exact stack smoke test | ExecuTorch 1.1.0 + torch 2.10.0 + the same `.pte` processed 3 frames end-to-end on the dev host | Validated before the event; Pi timing still to be measured |
+| Exact stack smoke test | ExecuTorch 1.1.0 + torch 2.10.0 + the same `.pte` processed 3 frames end-to-end; 20-run benchmark: 23.83 ms mean / 41.96 FPS on the dev host | Validated before the event; Pi timing still to be measured |
 | Model size | 4.73 MB; fits in RAM and on disk | Commit the `.pte`; verify SHA-256 |
 | Input | Fixed 640×640; letterbox 114 pad; RGB /255 | Preprocess unit-tested against the contract |
 | Output | `[1, 84, 8400]`; 4 xywh + 80 classes; no objectness | NumPy decode + per-class NMS |

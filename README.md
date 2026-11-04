@@ -216,8 +216,9 @@ The full mapping, including what to say at the booth, is in
 - **Tests:** `make test` — 21 passing tests on preprocessing, NMS, decode, tracker
   identity and metrics.
 - **Runtime parity:** the exact Pi stack (ExecuTorch 1.1.0 + torch 2.10.0) was
-  smoke-tested on the dev host: 3 frames end-to-end, same output shape and
-  counts, 21.67 ms mean model latency. Only the Pi timing remains to be measured.
+  smoke-tested on the dev host: 20-run model-only benchmark, 23.83 ms mean
+  (22.52 ms p50), plus a 3-frame end-to-end run. Only the Pi timing remains to
+  be measured.
 - **Provenance:** model URL + SHA-256, sample media licences and source URLs are
   in `models/README.md` and `data/README.md`.
 
@@ -235,6 +236,9 @@ The full mapping, including what to say at the booth, is in
 - **Aggregate only.** No face recognition, no licence plate recognition, no
   identity persistence. Frames are processed in memory; only requested evidence
   is written. The tool is a decision-support aid, not a surveillance product.
+- **Annotated frames still contain pixels.** The pipeline does not extract
+  identities, but a saved frame may show faces or plates. Treat evidence as
+  sensitive and blur it before public release.
 - **Licence.** The YOLO11n weights and the Arm-optimized `.pte` are AGPL-3.0.
   This repository is AGPL-3.0 to comply. For a permissive deployment, swap in a
   permissively licensed detector and re-export; the CLI accepts any YOLO-style
