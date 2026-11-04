@@ -1,0 +1,19 @@
+input:
+  shape: [1, 3, 640, 640]
+  dtype: float32
+  range: [0.0, 1.0]
+  preprocessing:
+    - letterbox_resize: [640, 640]  # aspect-ratio-preserving resize + pad, pad value 114/255, center-anchored
+    - to_tensor  # resize uint8 pixels first, then divide by 255 to get [0, 1] float32 (Ultralytics order)
+    # No mean/std normalization
+
+output:
+  shape: [1, 84, 8400]
+  format: "Transposed to [1, 8400, 84] before decoding: 4 (xywh center) + 80 (class scores), NO objectness"
+  postprocessing:
+    score_formula: "max(class_scores)"
+    confidence_threshold: 0.001
+    iou_threshold: 0.7
+    box_format: "xyxy"
+    nms: "per-class (torchvision batched_nms), top 30000 candidates by score -> NMS -> top 300 detections"
+    rescale: "inverse letterbox transform back to original image coordinates"

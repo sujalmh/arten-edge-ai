@@ -1,0 +1,32 @@
+# Raspberry Pi 5 (aarch64, Python 3.13), 64-bit Raspberry Pi OS.
+#
+# ExecuTorch 1.1.0 is installed separately with --no-deps by setup_pi.sh.
+# Its declared Linux dependency set includes coremltools, which has no
+# aarch64 wheel; Arm's own runtime project excludes coremltools and pins the
+# versions below. Installing the runtime support packages explicitly mirrors
+# that working set without dragging in an x86-only package.
+#
+# The CPU index avoids pulling CUDA libraries onto the Pi. PyPI is kept as an
+# extra index for packages that are not on the PyTorch index.
+--index-url https://download.pytorch.org/whl/cpu
+--extra-index-url https://pypi.org/simple
+
+torch==2.10.0
+numpy==2.2.6
+opencv-python-headless==5.0.0.93
+pillow==12.3.0
+psutil>=5.9
+
+# ExecuTorch runtime support (the import path pulls in exir for verification)
+flatbuffers
+pyyaml
+ruamel.yaml
+tabulate
+pandas>=2.2.2
+scikit-learn==1.7.1
+torchao==0.15.0
+pytorch-tokenizers>=1.1
+hydra-core>=1.3.0
+omegaconf>=2.3.0
+packaging
+typing-extensions>=4.10.0

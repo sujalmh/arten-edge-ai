@@ -1,0 +1,222 @@
+{
+  "project": "Namma Drishti",
+  "tagline": "Offline edge detection and counting for safer streets",
+  "run": {
+    "input": "/Users/sujal/.t3/projects/edge-ai-detection/data/samples/bengaluru_street.jpg",
+    "input_type": "images",
+    "output_dir": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_street",
+    "frames_processed": 1,
+    "source_frames": 1,
+    "stride": 1,
+    "duration_s": 1.0,
+    "wall_time_s": 0.058,
+    "source_fps": null,
+    "source_size": null,
+    "classes": [
+      "person",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "bus",
+      "truck"
+    ],
+    "confidence_threshold": 0.35,
+    "iou_threshold": 0.7,
+    "tracking": false,
+    "threads": null,
+    "annotate_every": 1,
+    "save_video": false
+  },
+  "model": {
+    "name": "YOLO11n (COCO) — Arm-optimized INT8",
+    "description": "Ultralytics YOLO11n, 80-class COCO detector, statically quantized to INT8 by Arm and exported to ExecuTorch .pte with the XNNPACK delegate.",
+    "path": "/Users/sujal/.t3/projects/edge-ai-detection/models/yolo11n_int8_xnnpack.pte",
+    "size_mb": 4.73,
+    "sha256": "154c54b52389219ebd982e1003227c1abbc3f29a99bdad241147b684d3041b96",
+    "expected_sha256": "154c54b52389219ebd982e1003227c1abbc3f29a99bdad241147b684d3041b96",
+    "sha256_match": true,
+    "format": "ExecuTorch .pte",
+    "backend": "XNNPACK (prebuilt with Arm KleidiAI kernels)",
+    "quantization": "INT8 static post-training quantization; stem conv and detection head remain FP32 (per Arm model card)",
+    "input_shape": [
+      1,
+      3,
+      640,
+      640
+    ],
+    "input_range": [
+      0.0,
+      1.0
+    ],
+    "classes": 80,
+    "dataset": "COCO 2017",
+    "source": "https://huggingface.co/Arm/yolo11n-int8-xnnpack-executorch-raspberrypi5",
+    "load_ms": 5.44,
+    "torch": "2.15.0",
+    "executorch": "1.5.1"
+  },
+  "environment": {
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "machine": "arm64",
+    "processor": "arm",
+    "python": "3.12.12",
+    "timestamp_utc": "2026-11-04T12:27:28+00:00",
+    "peak_rss_mb": 511.3,
+    "threads": null,
+    "torch": "2.15.0",
+    "executorch": "1.5.1",
+    "opencv": "5.0.0"
+  },
+  "counts": {
+    "person": {
+      "peak": 8,
+      "mean": 8.0,
+      "p95": 8,
+      "total_detections": 8,
+      "unique_tracked": null
+    },
+    "bicycle": {
+      "peak": 0,
+      "mean": 0.0,
+      "p95": 0,
+      "total_detections": 0,
+      "unique_tracked": null
+    },
+    "car": {
+      "peak": 2,
+      "mean": 2.0,
+      "p95": 2,
+      "total_detections": 2,
+      "unique_tracked": null
+    },
+    "motorcycle": {
+      "peak": 1,
+      "mean": 1.0,
+      "p95": 1,
+      "total_detections": 1,
+      "unique_tracked": null
+    },
+    "bus": {
+      "peak": 0,
+      "mean": 0.0,
+      "p95": 0,
+      "total_detections": 0,
+      "unique_tracked": null
+    },
+    "truck": {
+      "peak": 0,
+      "mean": 0.0,
+      "p95": 0,
+      "total_detections": 0,
+      "unique_tracked": null
+    }
+  },
+  "latency": {
+    "model_inference": {
+      "count": 1.0,
+      "mean_ms": 21.93,
+      "p50_ms": 21.93,
+      "p95_ms": 21.93,
+      "p99_ms": 21.93,
+      "min_ms": 21.93,
+      "max_ms": 21.93,
+      "std_ms": 0.0,
+      "fps_from_mean": 45.59
+    },
+    "preprocess": {
+      "count": 1.0,
+      "mean_ms": 1.13,
+      "p50_ms": 1.13,
+      "p95_ms": 1.13,
+      "p99_ms": 1.13,
+      "min_ms": 1.13,
+      "max_ms": 1.13,
+      "std_ms": 0.0,
+      "fps_from_mean": 887.38
+    },
+    "postprocess": {
+      "count": 1.0,
+      "mean_ms": 3.76,
+      "p50_ms": 3.76,
+      "p95_ms": 3.76,
+      "p99_ms": 3.76,
+      "min_ms": 3.76,
+      "max_ms": 3.76,
+      "std_ms": 0.0,
+      "fps_from_mean": 266.12
+    },
+    "read": {
+      "count": 1.0,
+      "mean_ms": 14.13,
+      "p50_ms": 14.13,
+      "p95_ms": 14.13,
+      "p99_ms": 14.13,
+      "min_ms": 14.13,
+      "max_ms": 14.13,
+      "std_ms": 0.0,
+      "fps_from_mean": 70.77
+    },
+    "annotate": {
+      "count": 1.0,
+      "mean_ms": 17.14,
+      "p50_ms": 17.14,
+      "p95_ms": 17.14,
+      "p99_ms": 17.14,
+      "min_ms": 17.14,
+      "max_ms": 17.14,
+      "std_ms": 0.0,
+      "fps_from_mean": 58.36
+    },
+    "pipeline_total": {
+      "count": 1.0,
+      "mean_ms": 58.09,
+      "p50_ms": 58.09,
+      "p95_ms": 58.09,
+      "p99_ms": 58.09,
+      "min_ms": 58.09,
+      "max_ms": 58.09,
+      "std_ms": 0.0,
+      "fps_from_mean": 17.22
+    }
+  },
+  "throughput": {
+    "model_fps_from_mean": 45.59,
+    "pipeline_fps_from_mean": 17.22,
+    "processed_frames_per_wall_second": 17.18
+  },
+  "exposure": {
+    "person_seconds": 0.0,
+    "vehicle_seconds": 0.0,
+    "frames_with_person_and_vehicle": 1,
+    "share_frames_with_person_and_vehicle": 1.0
+  },
+  "peak_rss_mb": 511.3,
+  "reference": {
+    "device": "Raspberry Pi 5 (Cortex-A76, 4 cores @ 2.4 GHz)",
+    "runtime": "ExecuTorch 1.1.0, XNNPACK + KleidiAI, 1 thread",
+    "p50_latency_ms": 134.1,
+    "fps": 7.46,
+    "peak_memory_mb": 59.17,
+    "map_50_95": 38.9,
+    "map_50": 54.66,
+    "model_size_mb": 4.73,
+    "source": "https://huggingface.co/Arm/yolo11n-int8-xnnpack-executorch-raspberrypi5"
+  },
+  "outputs": {
+    "counts_csv": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_street/counts.csv",
+    "detections_jsonl": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_street/detections.jsonl",
+    "summary_json": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_street/summary.json",
+    "summary_txt": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_street/summary.txt",
+    "annotated_dir": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_street/annotated",
+    "annotated_video": null,
+    "contact_sheet": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_street/contact_sheet.jpg"
+  },
+  "notes": [
+    "Counts are per processed frame, not unique objects, unless the 'unique_tracked' field is used.",
+    "unique_tracked is indicative: a lightweight IoU/velocity tracker, not a production multi-object tracking system.",
+    "Latency is measured on the device that produced this run. Compare only with runs on the same hardware and thread count.",
+    "The model detects 80 COCO classes. Auto-rickshaws, carts and other India-specific categories are not guaranteed to be recognised.",
+    "No faces, licence plates or identities are extracted. Frames are processed locally and only the requested evidence is written.",
+    "Annotated-video encoding is an output convenience and is not included in the pipeline latency; model-only and per-stage timings are unaffected."
+  ]
+}

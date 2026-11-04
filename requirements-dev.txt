@@ -1,0 +1,14 @@
+# Development host (macOS Apple Silicon or Linux x86_64).
+# The runtime version can be newer than the Pi's pinned 1.1.0; the prebuilt
+# .pte loads on 1.5.x in our tests. Pin 1.1.0 for exact parity with the model
+# card and the Pi deployment.
+--index-url https://download.pytorch.org/whl/cpu
+--extra-index-url https://pypi.org/simple
+
+executorch==1.5.1
+torch==2.15.0
+numpy>=1.26,<3
+opencv-python-headless>=4.8
+pillow>=10.0
+psutil>=5.9
+pytest>=8.0
