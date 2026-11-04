@@ -10,7 +10,8 @@ resolution, codec and frame rate.
 - **Properties:** 640×480, 10 FPS, 150 frames, H.264.
 - **Source:** <https://github.com/opencv/opencv/blob/4.x/samples/data/vtest.avi>
 - **Provenance:** a long-standing public OpenCV sample clip, widely used for
-  optical-flow and pedestrian-detection tutorials.
+  optical-flow and pedestrian-detection tutorials. It is distributed as part of
+  the OpenCV samples; see the OpenCV repository for the sample-data terms.
 - **Why:** it gives a clean, low-resolution pedestrian scene with people entering
   and leaving frame — exactly the counting behaviour the PoC needs to show.
 
