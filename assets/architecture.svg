@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 560" width="1240" height="560" role="img" aria-label="Namma Drishti pipeline: input, preprocessing, ExecuTorch inference, decoding, counting, evidence, all on a Raspberry Pi">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 560" width="1240" height="560" role="img" aria-label="Arten pipeline: input, preprocessing, ExecuTorch inference, decoding, counting, evidence, all on a Raspberry Pi">
   <defs>
     <style>
       .bg { fill: #0c1016; }
@@ -20,7 +20,7 @@
   <rect class="bg" width="1240" height="560"/>
 
   <!-- Title -->
-  <text x="48" y="58" class="title" font-size="30">Namma Drishti — one local pipeline, six stages</text>
+  <text x="48" y="58" class="title" font-size="30">Arten — one local pipeline, six stages</text>
   <text x="48" y="86" class="body" font-size="16">A 15-second clip or a folder of images goes in. Counts, annotated evidence and latency numbers come out. Nothing leaves the device.</text>
 
   <!-- Row 1 -->

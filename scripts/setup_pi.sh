@@ -9,7 +9,7 @@ cd "$ROOT"
 PYTHON="${PYTHON:-python3}"
 VENV="${VENV:-.venv}"
 
-echo "== Namma Drishti · Raspberry Pi setup =="
+echo "== Arten · Raspberry Pi setup =="
 echo "repo:   $ROOT"
 echo "arch:   $(uname -m)"
 echo "python: $($PYTHON --version 2>&1)"
@@ -47,7 +47,7 @@ python -m pip install -r requirements-pi.txt
 # runtime project, which also excludes coremltools.
 python -m pip install --no-deps executorch==1.1.0
 
-echo "\n[3/4] Installing the namma-drishti package"
+echo "\n[3/4] Installing the arten package"
 python -m pip install -e . --no-deps
 
 echo "\n[4/4] Checking the model and runtime"
@@ -55,12 +55,12 @@ if [[ ! -f models/yolo11n_int8_xnnpack.pte ]]; then
   bash scripts/download_model.sh
 fi
 
-namma-drishti doctor || {
+arten doctor || {
   echo "\nDoctor found an issue. Check the messages above."
   exit 1
 }
 
 echo "\nSetup complete. Try:"
 echo "  source $VENV/bin/activate"
-echo "  namma-drishti run -i data/samples/pedestrians_15s.mp4 --save-video"
-echo "  namma-drishti benchmark --runs 50"
+echo "  arten run -i data/samples/pedestrians_15s.mp4 --save-video"
+echo "  arten benchmark --runs 50"

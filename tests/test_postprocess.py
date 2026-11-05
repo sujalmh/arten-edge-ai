@@ -1,7 +1,7 @@
 import numpy as np
 
-from namma_drishti.postprocess import count_by_class, decode, nms
-from namma_drishti.preprocess import LetterboxMeta
+from arten.postprocess import count_by_class, decode, nms
+from arten.preprocess import LetterboxMeta
 
 
 def identity_meta(size=640):

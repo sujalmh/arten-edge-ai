@@ -1,6 +1,6 @@
 
 ==============================================================================
-  NAMMA DRISHTI  ·  offline edge detection & counting
+  ARTEN  ·  edge object detection, counting & attributes
 ==============================================================================
   Input        bengaluru_traffic.jpg
   Frames       1 / 1
@@ -31,14 +31,14 @@
 +----------------+-----------+----------+----------+---------+
 | stage          | mean ms   | p50 ms   | p95 ms   | FPS     |
 +================+===========+==========+==========+=========+
-| model infer    | 20.38     | 20.38    | 20.38    | 49.06   |
-| preprocess     | 2.50      | 2.50     | 2.50     | 400.24  |
-| decode + NMS   | 7.54      | 7.54     | 7.54     | 132.62  |
-| frame read     | 18.30     | 18.30    | 18.30    | 54.64   |
-| annotate/save  | 13.99     | 13.99    | 13.99    | 71.48   |
-| pipeline total | 62.72     | 62.72    | 62.72    | 15.94   |
+| model infer    | 22.93     | 22.93    | 22.93    | 43.62   |
+| preprocess     | 1.49      | 1.49     | 1.49     | 669.59  |
+| decode + NMS   | 5.54      | 5.54     | 5.54     | 180.41  |
+| frame read     | 8.64      | 8.64     | 8.64     | 115.74  |
+| annotate/save  | 8.51      | 8.51     | 8.51     | 117.51  |
+| pipeline total | 47.11     | 47.11    | 47.11    | 21.23   |
 +----------------+-----------+----------+----------+---------+
-  Model-only 49.06 FPS · pipeline 15.94 FPS · wall 0.06 s
+  Model-only 43.62 FPS · pipeline 21.23 FPS · wall 0.05 s
 
   EXPOSURE (clip-level, descriptive)
   person-seconds 0.00 · vehicle-seconds 0.00 · frames with both 1 (100.0%)

@@ -124,7 +124,7 @@ def annotate_frame(
     )
     draw.text(
         (24, 20),
-        "NAMMA DRISHTI",
+        "ARTEN",
         font=font,
         fill=(255, 255, 255, 255),
     )
@@ -202,7 +202,7 @@ def annotate_frame(
 def make_contact_sheet(
     frames: list[np.ndarray],
     output_path: str | Path,
-    title: str = "Namma Drishti — sample detections",
+    title: str = "Arten — sample detections",
     subtitle: str = "",
     columns: int = 3,
     thumb_width: int = 420,

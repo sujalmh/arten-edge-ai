@@ -1,6 +1,8 @@
-# Namma Drishti
+# Arten
 
-### Offline edge detection and counting for safer streets
+### Edge Object Detection, Counting & Attributes
+
+**Offline edge detection and counting for safer streets**
 
 **Namma AI Hackathon 2026 · Problem Statement 2 — AI for Safer Communities**
 
@@ -10,9 +12,10 @@
 
 ## One line
 
-Namma Drishti turns a 15-second phone clip of any street into an offline,
-privacy-preserving count of pedestrians and vehicles on a Raspberry Pi — no
-cloud, no GPU and no identities.
+Arten turns a 15-second phone clip of any street into an offline,
+privacy-preserving count of pedestrians and vehicles on a Raspberry Pi — with
+on-device direction, dwell and coarse colour attributes. No cloud, no GPU and
+no identities.
 
 ## 1. The problem
 
@@ -216,11 +219,11 @@ runs on x86_64 too if the Pi fails.
 
 | Requirement | Where |
 |---|---|
-| Process 10–20 s clip or 10–20 images | `data/samples/pedestrians_15s.mp4`; `namma-drishti run` |
+| Process 10–20 s clip or 10–20 images | `data/samples/pedestrians_15s.mp4`; `arten run` |
 | Detect at least one category + per-frame counts | `counts.csv`, `summary.txt`, HUD |
 | Category + counts + 2 sample outputs | `results/demo_pedestrians/contact_sheet.jpg`, `results/demo_traffic/annotated/bengaluru_traffic.jpg`, `results/demo_street/annotated/bengaluru_street.jpg` |
 | Average inference time, model, throughput | `summary.json`, `summary.txt`, `benchmark_dev.json` |
 | 2-minute societal explanation | `docs/pitch-2min.md` |
 
-**Links:** GitHub https://github.com/sujalmh/namma-drishti · Demo video https://github.com/sujalmh/namma-drishti/releases/download/v1.0.0/demo.mp4 · Technical
+**Links:** GitHub https://github.com/sujalmh/arten-edge-ai · Demo video https://github.com/sujalmh/arten-edge-ai/releases/download/v1.0.0/demo.mp4 · Technical
 report `docs/report.md` · Research notes `docs/research.md`

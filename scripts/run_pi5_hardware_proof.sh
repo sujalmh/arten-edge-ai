@@ -30,13 +30,13 @@ fi
   sha256sum models/yolo11n_int8_xnnpack.pte
 } | tee "$OUT_DIR/hardware.txt"
 
-namma-drishti doctor 2>&1 | tee "$OUT_DIR/doctor.log"
-namma-drishti benchmark \
+arten doctor 2>&1 | tee "$OUT_DIR/doctor.log"
+arten benchmark \
   --input data/samples/bengaluru_traffic.jpg \
   --runs 50 --warmup 10 \
   --output "$OUT_DIR/benchmark.json" \
   2>&1 | tee "$OUT_DIR/benchmark.log"
-namma-drishti run \
+arten run \
   --input data/samples/pedestrians_15s.mp4 \
   --output "$OUT_DIR/clip" \
   --classes person,bicycle,car,motorcycle,bus,truck \

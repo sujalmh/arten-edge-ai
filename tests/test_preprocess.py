@@ -1,6 +1,6 @@
 import numpy as np
 
-from namma_drishti.preprocess import letterbox, unletterbox_boxes
+from arten.preprocess import letterbox, unletterbox_boxes
 
 
 def test_letterbox_shape_range_and_padding():

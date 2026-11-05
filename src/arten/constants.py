@@ -162,3 +162,10 @@ DIRECTION_ARROWS: dict[str, str] = {
     "stationary": "•",
     "unknown": "?",
 }
+
+
+# User-facing identity. The short title is deliberately self-explanatory: the
+# project name alone is not expected to carry the meaning.
+PROJECT_NAME = "Arten"
+PROJECT_TITLE = "Arten — Edge Object Detection, Counting & Attributes"
+PROJECT_TAGLINE = "Offline edge AI for safer streets"

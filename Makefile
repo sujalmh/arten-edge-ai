@@ -4,7 +4,7 @@ PIP ?= .venv/bin/pip
 .PHONY: help setup test demo benchmark info doctor pdf demo-video clean
 
 help:
-	@echo "Namma Drishti"
+	@echo "Arten"
 	@echo "  make setup       install on Raspberry Pi (or a dev host with requirements-pi.txt)"
 	@echo "  make test        run unit tests"
 	@echo "  make demo        process the committed sample clip and images"
@@ -22,28 +22,28 @@ test:
 	$(PY) -m pytest -q
 
 demo:
-	$(PY) -m namma_drishti run -i data/samples/pedestrians_15s.mp4 \
+	$(PY) -m arten run -i data/samples/pedestrians_15s.mp4 \
 		-o results/demo_pedestrians --save-video --annotate-every 10 \
 		--estimate-vehicle-colors
-	$(PY) -m namma_drishti run -i data/samples/bengaluru_traffic.jpg \
+	$(PY) -m arten run -i data/samples/bengaluru_traffic.jpg \
 		-o results/demo_traffic --annotate-every 1 --no-track \
 		--estimate-vehicle-colors
-	$(PY) -m namma_drishti run -i data/samples/bengaluru_street.jpg \
+	$(PY) -m arten run -i data/samples/bengaluru_street.jpg \
 		-o results/demo_street --annotate-every 1 --no-track \
 		--estimate-vehicle-colors
 
 benchmark:
-	$(PY) -m namma_drishti benchmark --input data/samples/bengaluru_traffic.jpg \
+	$(PY) -m arten benchmark --input data/samples/bengaluru_traffic.jpg \
 		--runs 50 --warmup 10 --output results/benchmark_dev.json
 
 demo-video:
 	$(PY) scripts/make_demo_video.py
 
 info:
-	$(PY) -m namma_drishti info
+	$(PY) -m arten info
 
 doctor:
-	$(PY) -m namma_drishti doctor
+	$(PY) -m arten doctor
 
 pdf:
 	bash scripts/make_pdf.sh

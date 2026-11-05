@@ -1,8 +1,8 @@
 import numpy as np
 
-from namma_drishti.attributes import AttributeAccumulator, estimate_vehicle_color
-from namma_drishti.postprocess import Detection
-from namma_drishti.tracker import IoUTracker
+from arten.attributes import AttributeAccumulator, estimate_vehicle_color
+from arten.postprocess import Detection
+from arten.tracker import IoUTracker
 
 
 def solid_frame(bgr):

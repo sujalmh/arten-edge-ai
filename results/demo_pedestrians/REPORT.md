@@ -1,6 +1,8 @@
-# Namma Drishti — run report
+# Arten — Edge Object Detection, Counting & Attributes
 
-Offline pedestrian and vehicle counting with ExecuTorch on a Raspberry Pi. This report was generated from the run's `summary.json`.
+**Run report**
+
+Offline pedestrian and vehicle detection, counting and attribute analysis with ExecuTorch on a Raspberry Pi. This report was generated from the run's `summary.json`.
 
 ## Run
 
@@ -11,7 +13,7 @@ Offline pedestrian and vehicle counting with ExecuTorch on a Raspberry Pi. This 
 - **Thresholds:** confidence 0.35, IoU 0.7
 - **Tracking:** on (indicative)
 - **Device:** arm64 · macOS-27.0.1-arm64-arm-64bit
-- **Peak process RSS:** 610.1 MB
+- **Peak process RSS:** 699.8 MB
 
 ## Model
 
@@ -53,16 +55,16 @@ These attributes are derived on-device from the tracker and a classical-CV colou
 
 | Stage | Mean (ms) | p50 (ms) | p95 (ms) | FPS from mean |
 |---|---:|---:|---:|---:|
-| Model inference | 20.99 | 20.84 | 21.78 | 47.63 |
-| Preprocess | 0.66 | 0.57 | 0.69 | 1525.59 |
-| Decode + NMS | 0.78 | 0.75 | 0.84 | 1285.70 |
-| Frame read | 0.19 | 0.16 | 0.21 | 5272.24 |
-| Annotate/save | 3.24 | 3.14 | 4.08 | 309.01 |
-| Pipeline total | 26.19 | 25.86 | 27.27 | 38.19 |
+| Model inference | 21.79 | 21.70 | 22.85 | 45.90 |
+| Preprocess | 0.70 | 0.66 | 0.90 | 1431.88 |
+| Decode + NMS | 0.94 | 0.88 | 1.02 | 1061.10 |
+| Frame read | 0.21 | 0.17 | 0.24 | 4818.64 |
+| Annotate/save | 3.43 | 3.25 | 4.20 | 291.60 |
+| Pipeline total | 27.40 | 27.14 | 28.48 | 36.49 |
 
-- **Model-only:** 47.63 FPS
-- **Pipeline:** 38.19 FPS
-- **Wall time:** 4.04 s
+- **Model-only:** 45.90 FPS
+- **Pipeline:** 36.49 FPS
+- **Wall time:** 4.23 s
 
 ## Exposure signals
 

@@ -3,14 +3,14 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "namma-drishti"
+name = "arten"
 version = "1.0.0"
-description = "Offline edge object detection and counting for safer streets, using ExecuTorch on Raspberry Pi"
+description = "Arten — Edge Object Detection, Counting & Attributes. Offline edge AI for safer streets using ExecuTorch on Raspberry Pi."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "AGPL-3.0-only" }
-authors = [{ name = "Namma Drishti team" }]
-keywords = ["executorch", "edge-ai", "raspberry-pi", "object-detection", "yolo11", "road-safety"]
+authors = [{ name = "Arten team" }]
+keywords = ["executorch", "edge-ai", "raspberry-pi", "object-detection", "counting", "attributes", "road-safety"]
 dependencies = [
   "numpy>=1.24,<3",
   "opencv-python-headless>=4.8",
@@ -22,10 +22,10 @@ dependencies = [
 dev = ["pytest>=8.0"]
 
 [project.scripts]
-namma-drishti = "namma_drishti.cli:main"
+arten = "arten.cli:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/namma_drishti"]
+packages = ["src/arten"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

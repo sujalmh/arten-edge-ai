@@ -1,6 +1,8 @@
-# Namma Drishti — judge brief
+# Arten
 
-**Offline edge detection and counting for safer streets**
+### Edge Object Detection, Counting & Attributes
+
+**Judge brief** · Offline edge AI for safer streets
 
 Namma AI Hackathon 2026 · Problem Statement 2 · [Team name] · [College / organisation]
 
@@ -8,7 +10,7 @@ Namma AI Hackathon 2026 · Problem Statement 2 · [Team name] · [College / orga
 
 ## One sentence
 
-Namma Drishti counts pedestrians and vehicles offline on a sub-₹10,000
+Arten counts pedestrians and vehicles offline on a sub-₹10,000
 Raspberry Pi, so a school can justify a crossing guard without buying a
 surveillance system.
 
@@ -81,15 +83,15 @@ subscription.
 ## Demo commands
 
 ```bash
-namma-drishti doctor
-namma-drishti run -i data/samples/pedestrians_15s.mp4 \
+arten doctor
+arten run -i data/samples/pedestrians_15s.mp4 \
   -o results/demo --save-video --estimate-vehicle-colors
-namma-drishti benchmark --input data/samples/bengaluru_traffic.jpg --runs 50
+arten benchmark --input data/samples/bengaluru_traffic.jpg --runs 50
 ```
 
 ## Links
 
-- GitHub: https://github.com/sujalmh/namma-drishti
+- GitHub: https://github.com/sujalmh/arten-edge-ai
 - Proposal: `docs/proposal.md`
 - Technical report: `docs/report.md`
 - Two-minute pitch: `docs/pitch-2min.md`

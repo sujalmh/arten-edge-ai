@@ -1,6 +1,6 @@
 
 ==============================================================================
-  NAMMA DRISHTI  ·  offline edge detection & counting
+  ARTEN  ·  edge object detection, counting & attributes
 ==============================================================================
   Input        pedestrians_15s.mp4
   Frames       150 / 150
@@ -32,14 +32,14 @@
 +----------------+-----------+----------+----------+---------+
 | stage          | mean ms   | p50 ms   | p95 ms   | FPS     |
 +================+===========+==========+==========+=========+
-| model infer    | 20.99     | 20.84    | 21.78    | 47.63   |
-| preprocess     | 0.66      | 0.57     | 0.69     | 1525.59 |
-| decode + NMS   | 0.78      | 0.75     | 0.84     | 1285.70 |
-| frame read     | 0.19      | 0.16     | 0.21     | 5272.24 |
-| annotate/save  | 3.24      | 3.14     | 4.08     | 309.01  |
-| pipeline total | 26.19     | 25.86    | 27.27    | 38.19   |
+| model infer    | 21.79     | 21.70    | 22.85    | 45.90   |
+| preprocess     | 0.70      | 0.66     | 0.90     | 1431.88 |
+| decode + NMS   | 0.94      | 0.88     | 1.02     | 1061.10 |
+| frame read     | 0.21      | 0.17     | 0.24     | 4818.64 |
+| annotate/save  | 3.43      | 3.25     | 4.20     | 291.60  |
+| pipeline total | 27.40     | 27.14    | 28.48    | 36.49   |
 +----------------+-----------+----------+----------+---------+
-  Model-only 47.63 FPS · pipeline 38.19 FPS · wall 4.04 s
+  Model-only 45.90 FPS · pipeline 36.49 FPS · wall 4.23 s
 
   EXPOSURE (clip-level, descriptive)
   person-seconds 82.50 · vehicle-seconds 30.00 · frames with both 150 (100.0%)

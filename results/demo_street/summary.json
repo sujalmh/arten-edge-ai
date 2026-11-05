@@ -1,6 +1,6 @@
 {
-  "project": "Namma Drishti",
-  "tagline": "Offline edge detection and counting for safer streets",
+  "project": "Arten",
+  "tagline": "Offline edge AI for safer streets",
   "run": {
     "input": "/Users/sujal/.t3/projects/edge-ai-detection/data/samples/bengaluru_street.jpg",
     "input_type": "images",
@@ -9,7 +9,7 @@
     "source_frames": 1,
     "stride": 1,
     "duration_s": 1.0,
-    "wall_time_s": 0.061,
+    "wall_time_s": 0.075,
     "source_fps": null,
     "source_size": null,
     "classes": [
@@ -53,7 +53,7 @@
     "classes": 80,
     "dataset": "COCO 2017",
     "source": "https://huggingface.co/Arm/yolo11n-int8-xnnpack-executorch-raspberrypi5",
-    "load_ms": 4.94,
+    "load_ms": 5.63,
     "torch": "2.15.0",
     "executorch": "1.5.1"
   },
@@ -62,8 +62,8 @@
     "machine": "arm64",
     "processor": "arm",
     "python": "3.12.12",
-    "timestamp_utc": "2026-11-05T23:07:19+00:00",
-    "peak_rss_mb": 511.7,
+    "timestamp_utc": "2026-11-05T23:28:20+00:00",
+    "peak_rss_mb": 518.1,
     "threads": null,
     "torch": "2.15.0",
     "executorch": "1.5.1",
@@ -116,75 +116,75 @@
   "latency": {
     "model_inference": {
       "count": 1.0,
-      "mean_ms": 22.56,
-      "p50_ms": 22.56,
-      "p95_ms": 22.56,
-      "p99_ms": 22.56,
-      "min_ms": 22.56,
-      "max_ms": 22.56,
+      "mean_ms": 22.64,
+      "p50_ms": 22.64,
+      "p95_ms": 22.64,
+      "p99_ms": 22.64,
+      "min_ms": 22.64,
+      "max_ms": 22.64,
       "std_ms": 0.0,
-      "fps_from_mean": 44.32
+      "fps_from_mean": 44.17
     },
     "preprocess": {
       "count": 1.0,
-      "mean_ms": 1.1,
-      "p50_ms": 1.1,
-      "p95_ms": 1.1,
-      "p99_ms": 1.1,
-      "min_ms": 1.1,
-      "max_ms": 1.1,
+      "mean_ms": 1.21,
+      "p50_ms": 1.21,
+      "p95_ms": 1.21,
+      "p99_ms": 1.21,
+      "min_ms": 1.21,
+      "max_ms": 1.21,
       "std_ms": 0.0,
-      "fps_from_mean": 910.16
+      "fps_from_mean": 828.64
     },
     "postprocess": {
       "count": 1.0,
-      "mean_ms": 5.68,
-      "p50_ms": 5.68,
-      "p95_ms": 5.68,
-      "p99_ms": 5.68,
-      "min_ms": 5.68,
-      "max_ms": 5.68,
+      "mean_ms": 6.47,
+      "p50_ms": 6.47,
+      "p95_ms": 6.47,
+      "p99_ms": 6.47,
+      "min_ms": 6.47,
+      "max_ms": 6.47,
       "std_ms": 0.0,
-      "fps_from_mean": 175.93
+      "fps_from_mean": 154.47
     },
     "read": {
       "count": 1.0,
-      "mean_ms": 14.52,
-      "p50_ms": 14.52,
-      "p95_ms": 14.52,
-      "p99_ms": 14.52,
-      "min_ms": 14.52,
-      "max_ms": 14.52,
+      "mean_ms": 25.58,
+      "p50_ms": 25.58,
+      "p95_ms": 25.58,
+      "p99_ms": 25.58,
+      "min_ms": 25.58,
+      "max_ms": 25.58,
       "std_ms": 0.0,
-      "fps_from_mean": 68.87
+      "fps_from_mean": 39.1
     },
     "annotate": {
       "count": 1.0,
-      "mean_ms": 17.51,
-      "p50_ms": 17.51,
-      "p95_ms": 17.51,
-      "p99_ms": 17.51,
-      "min_ms": 17.51,
-      "max_ms": 17.51,
+      "mean_ms": 18.98,
+      "p50_ms": 18.98,
+      "p95_ms": 18.98,
+      "p99_ms": 18.98,
+      "min_ms": 18.98,
+      "max_ms": 18.98,
       "std_ms": 0.0,
-      "fps_from_mean": 57.1
+      "fps_from_mean": 52.68
     },
     "pipeline_total": {
       "count": 1.0,
-      "mean_ms": 61.38,
-      "p50_ms": 61.38,
-      "p95_ms": 61.38,
-      "p99_ms": 61.38,
-      "min_ms": 61.38,
-      "max_ms": 61.38,
+      "mean_ms": 74.88,
+      "p50_ms": 74.88,
+      "p95_ms": 74.88,
+      "p99_ms": 74.88,
+      "min_ms": 74.88,
+      "max_ms": 74.88,
       "std_ms": 0.0,
-      "fps_from_mean": 16.29
+      "fps_from_mean": 13.35
     }
   },
   "throughput": {
-    "model_fps_from_mean": 44.32,
-    "pipeline_fps_from_mean": 16.29,
-    "processed_frames_per_wall_second": 16.26
+    "model_fps_from_mean": 44.17,
+    "pipeline_fps_from_mean": 13.35,
+    "processed_frames_per_wall_second": 13.33
   },
   "exposure": {
     "person_seconds": 0.0,
@@ -217,7 +217,7 @@
     },
     "total_tracks": 3
   },
-  "peak_rss_mb": 511.7,
+  "peak_rss_mb": 518.2,
   "reference": {
     "device": "Raspberry Pi 5 (Cortex-A76, 4 cores @ 2.4 GHz)",
     "runtime": "ExecuTorch 1.1.0, XNNPACK + KleidiAI, 1 thread",

@@ -40,7 +40,7 @@ def format_summary(summary: dict) -> str:
     lines: list[str] = []
     lines.append("")
     lines.append("=" * 78)
-    lines.append("  NAMMA DRISHTI  ·  offline edge detection & counting")
+    lines.append("  ARTEN  ·  edge object detection, counting & attributes")
     lines.append("=" * 78)
     lines.append(f"  Input        {Path(run['input']).name}")
     lines.append(
@@ -203,10 +203,11 @@ def write_markdown_report(summary: dict, path: str | Path) -> Path:
     path = Path(path)
 
     lines: list[str] = []
-    lines.append("# Namma Drishti — run report\n")
+    lines.append("# Arten — Edge Object Detection, Counting & Attributes\n\n**Run report**\n")
     lines.append(
-        "Offline pedestrian and vehicle counting with ExecuTorch on a "
-        "Raspberry Pi. This report was generated from the run's `summary.json`.\n"
+        "Offline pedestrian and vehicle detection, counting and attribute "
+        "analysis with ExecuTorch on a Raspberry Pi. This report was generated "
+        "from the run's `summary.json`.\n"
     )
 
     lines.append("## Run\n")

@@ -1,12 +1,12 @@
 <p align="center">
-  <img src="assets/icon.svg" width="76" height="76" alt="Namma Drishti icon">
+  <img src="assets/icon.svg" width="76" height="76" alt="Arten icon">
 </p>
 
-<h1 align="center">Namma Drishti</h1>
+<h1 align="center">Arten</h1>
 
 <p align="center">
-  <strong>Offline edge object detection &amp; counting for safer streets.</strong><br>
-  ExecuTorch · YOLO11n INT8 · Raspberry Pi 5 · zero cloud · zero identities.
+  <strong>Edge Object Detection, Counting &amp; Attributes</strong><br>
+  Offline edge AI for safer streets · ExecuTorch · YOLO11n INT8 · Raspberry Pi 5
 </p>
 
 <p align="center">
@@ -34,7 +34,7 @@ A ward officer, school principal or resident welfare association does not need a
 
 ## What this project does
 
-Namma Drishti is a deliberately small edge-AI PoC for **pedestrian and vehicle counting**:
+Arten is a deliberately small edge-AI PoC for **pedestrian and vehicle counting**:
 
 - Processes one **10–20 second clip** or a **folder of 10–20 images**.
 - Detects six COCO categories: **person, bicycle, car, motorcycle, bus, truck**.
@@ -78,7 +78,7 @@ Why it matters: a school-zone audit can separate “40 people crossed” from �
 | Pi 5 reference peak memory | **59.17 MB** | Arm model card |
 | This repo, dev host (Apple Silicon, ExecuTorch 1.5.1) | **20.34 ms mean model-only**, 49.16 FPS | `results/benchmark_dev.json` — *not a Pi measurement* |
 | Exact Pi stack on dev host (1.1.0 + torch 2.10) | **23.83 ms mean**, 41.96 FPS | `results/benchmark_pi_stack_dev.json` — *still not a Pi* |
-| This repo, full pipeline + attributes (dev host) | **26.19 ms mean**, 38.19 FPS | `results/demo_pedestrians/summary.json` |
+| This repo, full pipeline + attributes (dev host) | **27.40 ms mean**, 36.49 FPS | `results/demo_pedestrians/summary.json` |
 | Sample clip result | 150 frames · peak 9 people/frame · **18 tracked people (indicative)** · 2 tracked vehicles | `results/demo_pedestrians/summary.json` |
 | Motion attributes (clip) | 18 tracks: **9 left, 4 right, 2 stationary, 2 down, 1 up** · mean dwell **4.5 s** · mean **35.6 px/s** | `results/demo_pedestrians/attribute_summary.json` |
 | Colour attributes (traffic image) | 17 cars: **9 white, 4 gray/silver, 2 blue, 1 red, 1 orange/brown** | `results/demo_traffic/attribute_summary.json` |
@@ -99,15 +99,15 @@ Why it matters: a school-zone audit can separate “40 people crossed” from �
 64-bit Raspberry Pi OS (Trixie or Bookworm), Python 3.10–3.13, ~2 GB free disk.
 
 ```bash
-git clone https://github.com/sujalmh/namma-drishti namma-drishti
-cd namma-drishti
+git clone https://github.com/sujalmh/arten-edge-ai arten
+cd arten
 bash scripts/setup_pi.sh
 
 source .venv/bin/activate
-namma-drishti doctor
-namma-drishti run -i data/samples/pedestrians_15s.mp4 \
+arten doctor
+arten run -i data/samples/pedestrians_15s.mp4 \
   -o results/pi_run --save-video
-namma-drishti benchmark --input data/samples/bengaluru_traffic.jpg --runs 50
+arten benchmark --input data/samples/bengaluru_traffic.jpg --runs 50
 ```
 
 `setup_pi.sh` creates a venv, installs the pinned ExecuTorch 1.1.0 + CPU PyTorch
@@ -121,7 +121,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements-dev.txt
 pip install -e .
-namma-drishti doctor
+arten doctor
 make demo
 ```
 
@@ -132,29 +132,29 @@ to match Arm's model card. Both are exercised by the report.
 
 ```bash
 # One clip, all six categories, annotated video + evidence bundle
-namma-drishti run -i clip.mp4 -o results/clip --save-video
+arten run -i clip.mp4 -o results/clip --save-video
 
 # One image
-namma-drishti run -i street.jpg -o results/street --annotate-every 1
+arten run -i street.jpg -o results/street --annotate-every 1
 
 # A folder of 10–20 images (the other allowed input mode)
-namma-drishti run -i data/images/ -o results/images --annotate-every 1
+arten run -i data/images/ -o results/images --annotate-every 1
 
 # Faster survey: every second frame, 100 frames max
-namma-drishti run -i clip.mp4 -o results/fast --stride 2 --max-frames 100
+arten run -i clip.mp4 -o results/fast --stride 2 --max-frames 100
 
 # Attributes + optional coarse vehicle-colour estimates
-namma-drishti run -i clip.mp4 -o results/attrs --estimate-vehicle-colors
+arten run -i clip.mp4 -o results/attrs --estimate-vehicle-colors
 
 # Optional manual zone audit (descriptive co-presence only)
-namma-drishti run -i clip.mp4 -o results/zone \
+arten run -i clip.mp4 -o results/zone \
   --zone examples/selected_area.json
 
 # Model-only latency, 50 measured runs after 10 warmups
-namma-drishti benchmark --input street.jpg --runs 50 --warmup 10
+arten benchmark --input street.jpg --runs 50 --warmup 10
 
 # Model and runtime metadata
-namma-drishti info --json
+arten info --json
 ```
 
 Every run writes:
@@ -204,7 +204,7 @@ against the expected transform.
 
 | # | Requirement | Artifact |
 |---|---|---|
-| 1 | Process an organiser 10–20 s clip **or** 10–20 images on ExecuTorch + Pi | `data/samples/pedestrians_15s.mp4`; `namma-drishti run`; `results/demo_pedestrians/` |
+| 1 | Process an organiser 10–20 s clip **or** 10–20 images on ExecuTorch + Pi | `data/samples/pedestrians_15s.mp4`; `arten run`; `results/demo_pedestrians/` |
 | 2 | Detect at least one category and display counts per frame | `counts.csv`, `summary.txt`, HUD in `annotated/` |
 | 3 | Submit category + counts + at least two sample outputs | `results/demo_pedestrians/contact_sheet.jpg`, `results/demo_traffic/annotated/bengaluru_traffic.jpg`, `results/demo_street/annotated/bengaluru_street.jpg` |
 | 4 | Report average inference time, model and approximate throughput | `results/demo_pedestrians/summary.json` → `latency`, `throughput`; `results/benchmark_dev.json` |
@@ -217,7 +217,7 @@ The full mapping, including what to say at the booth, is in
 
 ```
 .
-├── src/namma_drishti/        # package: preprocess, model, decode, tracker, attributes, zone, pipeline
+├── src/arten/        # package: preprocess, model, decode, tracker, attributes, zone, pipeline
 ├── tests/                    # 29 unit tests for preprocessing, NMS, tracking, attributes, zone, metrics
 ├── scripts/
 │   ├── setup_pi.sh           # one-command Pi setup

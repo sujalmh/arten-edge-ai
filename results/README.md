@@ -24,11 +24,11 @@ quoted in the docs come from Arm's model card, not from these runs.
 
 ## Important labels
 
-- The dev host is **Apple Silicon macOS**, not a Raspberry Pi. Its 20 ms
+- The dev host is **Apple Silicon macOS**, not a Raspberry Pi. Its ~22 ms
   inference number is useful for pipeline validation only.
 - Arm's model card reports **134.10 ms p50 / 7.46 FPS** on a Raspberry Pi 5.
   That is the number to quote for the target device until the team runs
-  `namma-drishti benchmark` on the actual Pi.
+  `arten benchmark` on the actual Pi.
 - Unique counts in the pedestrian run are **indicative** (IoU/velocity tracker),
   not a production multi-object-tracking result.
 - Direction is image-plane; speed is uncalibrated pixels/second; colour is a

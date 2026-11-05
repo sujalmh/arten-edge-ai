@@ -1,4 +1,4 @@
-"""Command-line interface for Namma Drishti."""
+"""Command-line interface for Arten."""
 
 from __future__ import annotations
 
@@ -42,14 +42,14 @@ def _default_output() -> Path:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="namma-drishti",
+        prog="arten",
         description=(
             "Offline edge object detection and counting with ExecuTorch. "
             "Process a video or images, get per-frame counts, annotated "
             "evidence, and latency numbers."
         ),
     )
-    parser.add_argument("--version", action="version", version="namma-drishti 1.0.0")
+    parser.add_argument("--version", action="version", version="arten 1.0.0")
     sub = parser.add_subparsers(dest="command", required=True)
 
     run = sub.add_parser("run", help="process a video or images")
@@ -186,7 +186,7 @@ def cmd_info(args: argparse.Namespace) -> int:
 
 def cmd_doctor(args: argparse.Namespace) -> int:
     ok = True
-    print("\nNamma Drishti — environment check\n")
+    print("\nArten — environment check\n")
     print(f"  machine      {platform.machine()}")
     print(f"  platform     {platform.platform()}")
     print(f"  python       {platform.python_version()}")
@@ -220,7 +220,7 @@ def cmd_doctor(args: argparse.Namespace) -> int:
         print("\nFix the items above, then run `bash scripts/setup_pi.sh` if needed.\n")
         return 1
     print("\nAll checks passed. Try:")
-    print(f"  namma-drishti run -i {sample} --save-video\n")
+    print(f"  arten run -i {sample} --save-video\n")
     return 0
 
 

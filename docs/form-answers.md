@@ -8,9 +8,9 @@ text. Keep the numbers consistent with the repository.
 
 ## Project title
 
-**Namma Drishti — offline edge detection and counting for safer streets**
+**Arten — Edge Object Detection, Counting & Attributes**
 
-Alternative if a shorter title is needed: **Namma Drishti — count movement, not people.**
+Alternative if a shorter title is needed: **Arten — count movement, not people.**
 
 ## Problem statement
 
@@ -18,7 +18,7 @@ Alternative if a shorter title is needed: **Namma Drishti — count movement, no
 
 ## 50-word elevator pitch
 
-Namma Drishti turns a 15-second street clip into offline, privacy-preserving
+Arten turns a 15-second street clip into offline, privacy-preserving
 counts of pedestrians and vehicles on a Raspberry Pi. Using an Arm-optimized
 YOLO11n INT8 model in ExecuTorch, it runs at 7.46 FPS with no cloud, GPU or
 identities — evidence for safer crossings, not surveillance.
@@ -28,7 +28,7 @@ identities — evidence for safer crossings, not surveillance.
 Road traffic injuries are the leading cause of death for young people aged 5–29.
 India recorded 1,68,491 road deaths in 2022; pedestrians were 19.5% and
 two-wheeler riders 44.5%. The missing ingredient for safer streets is not more
-cameras — it is an affordable way to count movement. Namma Drishti is an offline
+cameras — it is an affordable way to count movement. Arten is an offline
 edge-AI PoC that processes a 10–20 second clip or images on a Raspberry Pi 5.
 A 4.73 MB YOLO11n INT8 model runs through ExecuTorch with XNNPACK at 7.46 FPS,
 detecting people, cars, motorcycles, buses, trucks and bicycles. It outputs
@@ -39,7 +39,7 @@ dismissal-time clips and make a case for a crossing guard or zebra crossing.
 
 ## 300-word solution description
 
-Namma Drishti is a lightweight, offline object-detection and counting PoC built
+Arten is a lightweight, offline object-detection and counting PoC built
 for the Namma AI Hackathon's safer-communities problem statement. It takes one
 10–20 second clip or a folder of 10–20 images and produces per-frame counts for
 six categories: person, bicycle, car, motorcycle, bus and truck.
@@ -67,6 +67,31 @@ The repository already contains a working pipeline, 29 tests, a one-command Pi
 setup, a checksum-verified model, evidence bundles and a 21-second demo. At the finals we will
 run the organiser clip on the Pi and replace the reference numbers with on-device
 measurements.
+
+
+## Approach and overall plan (application answer)
+
+**Approach.** Treat the street clip as an evidence problem, not a surveillance
+problem. We run a 4.73 MB YOLO11n INT8 ExecuTorch model entirely on a Raspberry
+Pi 5 CPU, at Arm's verified 134.10 ms p50 / 7.46 FPS. The pipeline letterboxes
+to 640×640, runs the `.pte` through XNNPACK, decodes the 4 xywh + 80 class
+outputs, applies per-class NMS, and writes per-frame counts plus annotated
+frames. We then add a deliberately non-learned attribute layer on the same
+tracker: image-plane direction, dwell time, relative speed and optional coarse
+vehicle colour. Outputs are `counts.csv`, `detections.jsonl`,
+`attribute_tracks.csv`, `attribute_summary.json`, a contact sheet, an optional
+annotated video, and p50/p95 latency. No cloud, no identity extraction, no
+second model.
+
+**Overall plan (one-day finals).** 0:00–0:45 verify the Pi, run
+`setup_pi.sh`, `doctor` and a smoke test. 0:45–1:30 run the organiser clip and
+inspect counts/attributes on a few frames. 1:30–2:30 freeze confidence, IoU and
+stride. 2:30–3:30 run the full clip, benchmark 50 runs, save the evidence
+bundle. 3:30–4:30 fill the report, regenerate the contact sheet and update the
+numbers. 4:30–5:30 rehearse the two-minute pitch and prepare a USB backup.
+5:30–6:00 buffer and submission. Fallbacks: prebuilt model, FP32 export path,
+pre-generated evidence, and the exact Pi runtime stack already smoke-tested on
+the dev host.
 
 ## 500-word technical approach
 
@@ -171,8 +196,8 @@ movement, prioritise one intervention, measure again.
 
 ## GitHub / demo links
 
-- GitHub: https://github.com/sujalmh/namma-drishti
-- Demo video: https://github.com/sujalmh/namma-drishti/releases/download/v1.0.0/demo.mp4
+- GitHub: https://github.com/sujalmh/arten-edge-ai
+- Demo video: https://github.com/sujalmh/arten-edge-ai/releases/download/v1.0.0/demo.mp4
 - Proposal: `docs/proposal.md`
 - Technical report: `docs/report.md`
 - Two-minute pitch: `docs/pitch-2min.md`

@@ -4,7 +4,7 @@
 This is a convenience for the proposal/demo video, not part of the mandatory
 PoC. The annotated clip is produced by:
 
-    namma-drishti run -i data/samples/pedestrians_15s.mp4 \
+    arten run -i data/samples/pedestrians_15s.mp4 \
         --save-video -o results/demo_pedestrians
 """
 
@@ -16,7 +16,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-from namma_drishti.visualize import make_title_card
+from arten.visualize import make_title_card
 
 ROOT = Path(__file__).resolve().parents[1]
 RUN = ROOT / "results" / "demo_pedestrians"
@@ -95,8 +95,8 @@ def main() -> int:
         end = Path(tmp) / "demo_end.png"
         make_title_card(
             title,
-            "Namma Drishti",
-            "Offline edge counting for safer streets",
+            "Arten",
+            "Edge Object Detection, Counting & Attributes",
             "ExecuTorch  ·  YOLO11n INT8  ·  target: Raspberry Pi 5  ·  dev preview",
         )
         make_title_card(

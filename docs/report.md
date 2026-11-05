@@ -1,6 +1,8 @@
-# Namma Drishti — Technical Report
+# Arten
 
-**Offline edge object detection and counting for safer streets**
+### Edge Object Detection, Counting & Attributes
+
+**Technical report** · Offline edge AI for safer streets
 
 Namma AI Hackathon 2026 · Problem Statement 2 · [Team name] · [College / organisation]
 
@@ -8,7 +10,7 @@ Namma AI Hackathon 2026 · Problem Statement 2 · [Team name] · [College / orga
 
 ## Abstract
 
-Namma Drishti is a functional edge-AI proof of concept that detects and counts
+Arten is a functional edge-AI proof of concept that detects and counts
 pedestrians and vehicles in a short street clip or a set of images, entirely on a
 Raspberry Pi. It uses an Arm-optimized YOLO11n INT8 ExecuTorch model (4.73 MB)
 running on the CPU through XNNPACK. The system writes per-frame counts, an
@@ -64,7 +66,7 @@ resident welfare association.
 1. Record three 15-second clips at the same gate: morning drop-off, afternoon
    dismissal and a quiet hour. Use a phone, a fixed viewpoint and the same
    direction.
-2. Run each clip on the Pi with `namma-drishti run`. No internet is required.
+2. Run each clip on the Pi with `arten run`. No internet is required.
 3. Compare:
    - peak concurrent pedestrians and vehicles,
    - mean counts per frame,
@@ -246,7 +248,7 @@ Each run writes:
 ### 5.1 Repository
 
 ```
-src/namma_drishti/
+src/arten/
   constants.py      COCO labels, default classes, model metadata
   preprocess.py     letterbox, EXIF-aware image read, inverse transform
   postprocess.py    decode, NumPy NMS, per-class counts
@@ -280,18 +282,18 @@ The script:
 - installs `executorch==1.1.0` with `--no-deps` (avoiding the x86-only
   `coremltools` dependency) and then installs the package editable;
 - downloads the model if absent and verifies the SHA-256;
-- runs `namma-drishti doctor`.
+- runs `arten doctor`.
 
 The prebuilt model is committed, so the core demo does not need a download.
 
 ### 5.3 CLI
 
 ```bash
-namma-drishti run -i clip.mp4 -o results/clip --save-video
-namma-drishti run -i images/ -o results/images --annotate-every 1
-namma-drishti benchmark --input street.jpg --runs 50 --warmup 10
-namma-drishti info --json
-namma-drishti doctor
+arten run -i clip.mp4 -o results/clip --save-video
+arten run -i images/ -o results/images --annotate-every 1
+arten benchmark --input street.jpg --runs 50 --warmup 10
+arten info --json
+arten doctor
 ```
 
 `run` accepts `--classes`, `--conf`, `--iou`, `--stride`, `--max-frames`,
@@ -356,7 +358,7 @@ These are stated explicitly so the results are not over-read.
 Command:
 
 ```bash
-namma-drishti run -i data/samples/pedestrians_15s.mp4 \
+arten run -i data/samples/pedestrians_15s.mp4 \
   -o results/demo_pedestrians --save-video --annotate-every 10
 ```
 
@@ -433,12 +435,12 @@ Pipeline run (150 frames):
 
 | Stage | Mean ms | p50 ms | p95 ms | FPS from mean |
 |---|---:|---:|---:|---:|
-| Model inference | 20.99 | 20.84 | 21.78 | 47.63 |
-| Preprocess | 0.66 | 0.57 | 0.69 | 1525.59 |
-| Decode + NMS | 0.78 | 0.75 | 0.84 | 1285.70 |
-| Frame read | 0.19 | 0.16 | 0.21 | 5272.24 |
-| Annotate/save | 3.24 | 3.14 | 4.08 | 309.01 |
-| **Pipeline total** | **26.19** | **25.86** | **27.27** | **38.19** |
+| Model inference | 21.79 | 21.70 | 22.85 | 45.90 |
+| Preprocess | 0.70 | 0.66 | 0.90 | 1431.88 |
+| Decode + NMS | 0.94 | 0.88 | 1.02 | 1061.10 |
+| Frame read | 0.21 | 0.17 | 0.24 | 4818.64 |
+| Annotate/save | 3.43 | 3.25 | 4.20 | 291.60 |
+| **Pipeline total** | **27.40** | **27.14** | **28.48** | **36.49** |
 
 Standalone benchmark (50 runs, 10 warmups, real traffic image):
 
@@ -486,7 +488,7 @@ These are projections from the reference latency, not measured clip runtimes.
 | COCO accuracy | 38.90% mAP@0.5:0.95 | Arm model card |
 | Committed clip counts | 150 frames, peak 9 people, 18 tracked people | This repo |
 | Committed clip attributes | 9 left / 4 right / 2 stationary / 2 down / 1 up; mean dwell 4.5 s | This repo |
-| Dev-host model latency (1.5.1) | 20.34 ms mean / 49.16 FPS (standalone); 20.99 ms in the 150-frame attribute run | This repo, labelled dev |
+| Dev-host model latency (1.5.1) | 20.34 ms mean / 49.16 FPS (standalone); 21.79 ms in the 150-frame attribute run | This repo, labelled dev |
 | Exact Pi stack on dev host (1.1.0) | 23.83 ms mean / 22.52 ms p50 / 41.96 FPS | `results/benchmark_pi_stack_dev.json` |
 | Tests | 29 passing | This repo |
 
@@ -582,10 +584,10 @@ and prefer aggregate outputs. Power consumption was not measured; a Pi 5 with a
 # Pi
 bash scripts/setup_pi.sh
 source .venv/bin/activate
-namma-drishti doctor
-namma-drishti run -i data/samples/pedestrians_15s.mp4 \
+arten doctor
+arten run -i data/samples/pedestrians_15s.mp4 \
   -o results/pi_run --save-video
-namma-drishti benchmark --input data/samples/bengaluru_traffic.jpg --runs 50
+arten benchmark --input data/samples/bengaluru_traffic.jpg --runs 50
 
 # Development host
 pip install -r requirements-dev.txt
@@ -617,7 +619,7 @@ make demo
 
 ## 12. Conclusion
 
-Namma Drishti demonstrates that a 4.73 MB INT8 ExecuTorch model on a CPU-only
+Arten demonstrates that a 4.73 MB INT8 ExecuTorch model on a CPU-only
 Raspberry Pi 5 can count pedestrians and vehicles in a short street clip at 7.46
 FPS, with no cloud and no identities. The PoC ships a complete evidence bundle,
 a one-command Pi setup, 29 tests, on-device motion/colour attributes and an
@@ -653,23 +655,23 @@ counts against a manual ground truth.
 
 ```bash
 # Pedestrian clip (video, tracking, annotated video)
-namma-drishti run -i data/samples/pedestrians_15s.mp4 \
+arten run -i data/samples/pedestrians_15s.mp4 \
   -o results/demo_pedestrians --save-video --annotate-every 10
 
 # Dense traffic image
-namma-drishti run -i data/samples/bengaluru_traffic.jpg \
+arten run -i data/samples/bengaluru_traffic.jpg \
   -o results/demo_traffic --annotate-every 1 --no-track
 
 # Street image
-namma-drishti run -i data/samples/bengaluru_street.jpg \
+arten run -i data/samples/bengaluru_street.jpg \
   -o results/demo_street --annotate-every 1 --no-track
 
 # Attributes + coarse vehicle-colour estimates
-namma-drishti run -i data/samples/bengaluru_traffic.jpg \
+arten run -i data/samples/bengaluru_traffic.jpg \
   -o results/demo_traffic --annotate-every 1 --no-track --estimate-vehicle-colors
 
 # Model-only benchmark
-namma-drishti benchmark --input data/samples/bengaluru_traffic.jpg \
+arten benchmark --input data/samples/bengaluru_traffic.jpg \
   --runs 50 --warmup 10 --output results/benchmark_dev.json
 
 # Demo video

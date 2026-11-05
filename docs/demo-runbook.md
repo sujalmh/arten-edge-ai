@@ -11,7 +11,7 @@ deliverables cleanly and leave a traceable evidence bundle.
 - [ ] Flash a 64-bit Raspberry Pi OS image; boot it once; set username, Wi-Fi,
       SSH and locale.
 - [ ] Clone the repo on the Pi, run `bash scripts/setup_pi.sh`, then
-      `namma-drishti doctor`.
+      `arten doctor`.
 - [ ] Run the pedestrian demo once end-to-end; confirm `annotated.mp4` and
       `summary.txt`.
 - [ ] Copy the model, repo, a wheel cache and the evidence bundles to a USB
@@ -33,21 +33,21 @@ deliverables cleanly and leave a traceable evidence bundle.
    ```
 4. Activate the venv and run the doctor:
    ```bash
-   cd namma-drishti
+   cd arten
    source .venv/bin/activate
-   namma-drishti doctor
+   arten doctor
    ```
 5. If the venv is missing, run `bash scripts/setup_pi.sh` (5–10 min). If the
    network is down, restore the prebuilt venv from the USB stick.
 6. Run the 10-frame smoke test:
    ```bash
-   namma-drishti run -i data/samples/pedestrians_15s.mp4 \
+   arten run -i data/samples/pedestrians_15s.mp4 \
      -o results/smoke --max-frames 10 --annotate-every 5 --quiet
    ```
 7. Confirm the summary says `checksum OK` and the model latency is plausible
    (Pi 5: roughly 120–150 ms; Pi 4: higher).
 
-**If it fails:** check `namma-drishti doctor`, the model path, the Python
+**If it fails:** check `arten doctor`, the model path, the Python
 version and the ExecuTorch version. Do not debug for more than 10 minutes before
 switching to the backup evidence and the dev host.
 
@@ -62,7 +62,7 @@ switching to the backup evidence and the dev host.
    ```
 3. Run a 20-frame reconnaissance pass:
    ```bash
-   namma-drishti run -i data/organiser/clip.mp4 \
+   arten run -i data/organiser/clip.mp4 \
      -o results/organiser_recon --max-frames 20 --annotate-every 5
    ```
 4. Look at 3 annotated frames. Ask:
@@ -87,12 +87,12 @@ cherry-picking.
 
 ```bash
 # Full clip, annotated video, evidence bundle
-namma-drishti run -i data/organiser/clip.mp4 \
+arten run -i data/organiser/clip.mp4 \
   -o results/organiser_final --save-video --annotate-every 10 \
   --estimate-vehicle-colors
 
 # Model-only latency, 50 runs
-namma-drishti benchmark --input data/organiser/frame.jpg \
+arten benchmark --input data/organiser/frame.jpg \
   --runs 50 --warmup 10 --output results/benchmark_pi5.json
 ```
 
@@ -138,11 +138,11 @@ Copy the whole `results/organiser_final/` to the USB stick.
 
 ## Troubleshooting
 
-### `namma-drishti: command not found`
+### `arten: command not found`
 
 ```bash
 source .venv/bin/activate
-python -m namma_drishti doctor
+python -m arten doctor
 ```
 
 If the package is missing: `pip install -e . --no-deps`.
@@ -159,7 +159,7 @@ If the network is down, restore the prebuilt venv from the USB stick.
 
 - Confirm the model path and checksum.
 - Confirm `executorch==1.1.0` on the Pi.
-- Try `python -m namma_drishti info`.
+- Try `python -m arten info`.
 - If it still fails, use the FP32 export fallback or the dev-host evidence.
 
 ### Video opens but no frames are read

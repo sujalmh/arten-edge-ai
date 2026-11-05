@@ -1,7 +1,7 @@
 # Research notes — Namma AI Hackathon, Problem Statement 2
 
 **Prepared:** 4 November 2026
-**Purpose:** shortlisting research and technical decisions for the Namma Drishti
+**Purpose:** shortlisting research and technical decisions for the Arten
 submission. This is a working document, not the submission itself.
 
 ---
@@ -52,7 +52,7 @@ The organisers do not publish a scoring rubric. The following signals are
 inferred directly from the brief and the programme page; treat them as a
 screening lens, not a guaranteed rubric.
 
-| Signal | What it means in practice | How Namma Drishti answers |
+| Signal | What it means in practice | How Arten answers |
 |---|---|---|
 | Societal relevance | A specific, credible problem — not “AI for good” in general | School-zone pedestrian/vehicle exposure; India road-death data; ward-level decision |
 | Technical fit | ExecuTorch on Raspberry Pi, not a laptop or cloud API | Arm-optimized `.pte`, ExecuTorch runtime, CPU-only XNNPACK, Pi setup script |
@@ -166,7 +166,7 @@ Typical hackathon submissions for this brief tend to fall into four patterns:
 4. **Dashboard-first.** A polished UI with weak measurement and no evidence
    bundle; the mandatory counts/latency story gets lost.
 
-Namma Drishti deliberately inverts the priorities:
+Arten deliberately inverts the priorities:
 
 - **Edge artifact first:** a target-verified INT8 `.pte`, not a laptop script.
 - **Measurement first:** model-only and pipeline latency, p50/p95, separate
@@ -213,7 +213,7 @@ The proposal is a high-level document. It should answer, in order:
 
 If a judge remembers only one sentence, it should be:
 
-> **Namma Drishti counts pedestrians and vehicles offline on a sub-₹10,000 Raspberry
+> **Arten counts pedestrians and vehicles offline on a sub-₹10,000 Raspberry
 > Pi, so a school can justify a crossing guard without buying a surveillance
 > system.**
 

@@ -1,4 +1,4 @@
-from namma_drishti.metrics import (
+from arten.metrics import (
     frames_with_both,
     person_seconds,
     summarise_latencies,

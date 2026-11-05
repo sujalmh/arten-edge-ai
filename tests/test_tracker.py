@@ -1,5 +1,5 @@
-from namma_drishti.postprocess import Detection
-from namma_drishti.tracker import IoUTracker
+from arten.postprocess import Detection
+from arten.tracker import IoUTracker
 
 
 def det(name, box, score=0.9, class_id=0):

@@ -16,6 +16,8 @@ from .constants import (
     DEFAULT_MODEL_PATH,
     INPUT_SIZE,
     MODEL_NAME,
+    PROJECT_NAME,
+    PROJECT_TAGLINE,
     PI5_REFERENCE,
     VEHICLE_CLASSES,
 )
@@ -277,7 +279,7 @@ def run_input(
     tracker = IoUTracker() if (track and is_video) else None
     attribute_acc = AttributeAccumulator() if (attributes or estimate_vehicle_colors) else None
     if not quiet:
-        print(f"\nNamma Drishti · {MODEL_NAME}")
+        print(f"\nArten · {MODEL_NAME}")
         print(f"  model     {Path(model_path).name} ({detector.model_size_mb:.2f} MB)")
         print(f"  runtime   ExecuTorch {detector.executorch_version} · torch {detector.torch_version}")
         print(f"  input     {input_path}")
@@ -592,8 +594,8 @@ def run_input(
 
     model_info = detector.info()
     summary = {
-        "project": "Namma Drishti",
-        "tagline": "Offline edge detection and counting for safer streets",
+        "project": PROJECT_NAME,
+        "tagline": PROJECT_TAGLINE,
         "run": {
             "input": str(input_path),
             "input_type": "video" if is_video else "images",
@@ -697,7 +699,7 @@ def run_input(
             make_contact_sheet(
                 frames,
                 output_dir / "contact_sheet.jpg",
-                title="Namma Drishti — per-frame detections",
+                title="Arten — per-frame detections",
                 subtitle=(
                     f"{Path(input_path).name} · {len(records)} frames · "
                     f"{', '.join(classes)}"

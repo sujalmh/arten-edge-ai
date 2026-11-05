@@ -2,8 +2,8 @@ import json
 
 import pytest
 
-from namma_drishti.postprocess import Detection
-from namma_drishti.zone import count_detections_in_zone, load_zone_profile, summarise_zone
+from arten.postprocess import Detection
+from arten.zone import count_detections_in_zone, load_zone_profile, summarise_zone
 
 
 def test_load_zone_profile_and_count_bottom_center(tmp_path):

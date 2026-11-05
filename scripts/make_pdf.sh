@@ -25,9 +25,9 @@ render() {
   echo "Wrote docs/${stem}.html"
 }
 
-render proposal.md "Namma Drishti — Proposal"
-render report.md "Namma Drishti — Technical Report"
-render judge-brief.md "Namma Drishti — Judge Brief"
+render proposal.md "Arten — Proposal"
+render report.md "Arten — Technical Report"
+render judge-brief.md "Arten — Judge Brief"
 
 CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 if [[ ! -x "$CHROME" ]]; then

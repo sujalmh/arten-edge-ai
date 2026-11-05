@@ -1,5 +1,7 @@
 # Two-minute pitch
 
+**Arten — Edge Object Detection, Counting & Attributes**
+
 **Goal:** make the judges remember one sentence — *count movement, not people* —
 and believe the PoC is real, measured and deployable.
 
@@ -28,7 +30,7 @@ terminal summary. Do not read slides.
 
 ## 0:30–0:52 — Solution
 
-> Namma Drishti is an offline edge counting kit. A 15-second clip goes in. A
+> Arten is an offline edge counting kit. A 15-second clip goes in. A
 > **4.7 MB** YOLO11n INT8 model runs through **ExecuTorch** on the Pi's CPU at
 > **7.5 frames per second**. Out come per-frame counts for people, cars,
 > motorcycles, buses and trucks. No cloud. No
@@ -42,7 +44,7 @@ terminal summary. Do not read slides.
 > frame is in the CSV. Each track also carries image-plane direction,
 > dwell time and relative speed; on vehicles, an optional coarse colour — nine
 > white cars, four silver, two blue on the traffic image. This host takes
-> **20 ms** per frame; Arm's Pi 5 reference is **134 ms**.
+> **22 ms** per frame; Arm's Pi 5 reference is **134 ms**.
 
 ## 1:15–1:35 — Rigour
 
@@ -60,7 +62,7 @@ terminal summary. Do not read slides.
 
 ## 1:55–2:00 — Close
 
-> Count movement, not people. Namma Drishti.
+> Count movement, not people. Arten.
 
 *Stop. Don't fill the silence.*
 

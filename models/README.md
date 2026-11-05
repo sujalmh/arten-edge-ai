@@ -45,7 +45,7 @@ Reference numbers from the model card (Raspberry Pi 5, Cortex-A76, 4 cores
 | mAP@0.5 | 54.66% |
 
 These are **reference** values, not measurements from this repository. Run
-`namma-drishti benchmark` on the actual Pi and replace the dev-host row in the
+`arten benchmark` on the actual Pi and replace the dev-host row in the
 report.
 
 ## I/O contract

@@ -33,7 +33,7 @@ before the live hackathon (14 November 2026).
 
 | Requirement | Evidence in repo | Check |
 |---|---|---|
-| Process a 10–20 s clip or 10–20 images on ExecuTorch + Pi | `data/samples/pedestrians_15s.mp4`; `namma-drishti run`; Pi setup script | [ ] |
+| Process a 10–20 s clip or 10–20 images on ExecuTorch + Pi | `data/samples/pedestrians_15s.mp4`; `arten run`; Pi setup script | [ ] |
 | Detect at least one category and show per-frame counts | `results/demo_pedestrians/counts.csv`; `summary.txt`; HUD | [ ] |
 | Submit category + counts + two sample outputs | Contact sheet + traffic image + street image | [ ] |
 | Report average inference time, model, throughput | `summary.json`; `benchmark_dev.json`; report §7 | [ ] |
@@ -50,8 +50,7 @@ The portal may ask for some or all of these. Drafts are in
 - [ ] Member names, emails, roles
 - [ ] College/organisation and nomination (students)
 - [ ] Problem statement selection: **Problem Statement 2**
-- [ ] Project title: **Namma Drishti — offline edge detection and counting for
-      safer streets**
+- [ ] Project title: **Arten — Edge Object Detection, Counting & Attributes**
 - [ ] 50-word elevator pitch
 - [ ] 150-word summary
 - [ ] 300-word solution description
