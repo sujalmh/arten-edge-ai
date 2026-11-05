@@ -10,10 +10,9 @@
 </p>
 
 <p align="center">
-  <a href="docs/proposal.md">Proposal</a> ·
-  <a href="docs/report.md">Technical report</a> ·
+  <a href="docs/report.md">Project report</a> ·
   <a href="docs/pitch-2min.md">2-minute pitch</a> ·
-  <a href="docs/judge-brief.md">Judge brief</a> ·
+  <a href="docs/form-answers.md">Form answers</a> ·
   <a href="docs/submission-checklist.md">Submission checklist</a> ·
   <a href="results/demo.mp4">Demo video</a>
 </p>
@@ -83,7 +82,7 @@ Why it matters: a school-zone audit can separate “40 people crossed” from �
 | Motion attributes (clip) | 18 tracks: **9 left, 4 right, 2 stationary, 2 down, 1 up** · mean dwell **4.5 s** · mean **35.6 px/s** | `results/demo_pedestrians/attribute_summary.json` |
 | Colour attributes (traffic image) | 17 cars: **9 white, 4 gray/silver, 2 blue, 1 red, 1 orange/brown** | `results/demo_traffic/attribute_summary.json` |
 
-> **Read the labels.** The Pi 5 numbers are Arm's published reference for the prebuilt model. The dev-host numbers are what this repository measured on an Apple Silicon machine. The repo includes the exact benchmark harness so the team can replace the dev row with an on-device Pi row at the finals. We do not present dev-host numbers as Pi performance.
+> **Read the labels.** The Pi 5 numbers are Arm's published reference for the prebuilt model. The dev-host numbers are what this repository measured on an Apple Silicon machine. The repo includes the exact benchmark harness so the final Pi run can replace the dev row at the event. We do not present dev-host numbers as Pi performance.
 
 <p align="center">
   <img src="results/demo_traffic/annotated/bengaluru_traffic.jpg" width="49%" alt="Bengaluru traffic detections">
@@ -208,7 +207,7 @@ against the expected transform.
 | 2 | Detect at least one category and display counts per frame | `counts.csv`, `summary.txt`, HUD in `annotated/` |
 | 3 | Submit category + counts + at least two sample outputs | `results/demo_pedestrians/contact_sheet.jpg`, `results/demo_traffic/annotated/bengaluru_traffic.jpg`, `results/demo_street/annotated/bengaluru_street.jpg` |
 | 4 | Report average inference time, model and approximate throughput | `results/demo_pedestrians/summary.json` → `latency`, `throughput`; `results/benchmark_dev.json` |
-| 5 | Explain societal issue, how counting helps, one practical application (≤2 min) | `docs/pitch-2min.md`; `docs/report.md` §1 and §7 |
+| 5 | Explain societal issue, how counting helps, one practical application (≤2 min) | `docs/pitch-2min.md`; `docs/report.md` §1 |
 
 The full mapping, including what to say at the booth, is in
 [`docs/submission-checklist.md`](docs/submission-checklist.md).
@@ -228,7 +227,7 @@ The full mapping, including what to say at the booth, is in
 ├── models/                   # 4.73 MB INT8 .pte, model card, AGPL notice
 ├── data/samples/             # 15 s pedestrian clip + two CC0/PD Bengaluru images
 ├── results/                  # committed evidence bundles and demo video
-├── docs/                     # proposal, report, pitch, research, checklist
+├── docs/                     # project report, pitch, form answers, research, checklist
 └── assets/                   # icon and architecture diagram
 ```
 
@@ -282,19 +281,15 @@ The full mapping, including what to say at the booth, is in
   permissively licensed detector and re-export; the CLI accepts any YOLO-style
   `.pte` output.
 
-## Team
+## Author
 
-Built for the **Namma AI Hackathon — AI for Safer Communities** (Problem
-Statement 2), 14 November 2026, Bengaluru.
+**Sujal M H** — solo participant. Designed and built the edge pipeline, model
+integration, attribute layer, evaluation, evidence and pitch for the
+**Namma AI Hackathon 2026 — AI for Safer Communities** (Problem Statement 2),
+14 November 2026, Bengaluru.
 
-- `[Team name]`
-- `[Member 1 — role]`
-- `[Member 2 — role]`
-- `[Member 3 — role]`
-- `[College / organisation]`
-
-Replace the placeholders before submitting. The proposal and form-answer drafts
-are in [`docs/proposal.md`](docs/proposal.md) and
+The project report and form-answer drafts are in
+[`docs/report.md`](docs/report.md) and
 [`docs/form-answers.md`](docs/form-answers.md).
 
 ## Credits

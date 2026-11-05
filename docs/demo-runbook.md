@@ -18,8 +18,7 @@ deliverables cleanly and leave a traceable evidence bundle.
       stick.
 - [ ] Charge the laptop and phone; pack the power supply, HDMI adapter and
       Ethernet cable.
-- [ ] Print two copies of `docs/proposal.md` (or the PDF) and the mandatory
-      deliverable table.
+- [ ] Print two copies of `docs/report.pdf` and the mandatory deliverable table.
 
 ## 1. Arrival and setup (0:00–0:45)
 
@@ -192,13 +191,14 @@ Keep the final bundle and the USB copy.
 
 ---
 
-## Division of labour (3 people)
+## Solo runbook
 
-| Person | During setup | During run | During pitch |
-|---|---|---|---|
-| A | Pi OS, power, venv | Run CLI, benchmark, copy evidence | Demo operator |
-| B | Repo, model, checksum | Inspect frames, tune threshold, fill report | Numbers and caveats |
-| C | Laptop, USB, printouts | Build contact sheet/video, update README | Narrator |
+You are the operator, analyst and narrator. Work in this order:
 
-If you are a team of one, do A and B first and rehearse C while the final run
-is processing.
+1. Finish setup and the smoke test before touching the organiser clip.
+2. Start the final run, then use the processing time to fill the report tables
+   and prepare the contact sheet.
+3. Stop, inspect the annotated frames and the CSV, and freeze the numbers.
+4. Rehearse the two-minute pitch once with the demo video, then keep the CSV
+   and one annotated frame open as backup.
+5. Leave the last 30 minutes for a rerun, export and USB copy.

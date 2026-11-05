@@ -12,7 +12,7 @@ help:
 	@echo "  make demo-video  build results/demo.mp4 from the pedestrian run"
 	@echo "  make info        show model/runtime information"
 	@echo "  make doctor      check the environment"
-	@echo "  make pdf         render docs/proposal.html to docs/proposal.pdf"
+	@echo "  make pdf         render docs/report.html to docs/report.pdf"
 	@echo "  make clean       remove caches (keeps results)"
 
 setup:

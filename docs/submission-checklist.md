@@ -1,17 +1,15 @@
 # Submission checklist
 
-Use this before submitting the proposal (deadline **6 November 2026**) and again
-before the live hackathon (14 November 2026).
+Use this before submitting the application (deadline **6 November 2026**) and
+again before the live hackathon (14 November 2026).
 
 ---
 
 ## A. Five-minute pre-submit check
 
-- [ ] Team name, member names, roles and college/organisation replaced in
-      `README.md`, `docs/proposal.md`, `docs/report.md` and
-      `docs/form-answers.md`.
-- [ ] GitHub repository is **public** and the URL is inserted in the proposal and
-      the form.
+- [ ] Author is **Sujal M H**, solo participant, in `README.md`,
+      `docs/report.md` and `docs/form-answers.md`.
+- [ ] GitHub repository is **public** and the URL is inserted in the form.
 - [ ] `README.md` renders correctly on GitHub: images load, links resolve, and
       the clone URL points to the public repository.
 - [ ] `results/demo.mp4` plays in a browser (H.264, 21 s, 1280×720).
@@ -21,13 +19,13 @@ before the live hackathon (14 November 2026).
       `results/demo_traffic/attribute_summary.json` are present.
 - [ ] `make test` passes (29 tests).
 - [ ] `make doctor` passes on the development host.
-- [ ] `docs/proposal.pdf` is generated and opens; check page breaks and images.
+- [ ] `docs/report.pdf` is generated and opens; check page breaks and images.
 - [ ] No secrets, API keys, personal phone numbers or private paths in the repo.
 - [ ] `.venv/`, `__pycache__/`, raw downloads and scratch results are ignored.
 - [ ] Model licence notice (`models/LICENSE-AGPL-3.0.txt`) and repo `LICENSE`
       are present.
 - [ ] Sample-media attribution is present in `data/README.md`.
-- [ ] The proposal's claims match the repository's numbers and labels.
+- [ ] The report's claims match the repository's numbers and labels.
 
 ## B. Mandatory deliverables map
 
@@ -36,8 +34,8 @@ before the live hackathon (14 November 2026).
 | Process a 10–20 s clip or 10–20 images on ExecuTorch + Pi | `data/samples/pedestrians_15s.mp4`; `arten run`; Pi setup script | [ ] |
 | Detect at least one category and show per-frame counts | `results/demo_pedestrians/counts.csv`; `summary.txt`; HUD | [ ] |
 | Submit category + counts + two sample outputs | Contact sheet + traffic image + street image | [ ] |
-| Report average inference time, model, throughput | `summary.json`; `benchmark_dev.json`; report §7 | [ ] |
-| Explain society, help, one application (≤2 min) | `docs/pitch-2min.md`; report §1, §7 | [ ] |
+| Report average inference time, model, throughput | `summary.json`; `benchmark_dev.json`; report §4.4 | [ ] |
+| Explain society, help, one application (≤2 min) | `docs/pitch-2min.md`; report §1, §5 | [ ] |
 | **Differentiator:** attributes alongside detections | `attribute_tracks.csv`; `attribute_summary.json`; README “Standout” | [ ] |
 
 ## C. Form-field checklist
@@ -45,10 +43,10 @@ before the live hackathon (14 November 2026).
 The portal may ask for some or all of these. Drafts are in
 [`form-answers.md`](form-answers.md).
 
-- [ ] Team name
-- [ ] Team leader name, email, phone
-- [ ] Member names, emails, roles
-- [ ] College/organisation and nomination (students)
+- [ ] Author: **Sujal M H**
+- [ ] Team size: **1 (solo participant)**
+- [ ] Email and phone
+- [ ] College/organisation and nomination (if a student)
 - [ ] Problem statement selection: **Problem Statement 2**
 - [ ] Project title: **Arten — Edge Object Detection, Counting & Attributes**
 - [ ] 50-word elevator pitch
@@ -62,7 +60,7 @@ The portal may ask for some or all of these. Drafts are in
 - [ ] Demo video URL or file
 - [ ] Declaration / eligibility confirmation
 
-## D. Proposal quality checklist
+## D. Report quality checklist
 
 - [ ] The first 100 words name a specific user and a specific decision, not
       “smart cities”.
@@ -75,7 +73,7 @@ The portal may ask for some or all of these. Drafts are in
 - [ ] The COCO/India gap and small-object failure are named.
 - [ ] The privacy position is clear: no identities, no cloud.
 - [ ] The 6-hour plan is realistic and has fallbacks.
-- [ ] The team roles are filled.
+- [ ] The report names Sujal M H as the sole author.
 - [ ] The 2-minute script fits the time limit when read aloud.
 - [ ] There is no claim of accuracy on data that was not measured.
 
@@ -111,8 +109,7 @@ The portal may ask for some or all of these. Drafts are in
 - [ ] Backup of `results/demo.mp4` and `results/demo_pedestrians/`
 
 **Presentation**
-- [ ] Printed `docs/judge-brief.pdf` (2 copies)
-- [ ] Printed `docs/proposal.pdf` (2 copies)
+- [ ] Printed `docs/report.pdf` (2 copies)
 - [ ] Printed mandatory-deliverable table
 - [ ] Laptop with the demo video and report
 - [ ] Timer for the 2-minute pitch
@@ -134,5 +131,5 @@ The portal may ask for some or all of these. Drafts are in
 - [ ] Push the final Pi run and the organiser-clip evidence to GitHub.
 - [ ] Replace the dev-host row in `README.md` and `docs/report.md` with the
       on-device numbers.
-- [ ] Add a short “what we learned” note to the report.
+- [ ] Add a short “what I learned” note to the report.
 - [ ] Keep the model checksum and licence notice with the final tag.

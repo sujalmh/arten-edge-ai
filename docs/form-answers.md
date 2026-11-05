@@ -131,8 +131,8 @@ decode/NMS, tracking, attribute extraction and annotation times separately,
 then reports mean, p50,
 p95 and p99. Throughput is reported twice — model-only FPS and full-pipeline FPS
 — and never conflated. The report distinguishes the Pi 5 reference numbers from
-the development-host numbers; the team replaces the dev row with an on-device row
-at the finals.
+the development-host numbers; the final Pi run replaces the dev row with an on-device row
+at the event.
 
 **Reproducibility.** The model is committed and checksum-verified. `setup_pi.sh`
 pins ExecuTorch 1.1.0 and CPU PyTorch, creates a venv, installs the package and
@@ -186,20 +186,17 @@ Raspberry Pi and no cloud subscription. The longer-term impact is a template for
 wards that cannot afford proprietary traffic-analytics platforms: count
 movement, prioritise one intervention, measure again.
 
-## Team roles
+## Author
 
-| Name | Role | Relevant experience |
-|---|---|---|
-| [Member 1] | Edge runtime and Pi deployment | [fill] |
-| [Member 2] | Computer vision and evaluation | [fill] |
-| [Member 3] | Product, societal application and pitch | [fill] |
+| Name | Role |
+|---|---|
+| **Sujal M H** | Solo participant — edge runtime, computer vision, evaluation and pitch |
 
 ## GitHub / demo links
 
 - GitHub: https://github.com/sujalmh/arten-edge-ai
 - Demo video: https://github.com/sujalmh/arten-edge-ai/releases/download/v1.0.0/demo.mp4
-- Proposal: `docs/proposal.md`
-- Technical report: `docs/report.md`
+- Project report: `docs/report.md`
 - Two-minute pitch: `docs/pitch-2min.md`
 
 ## Declaration (if asked)
