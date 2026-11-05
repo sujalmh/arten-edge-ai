@@ -88,7 +88,8 @@ cherry-picking.
 ```bash
 # Full clip, annotated video, evidence bundle
 namma-drishti run -i data/organiser/clip.mp4 \
-  -o results/organiser_final --save-video --annotate-every 10
+  -o results/organiser_final --save-video --annotate-every 10 \
+  --estimate-vehicle-colors
 
 # Model-only latency, 50 runs
 namma-drishti benchmark --input data/organiser/frame.jpg \
@@ -96,7 +97,9 @@ namma-drishti benchmark --input data/organiser/frame.jpg \
 ```
 
 Check:
-- `summary.txt` has counts, p50/p95, model-only and pipeline FPS.
+- `summary.txt` has counts, attribute tracks, p50/p95, model-only and pipeline FPS.
+- `attribute_tracks.csv` has direction/dwell/speed and optional colour; call it a
+  derived, heuristic layer, not a trained attribute model.
 - `counts.csv` has one row per processed frame.
 - `annotated/` has at least two sample frames.
 - `contact_sheet.jpg` is readable.

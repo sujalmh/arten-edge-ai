@@ -1,0 +1,245 @@
+{
+  "summary": {
+    "note": "Image-plane motion and coarse colour are derived attributes, not trained model outputs. Speed is uncalibrated pixels/second.",
+    "by_class": {
+      "truck": {
+        "tracks": 1,
+        "directions": {
+          "stationary": 1
+        },
+        "colors": {
+          "white": 1
+        },
+        "mean_dwell_s": 14.9,
+        "mean_speed_px_s": 0.6
+      },
+      "car": {
+        "tracks": 1,
+        "directions": {
+          "stationary": 1
+        },
+        "colors": {
+          "blue": 1
+        },
+        "mean_dwell_s": 14.9,
+        "mean_speed_px_s": 0.4
+      },
+      "person": {
+        "tracks": 18,
+        "directions": {
+          "down": 2,
+          "left": 9,
+          "right": 4,
+          "stationary": 2,
+          "up": 1
+        },
+        "colors": {},
+        "mean_dwell_s": 4.52,
+        "mean_speed_px_s": 35.63
+      }
+    },
+    "total_tracks": 20
+  },
+  "tracks": [
+    {
+      "class": "car",
+      "track_id": 5,
+      "color": "blue",
+      "direction": "stationary",
+      "speed_px_s": 0.4,
+      "dwell_s": 14.9,
+      "hits": 150,
+      "score": 0.6719930171966553
+    },
+    {
+      "class": "person",
+      "track_id": 1,
+      "color": null,
+      "direction": "left",
+      "speed_px_s": 55.8,
+      "dwell_s": 2.4,
+      "hits": 25,
+      "score": 0.8768914341926575
+    },
+    {
+      "class": "person",
+      "track_id": 2,
+      "color": null,
+      "direction": "right",
+      "speed_px_s": 8.2,
+      "dwell_s": 4.2,
+      "hits": 43,
+      "score": 0.8801868557929993
+    },
+    {
+      "class": "person",
+      "track_id": 3,
+      "color": null,
+      "direction": "left",
+      "speed_px_s": 48.0,
+      "dwell_s": 1.7,
+      "hits": 18,
+      "score": 0.8434121608734131
+    },
+    {
+      "class": "person",
+      "track_id": 6,
+      "color": null,
+      "direction": "left",
+      "speed_px_s": 33.5,
+      "dwell_s": 0.8,
+      "hits": 9,
+      "score": 0.8571546673774719
+    },
+    {
+      "class": "person",
+      "track_id": 7,
+      "color": null,
+      "direction": "left",
+      "speed_px_s": 39.5,
+      "dwell_s": 1.0,
+      "hits": 11,
+      "score": 0.8273424506187439
+    },
+    {
+      "class": "person",
+      "track_id": 8,
+      "color": null,
+      "direction": "right",
+      "speed_px_s": 25.7,
+      "dwell_s": 13.2,
+      "hits": 133,
+      "score": 0.8670840263366699
+    },
+    {
+      "class": "person",
+      "track_id": 9,
+      "color": null,
+      "direction": "up",
+      "speed_px_s": 13.1,
+      "dwell_s": 0.1,
+      "hits": 2,
+      "score": 0.40410393476486206
+    },
+    {
+      "class": "person",
+      "track_id": 10,
+      "color": null,
+      "direction": "right",
+      "speed_px_s": 15.9,
+      "dwell_s": 12.2,
+      "hits": 123,
+      "score": 0.8712457418441772
+    },
+    {
+      "class": "person",
+      "track_id": 11,
+      "color": null,
+      "direction": "down",
+      "speed_px_s": 18.9,
+      "dwell_s": 11.5,
+      "hits": 115,
+      "score": 0.8095541000366211
+    },
+    {
+      "class": "person",
+      "track_id": 14,
+      "color": null,
+      "direction": "stationary",
+      "speed_px_s": 1.8,
+      "dwell_s": 11.0,
+      "hits": 111,
+      "score": 0.8723544478416443
+    },
+    {
+      "class": "person",
+      "track_id": 15,
+      "color": null,
+      "direction": "left",
+      "speed_px_s": 28.4,
+      "dwell_s": 1.2,
+      "hits": 13,
+      "score": 0.8039100766181946
+    },
+    {
+      "class": "person",
+      "track_id": 16,
+      "color": null,
+      "direction": "stationary",
+      "speed_px_s": 6.3,
+      "dwell_s": 0.7,
+      "hits": 6,
+      "score": 0.5508489608764648
+    },
+    {
+      "class": "person",
+      "track_id": 17,
+      "color": null,
+      "direction": "right",
+      "speed_px_s": 72.5,
+      "dwell_s": 8.8,
+      "hits": 83,
+      "score": 0.8564140200614929
+    },
+    {
+      "class": "person",
+      "track_id": 18,
+      "color": null,
+      "direction": "left",
+      "speed_px_s": 44.1,
+      "dwell_s": 2.8,
+      "hits": 29,
+      "score": 0.7236984968185425
+    },
+    {
+      "class": "person",
+      "track_id": 21,
+      "color": null,
+      "direction": "left",
+      "speed_px_s": 43.2,
+      "dwell_s": 4.4,
+      "hits": 44,
+      "score": 0.7020963430404663
+    },
+    {
+      "class": "person",
+      "track_id": 22,
+      "color": null,
+      "direction": "left",
+      "speed_px_s": 52.1,
+      "dwell_s": 3.5,
+      "hits": 35,
+      "score": 0.8495286703109741
+    },
+    {
+      "class": "person",
+      "track_id": 23,
+      "color": null,
+      "direction": "left",
+      "speed_px_s": 119.3,
+      "dwell_s": 1.8,
+      "hits": 19,
+      "score": 0.8582054376602173
+    },
+    {
+      "class": "person",
+      "track_id": 24,
+      "color": null,
+      "direction": "down",
+      "speed_px_s": 15.1,
+      "dwell_s": 0.1,
+      "hits": 2,
+      "score": 0.49662190675735474
+    },
+    {
+      "class": "truck",
+      "track_id": 4,
+      "color": "white",
+      "direction": "stationary",
+      "speed_px_s": 0.6,
+      "dwell_s": 14.9,
+      "hits": 150,
+      "score": 0.8338605165481567
+    }
+  ]
+}

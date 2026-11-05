@@ -5,8 +5,8 @@ quoted in the docs come from Arm's model card, not from these runs.
 
 | Bundle | Input | What it demonstrates |
 |---|---|---|
-| `demo_pedestrians/` | `data/samples/pedestrians_15s.mp4` | 150-frame video, per-frame counts, tracking, annotated video, contact sheet, full metrics |
-| `demo_traffic/` | `data/samples/bengaluru_traffic.jpg` | Dense-scene stress test: 17 cars, 1 bus, 1 truck, 2 people |
+| `demo_pedestrians/` | `data/samples/pedestrians_15s.mp4` | 150-frame video, per-frame counts, tracking, motion/colour attributes, annotated video, contact sheet, full metrics |
+| `demo_traffic/` | `data/samples/bengaluru_traffic.jpg` | Dense-scene stress test: 17 cars, 1 bus, 1 truck, 2 people; coarse colour attributes |
 | `demo_street/` | `data/samples/bengaluru_street.jpg` | Close-range scene: 8 people, 2 cars, 1 motorcycle; auto-rickshaw gap |
 | `demo.mp4` | title + pedestrian annotated clip + end card | 21-second demo video for the proposal |
 | `benchmark_dev.json` | `bengaluru_traffic.jpg` | 50-run model-only latency on the Apple Silicon dev host (ExecuTorch 1.5.1) |
@@ -17,6 +17,8 @@ quoted in the docs come from Arm's model card, not from these runs.
 - `demo_pedestrians/summary.json` → `latency`, `throughput`, `counts`,
   `environment`, `model`.
 - `demo_pedestrians/counts.csv` → per-frame counts and stage timings.
+- `demo_pedestrians/attribute_tracks.csv` → per-track direction, dwell, relative speed and optional colour.
+- `demo_pedestrians/attribute_summary.json` → aggregate attribute distributions and caveats.
 - `demo_pedestrians/REPORT.md` → self-contained Markdown report.
 - `benchmark_dev.json` → model-only mean/p50/p95 and 49.16 FPS on the dev host.
 
@@ -29,8 +31,12 @@ quoted in the docs come from Arm's model card, not from these runs.
   `namma-drishti benchmark` on the actual Pi.
 - Unique counts in the pedestrian run are **indicative** (IoU/velocity tracker),
   not a production multi-object-tracking result.
+- Direction is image-plane; speed is uncalibrated pixels/second; colour is a
+  coarse HSV heuristic. These attributes are derived, not trained predictions.
 - The dense traffic run is a **stress test**, not an accuracy benchmark. The
   model misses many small motorcycles and has no auto-rickshaw class.
+- The colour labels on the dense traffic image include visible mistakes (for
+  example, the red truck is labelled orange/brown). Treat them as a demo.
 
 ## Regenerating
 

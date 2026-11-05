@@ -15,6 +15,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from .constants import (
     CLASS_COLORS_BGR,
+    DIRECTION_ARROWS,
     DEFAULT_CLASSES,
     FALLBACK_COLOR_BGR,
 )
@@ -62,6 +63,9 @@ def annotate_frame(
     classes: tuple[str, ...] = DEFAULT_CLASSES,
     show_track_ids: bool = False,
     footer: str = "Local inference · no cloud · no identities",
+    zone_name: str | None = None,
+    zone_points: tuple[tuple[float, float], ...] | None = None,
+    zone_counts: dict[str, int] | None = None,
 ) -> np.ndarray:
     """Draw boxes, labels and a compact counts panel onto a BGR frame."""
 
@@ -76,15 +80,28 @@ def annotate_frame(
     small = _load_font(small_size)
     line_width = max(2, int(3 * scale))
 
+    if zone_name and zone_points:
+        polygon = [(round(x * (width - 1)), round(y * (height - 1))) for x, y in zone_points]
+        draw.polygon(polygon, fill=(255, 178, 44, 32), outline=(255, 178, 44, 230), width=line_width)
+
     # Boxes and labels.
+    attributes_present = False
     for det in detections:
+        attributes_present = attributes_present or bool(det.attributes)
         x1, y1, x2, y2 = det.box
         color = _class_color(det.class_name)
         rgba = (*reversed(color), 255)  # BGR -> RGB
         draw.rectangle([x1, y1, x2, y2], outline=rgba, width=line_width)
-        label = f"{det.class_name} {det.score:.2f}"
+        parts = [det.class_name, f"{det.score:.2f}"]
         if show_track_ids and det.track_id is not None:
-            label = f"#{det.track_id} {label}"
+            parts.insert(0, f"#{det.track_id}")
+        direction = det.attributes.get("direction")
+        if direction:
+            parts.append(DIRECTION_ARROWS.get(direction, ""))
+        color_estimate = det.attributes.get("color_estimate")
+        if color_estimate:
+            parts.append(f"~{color_estimate}")
+        label = " ".join(part for part in parts if part)
         bbox = draw.textbbox((0, 0), label, font=font)
         text_w, text_h = bbox[2] - bbox[0], bbox[3] - bbox[1]
         label_y = max(0, y1 - text_h - 6)
@@ -144,8 +161,28 @@ def annotate_frame(
         fill=(255, 220, 120, 255),
     )
 
+    if zone_name and zone_counts is not None:
+        badge = (
+            f"ZONE · {zone_name}  P {zone_counts.get('person', 0)}"
+            f"  V {zone_counts.get('vehicle', 0)}"
+        )
+        bbox = draw.textbbox((0, 0), badge, font=small)
+        badge_w = bbox[2] - bbox[0] + 22
+        badge_h = bbox[3] - bbox[1] + 14
+        left = max(12, width - badge_w - 14)
+        draw.rounded_rectangle(
+            [left, 14, left + badge_w, 14 + badge_h],
+            radius=6,
+            fill=(18, 22, 26, 220),
+            outline=(255, 178, 44, 255),
+            width=2,
+        )
+        draw.text((left + 11, 20), badge, font=small, fill=(255, 226, 170, 255))
+
     # Footer.
     footer_text = f"{model_tag}  ·  {footer}"
+    if attributes_present:
+        footer_text += "  ·  attributes on-device"
     bbox = draw.textbbox((0, 0), footer_text, font=small)
     text_w = bbox[2] - bbox[0]
     draw.rectangle(

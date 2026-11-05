@@ -9,7 +9,7 @@
     "source_frames": 150,
     "stride": 1,
     "duration_s": 15.0,
-    "wall_time_s": 3.905,
+    "wall_time_s": 4.035,
     "source_fps": 10.0,
     "source_size": [
       640,
@@ -26,9 +26,11 @@
     "confidence_threshold": 0.35,
     "iou_threshold": 0.7,
     "tracking": true,
+    "attributes": true,
     "threads": null,
     "annotate_every": 10,
-    "save_video": true
+    "save_video": true,
+    "vehicle_color_estimate": true
   },
   "model": {
     "name": "YOLO11n (COCO) — Arm-optimized INT8",
@@ -54,7 +56,7 @@
     "classes": 80,
     "dataset": "COCO 2017",
     "source": "https://huggingface.co/Arm/yolo11n-int8-xnnpack-executorch-raspberrypi5",
-    "load_ms": 7.34,
+    "load_ms": 6.73,
     "torch": "2.15.0",
     "executorch": "1.5.1"
   },
@@ -63,8 +65,8 @@
     "machine": "arm64",
     "processor": "arm",
     "python": "3.12.12",
-    "timestamp_utc": "2026-11-04T12:27:24+00:00",
-    "peak_rss_mb": 610.5,
+    "timestamp_utc": "2026-11-05T23:05:28+00:00",
+    "peak_rss_mb": 610.1,
     "threads": null,
     "torch": "2.15.0",
     "executorch": "1.5.1",
@@ -117,75 +119,75 @@
   "latency": {
     "model_inference": {
       "count": 150.0,
-      "mean_ms": 20.71,
-      "p50_ms": 20.68,
-      "p95_ms": 21.36,
-      "p99_ms": 21.8,
-      "min_ms": 19.13,
-      "max_ms": 28.98,
-      "std_ms": 0.78,
-      "fps_from_mean": 48.29
+      "mean_ms": 20.99,
+      "p50_ms": 20.84,
+      "p95_ms": 21.78,
+      "p99_ms": 23.27,
+      "min_ms": 20.07,
+      "max_ms": 33.19,
+      "std_ms": 1.11,
+      "fps_from_mean": 47.63
     },
     "preprocess": {
       "count": 150.0,
-      "mean_ms": 0.59,
+      "mean_ms": 0.66,
       "p50_ms": 0.57,
-      "p95_ms": 0.65,
-      "p99_ms": 1.05,
+      "p95_ms": 0.69,
+      "p99_ms": 1.51,
       "min_ms": 0.53,
-      "max_ms": 1.82,
-      "std_ms": 0.12,
-      "fps_from_mean": 1697.79
+      "max_ms": 8.67,
+      "std_ms": 0.67,
+      "fps_from_mean": 1525.59
     },
     "postprocess": {
       "count": 150.0,
-      "mean_ms": 0.67,
-      "p50_ms": 0.65,
-      "p95_ms": 0.71,
-      "p99_ms": 0.93,
-      "min_ms": 0.55,
-      "max_ms": 4.19,
-      "std_ms": 0.29,
-      "fps_from_mean": 1484.61
+      "mean_ms": 0.78,
+      "p50_ms": 0.75,
+      "p95_ms": 0.84,
+      "p99_ms": 1.05,
+      "min_ms": 0.65,
+      "max_ms": 3.83,
+      "std_ms": 0.26,
+      "fps_from_mean": 1285.7
     },
     "read": {
       "count": 150.0,
       "mean_ms": 0.19,
       "p50_ms": 0.16,
-      "p95_ms": 0.22,
+      "p95_ms": 0.21,
       "p99_ms": 0.23,
       "min_ms": 0.11,
-      "max_ms": 5.0,
-      "std_ms": 0.39,
-      "fps_from_mean": 5145.61
+      "max_ms": 4.76,
+      "std_ms": 0.38,
+      "fps_from_mean": 5272.24
     },
     "annotate": {
       "count": 150.0,
-      "mean_ms": 2.92,
-      "p50_ms": 2.81,
-      "p95_ms": 3.72,
-      "p99_ms": 6.33,
-      "min_ms": 2.29,
-      "max_ms": 8.38,
-      "std_ms": 0.72,
-      "fps_from_mean": 342.66
+      "mean_ms": 3.24,
+      "p50_ms": 3.14,
+      "p95_ms": 4.08,
+      "p99_ms": 4.28,
+      "min_ms": 2.64,
+      "max_ms": 8.18,
+      "std_ms": 0.53,
+      "fps_from_mean": 309.01
     },
     "pipeline_total": {
       "count": 150.0,
-      "mean_ms": 25.39,
-      "p50_ms": 25.2,
-      "p95_ms": 26.29,
-      "p99_ms": 32.91,
-      "min_ms": 23.57,
-      "max_ms": 38.53,
-      "std_ms": 1.49,
-      "fps_from_mean": 39.38
+      "mean_ms": 26.19,
+      "p50_ms": 25.86,
+      "p95_ms": 27.27,
+      "p99_ms": 34.1,
+      "min_ms": 24.73,
+      "max_ms": 46.65,
+      "std_ms": 2.09,
+      "fps_from_mean": 38.19
     }
   },
   "throughput": {
-    "model_fps_from_mean": 48.29,
-    "pipeline_fps_from_mean": 39.38,
-    "processed_frames_per_wall_second": 38.41
+    "model_fps_from_mean": 47.63,
+    "pipeline_fps_from_mean": 38.19,
+    "processed_frames_per_wall_second": 37.17
   },
   "exposure": {
     "person_seconds": 82.5,
@@ -193,7 +195,49 @@
     "frames_with_person_and_vehicle": 150,
     "share_frames_with_person_and_vehicle": 1.0
   },
-  "peak_rss_mb": 610.5,
+  "zone": null,
+  "attributes": {
+    "note": "Image-plane motion and coarse colour are derived attributes, not trained model outputs. Speed is uncalibrated pixels/second.",
+    "by_class": {
+      "truck": {
+        "tracks": 1,
+        "directions": {
+          "stationary": 1
+        },
+        "colors": {
+          "white": 1
+        },
+        "mean_dwell_s": 14.9,
+        "mean_speed_px_s": 0.6
+      },
+      "car": {
+        "tracks": 1,
+        "directions": {
+          "stationary": 1
+        },
+        "colors": {
+          "blue": 1
+        },
+        "mean_dwell_s": 14.9,
+        "mean_speed_px_s": 0.4
+      },
+      "person": {
+        "tracks": 18,
+        "directions": {
+          "down": 2,
+          "left": 9,
+          "right": 4,
+          "stationary": 2,
+          "up": 1
+        },
+        "colors": {},
+        "mean_dwell_s": 4.52,
+        "mean_speed_px_s": 35.63
+      }
+    },
+    "total_tracks": 20
+  },
+  "peak_rss_mb": 610.1,
   "reference": {
     "device": "Raspberry Pi 5 (Cortex-A76, 4 cores @ 2.4 GHz)",
     "runtime": "ExecuTorch 1.1.0, XNNPACK + KleidiAI, 1 thread",
@@ -207,6 +251,9 @@
   },
   "outputs": {
     "counts_csv": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_pedestrians/counts.csv",
+    "zone_counts_csv": null,
+    "attribute_tracks_csv": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_pedestrians/attribute_tracks.csv",
+    "attribute_summary_json": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_pedestrians/attribute_summary.json",
     "detections_jsonl": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_pedestrians/detections.jsonl",
     "summary_json": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_pedestrians/summary.json",
     "summary_txt": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_pedestrians/summary.txt",
@@ -220,6 +267,7 @@
     "Latency is measured on the device that produced this run. Compare only with runs on the same hardware and thread count.",
     "The model detects 80 COCO classes. Auto-rickshaws, carts and other India-specific categories are not guaranteed to be recognised.",
     "No faces, licence plates or identities are extracted. Frames are processed locally and only the requested evidence is written.",
-    "Annotated-video encoding is an output convenience and is not included in the pipeline latency; model-only and per-stage timings are unaffected."
+    "Annotated-video encoding is an output convenience and is not included in the pipeline latency; model-only and per-stage timings are unaffected.",
+    "Direction and speed are image-plane attributes from the tracker. Speed is uncalibrated pixels/second, not km/h. Colour is an optional HSV heuristic on vehicle crops, not a trained attribute model."
   ]
 }

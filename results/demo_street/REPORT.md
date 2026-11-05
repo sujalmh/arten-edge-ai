@@ -10,7 +10,7 @@ Offline pedestrian and vehicle counting with ExecuTorch on a Raspberry Pi. This 
 - **Thresholds:** confidence 0.35, IoU 0.7
 - **Tracking:** off
 - **Device:** arm64 · macOS-27.0.1-arm64-arm-64bit
-- **Peak process RSS:** 511.3 MB
+- **Peak process RSS:** 511.7 MB
 
 ## Model
 
@@ -35,19 +35,31 @@ Offline pedestrian and vehicle counting with ExecuTorch on a Raspberry Pi. This 
 
 > Counts are per processed frame. `Unique` comes from a lightweight IoU/velocity tracker and is indicative, not a production MOT count.
 
+## Attributes alongside detections
+
+These attributes are derived on-device from the tracker and a classical-CV colour heuristic. They are not trained attribute predictions and do not identify people.
+
+| Class | Unique tracks | Direction (image-plane) | Colour estimate | Mean dwell | Mean speed |
+|---|---:|---|---|---:|---:|
+| car | 2 | — | white 2 | — | — |
+| motorcycle | 1 | — | gray/silver 1 | — | — |
+
+> Direction and speed are measured in the image plane; speed is uncalibrated pixels/second, not km/h. Colour applies only to vehicle crops and is a heuristic, not a trained attribute model. Compare directions within one fixed-camera clip, not across camera angles.
+
+
 ## Latency and throughput
 
 | Stage | Mean (ms) | p50 (ms) | p95 (ms) | FPS from mean |
 |---|---:|---:|---:|---:|
-| Model inference | 21.93 | 21.93 | 21.93 | 45.59 |
-| Preprocess | 1.13 | 1.13 | 1.13 | 887.38 |
-| Decode + NMS | 3.76 | 3.76 | 3.76 | 266.12 |
-| Frame read | 14.13 | 14.13 | 14.13 | 70.77 |
-| Annotate/save | 17.14 | 17.14 | 17.14 | 58.36 |
-| Pipeline total | 58.09 | 58.09 | 58.09 | 17.22 |
+| Model inference | 22.56 | 22.56 | 22.56 | 44.32 |
+| Preprocess | 1.10 | 1.10 | 1.10 | 910.16 |
+| Decode + NMS | 5.68 | 5.68 | 5.68 | 175.93 |
+| Frame read | 14.52 | 14.52 | 14.52 | 68.87 |
+| Annotate/save | 17.51 | 17.51 | 17.51 | 57.10 |
+| Pipeline total | 61.38 | 61.38 | 61.38 | 16.29 |
 
-- **Model-only:** 45.59 FPS
-- **Pipeline:** 17.22 FPS
+- **Model-only:** 44.32 FPS
+- **Pipeline:** 16.29 FPS
 - **Wall time:** 0.06 s
 
 ## Exposure signals
@@ -69,6 +81,10 @@ Offline pedestrian and vehicle counting with ExecuTorch on a Raspberry Pi. This 
 - `summary.json` — machine-readable summary
 - `annotated/` — sample annotated frames
 
+- `attribute_tracks.csv` — per-track direction, dwell, speed and optional colour
+
+- `attribute_summary.json` — aggregate attribute distributions
+
 
 ## Reference benchmark (not this run)
 
@@ -82,3 +98,4 @@ Arm's model card reports **134.10 ms p50 / 7.46 FPS** on a Raspberry Pi 5 (Execu
 - The model detects 80 COCO classes. Auto-rickshaws, carts and other India-specific categories are not guaranteed to be recognised.
 - No faces, licence plates or identities are extracted. Frames are processed locally and only the requested evidence is written.
 - Annotated-video encoding is an output convenience and is not included in the pipeline latency; model-only and per-stage timings are unaffected.
+- Direction and speed are image-plane attributes from the tracker. Speed is uncalibrated pixels/second, not km/h. Colour is an optional HSV heuristic on vehicle crops, not a trained attribute model.

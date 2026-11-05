@@ -82,6 +82,38 @@ def format_summary(summary: dict) -> str:
     lines.append("  * unique is indicative, from a lightweight IoU/velocity tracker.")
     lines.append("")
 
+    attrs = summary.get("attributes")
+    if attrs:
+        lines.append("  ATTRIBUTES (unique tracks, on-device)")
+        for class_name, stats in attrs.get("by_class", {}).items():
+            directions = ", ".join(
+                f"{name} {count}" for name, count in stats.get("directions", {}).items()
+            ) or "—"
+            colors = ", ".join(
+                f"{name} {count}" for name, count in stats.get("colors", {}).items()
+            ) or "—"
+            dwell = (
+                f"{stats['mean_dwell_s']:.1f}s"
+                if stats.get("mean_dwell_s") is not None
+                else "—"
+            )
+            speed = (
+                f"{stats['mean_speed_px_s']:.1f}px/s"
+                if stats.get("mean_speed_px_s") is not None
+                else "—"
+            )
+            if stats.get("mean_speed_px_s") is None and not stats.get("directions"):
+                lines.append(
+                    f"  {class_name:<12} {stats['tracks']:>3} tracks  colours: {colors}"
+                )
+            else:
+                lines.append(
+                    f"  {class_name:<12} {stats['tracks']:>3} tracks  "
+                    f"{directions} · {colors} · dwell {dwell} · {speed}"
+                )
+        lines.append("  Motion is image-plane; speed is uncalibrated. Colour is optional HSV.")
+        lines.append("")
+
     lines.append("  LATENCY / THROUGHPUT")
     rows = []
     for label, key in (
@@ -126,6 +158,25 @@ def format_summary(summary: dict) -> str:
         f"({exposure['share_frames_with_person_and_vehicle'] * 100:.1f}%)"
     )
     lines.append("")
+
+    zone = summary.get("zone")
+    if zone:
+        stats = zone["counts"]
+        lines.append(f"  SHARED-SPACE AUDIT · {zone['name']}")
+        lines.append(
+            f"  peak people {stats['peak_people_per_frame']} · "
+            f"peak vehicles {stats['peak_vehicles_per_frame']} · "
+            f"co-presence {stats['frames_with_people_and_vehicles']}/"
+            f"{stats['frames']} frames "
+            f"({stats['share_frames_with_people_and_vehicles'] * 100:.1f}%)"
+        )
+        if "co_presence_sample_seconds" in stats:
+            lines.append(
+                f"  sampled co-presence {stats['co_presence_sample_seconds']:.2f} s · "
+                f"longest sampled run {stats['longest_co_presence_sample_seconds']:.2f} s"
+            )
+        lines.append("  Descriptive co-presence only; not a conflict or crash-risk score.")
+        lines.append("")
 
     lines.append("  REFERENCE (not measured here)")
     lines.append(
@@ -205,6 +256,37 @@ def write_markdown_report(summary: dict, path: str | Path) -> Path:
     )
     lines.append("")
 
+    attrs = summary.get("attributes")
+    if attrs:
+        lines.append("## Attributes alongside detections\n")
+        lines.append(
+            "These attributes are derived on-device from the tracker and a "
+            "classical-CV colour heuristic. They are not trained attribute "
+            "predictions and do not identify people.\n"
+        )
+        lines.append("| Class | Unique tracks | Direction (image-plane) | Colour estimate | Mean dwell | Mean speed |")
+        lines.append("|---|---:|---|---|---:|---:|")
+        for class_name, stats in attrs.get("by_class", {}).items():
+            directions = ", ".join(
+                f"{name} {count}" for name, count in stats.get("directions", {}).items()
+            ) or "—"
+            colors = ", ".join(
+                f"{name} {count}" for name, count in stats.get("colors", {}).items()
+            ) or "—"
+            dwell = f"{stats['mean_dwell_s']:.2f} s" if stats.get("mean_dwell_s") is not None else "—"
+            speed = f"{stats['mean_speed_px_s']:.1f} px/s" if stats.get("mean_speed_px_s") is not None else "—"
+            lines.append(
+                f"| {class_name} | {stats['tracks']} | {directions} | {colors} | {dwell} | {speed} |"
+            )
+        lines.append("")
+        lines.append(
+            "> Direction and speed are measured in the image plane; speed is "
+            "uncalibrated pixels/second, not km/h. Colour applies only to vehicle "
+            "crops and is a heuristic, not a trained attribute model. Compare "
+            "directions within one fixed-camera clip, not across camera angles.\n"
+        )
+        lines.append("")
+
     lines.append("## Latency and throughput\n")
     lines.append("| Stage | Mean (ms) | p50 (ms) | p95 (ms) | FPS from mean |")
     lines.append("|---|---:|---:|---:|---:|")
@@ -247,6 +329,28 @@ def write_markdown_report(summary: dict, path: str | Path) -> Path:
     )
     lines.append("")
 
+    zone = summary.get("zone")
+    if zone:
+        stats = zone["counts"]
+        lines.append(f"## Shared-space zone: {zone['name']}\n")
+        lines.append(
+            f"- **Peak people / frame in zone:** {stats['peak_people_per_frame']}\n"
+            f"- **Peak vehicles / frame in zone:** {stats['peak_vehicles_per_frame']}\n"
+            f"- **Frames with both present:** {stats['frames_with_people_and_vehicles']} "
+            f"of {stats['frames']} ({stats['share_frames_with_people_and_vehicles'] * 100:.1f}%)"
+        )
+        if "co_presence_sample_seconds" in stats:
+            lines.append(
+                f"- **Sampled co-presence exposure:** {stats['co_presence_sample_seconds']:.2f} s; "
+                f"longest sampled run {stats['longest_co_presence_sample_seconds']:.2f} s"
+            )
+        lines.append(
+            "> The polygon is selected manually; detections use each box's bottom-center point. "
+            "Co-presence describes simultaneous observed occupancy only. It does not estimate "
+            "near misses, speed, collision probability, or crash risk.\n"
+        )
+        lines.append("")
+
     lines.append("## Evidence\n")
     if summary["outputs"].get("contact_sheet"):
         lines.append(f"![Contact sheet]({Path(summary['outputs']['contact_sheet']).name})\n")
@@ -261,6 +365,12 @@ def write_markdown_report(summary: dict, path: str | Path) -> Path:
         f"- `summary.json` — machine-readable summary\n"
         f"- `annotated/` — sample annotated frames\n"
     )
+    if summary["outputs"].get("attribute_tracks_csv"):
+        lines.append("- `attribute_tracks.csv` — per-track direction, dwell, speed and optional colour\n")
+    if summary["outputs"].get("attribute_summary_json"):
+        lines.append("- `attribute_summary.json` — aggregate attribute distributions\n")
+    if summary["outputs"].get("zone_counts_csv"):
+        lines.append("- `zone_counts.csv` — per-frame counts inside the selected zone\n")
     if summary["outputs"].get("annotated_video"):
         lines.append(f"- `annotated.mp4` — annotated clip\n")
     lines.append("")

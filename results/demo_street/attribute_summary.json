@@ -1,0 +1,58 @@
+{
+  "summary": {
+    "note": "Image-plane motion and coarse colour are derived attributes, not trained model outputs. Speed is uncalibrated pixels/second.",
+    "by_class": {
+      "car": {
+        "tracks": 2,
+        "directions": {},
+        "colors": {
+          "white": 2
+        },
+        "mean_dwell_s": null,
+        "mean_speed_px_s": null
+      },
+      "motorcycle": {
+        "tracks": 1,
+        "directions": {},
+        "colors": {
+          "gray/silver": 1
+        },
+        "mean_dwell_s": null,
+        "mean_speed_px_s": null
+      }
+    },
+    "total_tracks": 3
+  },
+  "tracks": [
+    {
+      "class": "car",
+      "track_id": null,
+      "color": "white",
+      "direction": null,
+      "speed_px_s": null,
+      "dwell_s": null,
+      "hits": 0,
+      "score": 0.9223230481147766
+    },
+    {
+      "class": "car",
+      "track_id": null,
+      "color": "white",
+      "direction": null,
+      "speed_px_s": null,
+      "dwell_s": null,
+      "hits": 0,
+      "score": 0.7711855173110962
+    },
+    {
+      "class": "motorcycle",
+      "track_id": null,
+      "color": "gray/silver",
+      "direction": null,
+      "speed_px_s": null,
+      "dwell_s": null,
+      "hits": 0,
+      "score": 0.5311669111251831
+    }
+  ]
+}

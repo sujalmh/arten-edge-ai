@@ -16,8 +16,10 @@ before the live hackathon (14 November 2026).
       the clone URL points to the public repository.
 - [ ] `results/demo.mp4` plays in a browser (H.264, 21 s, 1280×720).
 - [ ] `results/demo_pedestrians/contact_sheet.jpg` and the two annotated
-      Bengaluru images are visible.
-- [ ] `make test` passes (21 tests).
+      Bengaluru images are visible, with direction/colour labels.
+- [ ] `results/demo_pedestrians/attribute_tracks.csv` and
+      `results/demo_traffic/attribute_summary.json` are present.
+- [ ] `make test` passes (29 tests).
 - [ ] `make doctor` passes on the development host.
 - [ ] `docs/proposal.pdf` is generated and opens; check page breaks and images.
 - [ ] No secrets, API keys, personal phone numbers or private paths in the repo.
@@ -36,6 +38,7 @@ before the live hackathon (14 November 2026).
 | Submit category + counts + two sample outputs | Contact sheet + traffic image + street image | [ ] |
 | Report average inference time, model, throughput | `summary.json`; `benchmark_dev.json`; report §7 | [ ] |
 | Explain society, help, one application (≤2 min) | `docs/pitch-2min.md`; report §1, §7 | [ ] |
+| **Differentiator:** attributes alongside detections | `attribute_tracks.csv`; `attribute_summary.json`; README “Standout” | [ ] |
 
 ## C. Form-field checklist
 
@@ -66,6 +69,8 @@ The portal may ask for some or all of these. Drafts are in
       “smart cities”.
 - [ ] The mandatory deliverables are explicitly mapped.
 - [ ] The model, runtime, size, latency, memory and accuracy are stated.
+- [ ] The attribute layer is described as **derived** (image-plane direction,
+      uncalibrated speed, heuristic colour), not as a trained model.
 - [ ] Dev-host numbers are labelled as dev-host; Pi numbers are labelled as
       reference.
 - [ ] The COCO/India gap and small-object failure are named.

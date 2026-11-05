@@ -60,6 +60,10 @@ Optional refinements that make the counts more useful without overbuilding:
   clip. Clearly labelled as indicative, never presented as production MOT.
 - **Observed person-seconds / vehicle-seconds** for the clip, so two clips of
   different lengths can be compared without pretending to extrapolate a full day.
+- **On-device attributes** alongside each tracked detection: image-plane
+  direction, dwell time, relative speed and optional coarse vehicle colour.
+  Derived from the same tracker and classical CV, not a second model; no
+  identity attributes.
 - A **self-contained run report** (`REPORT.md`) generated from the same JSON that
   drives the terminal output, so every number is traceable.
 
@@ -114,8 +118,8 @@ This is not a slideware proposal. The repository already contains:
 
 - A working ExecuTorch pipeline tested on the committed clip and two Bengaluru
   images.
-- **21 passing unit tests** for letterboxing, NMS, decode, tracker identity and
-  metrics.
+- **29 passing unit tests** for letterboxing, NMS, decode, tracker identity,
+  attributes, zone metrics and latency statistics.
 - A one-command Raspberry Pi setup script with a pinned runtime, checksum
   verification and a smoke test.
 - A reproducible evidence bundle: per-frame CSV, detections JSONL, annotated
@@ -124,7 +128,12 @@ This is not a slideware proposal. The repository already contains:
   Silicon (explicitly labelled as not a Pi measurement).
 - A smoke test of the **exact Pi runtime stack** (ExecuTorch 1.1.0 + torch
   2.10.0) on the dev host: 3 frames end-to-end, same output shape and counts.
-- A 21-second demo video with title card, live detections, counts and an end card.
+- Attribute evidence: on the committed clip, **18 confirmed tracks** split
+  **9 left / 4 right / 2 stationary / 2 down / 1 up**, mean dwell **4.5 s**;
+  on the dense traffic image, **17 cars** split into **9 white, 4 gray/silver,
+  2 blue, 1 red, 1 orange/brown** (coarse HSV estimate).
+- A 21-second demo video with title card, live detections, counts, attribute
+  labels and an end card.
 
 At the finals we will run the same commands on the organiser clip on the Pi,
 replace the dev-host row with on-device numbers, and show the raw CSV next to the

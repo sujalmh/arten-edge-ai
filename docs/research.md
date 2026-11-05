@@ -171,6 +171,9 @@ Namma Drishti deliberately inverts the priorities:
 - **Edge artifact first:** a target-verified INT8 `.pte`, not a laptop script.
 - **Measurement first:** model-only and pipeline latency, p50/p95, separate
   throughputs.
+- **Attributes, not just boxes:** image-plane direction, dwell, relative speed
+  and optional coarse vehicle colour ride along with the same detections, with
+  the caveats printed in the evidence.
 - **Evidence first:** CSV/JSONL/annotated frames/report, not screenshots.
 - **Privacy first:** aggregate counts, no identities, no network calls.
 - **Honesty first:** COCO reference accuracy, named failure cases, no invented

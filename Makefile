@@ -23,11 +23,14 @@ test:
 
 demo:
 	$(PY) -m namma_drishti run -i data/samples/pedestrians_15s.mp4 \
-		-o results/demo_pedestrians --save-video --annotate-every 10
+		-o results/demo_pedestrians --save-video --annotate-every 10 \
+		--estimate-vehicle-colors
 	$(PY) -m namma_drishti run -i data/samples/bengaluru_traffic.jpg \
-		-o results/demo_traffic --annotate-every 1 --no-track
+		-o results/demo_traffic --annotate-every 1 --no-track \
+		--estimate-vehicle-colors
 	$(PY) -m namma_drishti run -i data/samples/bengaluru_street.jpg \
-		-o results/demo_street --annotate-every 1 --no-track
+		-o results/demo_street --annotate-every 1 --no-track \
+		--estimate-vehicle-colors
 
 benchmark:
 	$(PY) -m namma_drishti benchmark --input data/samples/bengaluru_traffic.jpg \

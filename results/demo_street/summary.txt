@@ -21,18 +21,23 @@
 +----------------+------------+------------+-------+----------+
   * unique is indicative, from a lightweight IoU/velocity tracker.
 
+  ATTRIBUTES (unique tracks, on-device)
+  car            2 tracks  colours: white 2
+  motorcycle     1 tracks  colours: gray/silver 1
+  Motion is image-plane; speed is uncalibrated. Colour is optional HSV.
+
   LATENCY / THROUGHPUT
 +----------------+-----------+----------+----------+---------+
 | stage          | mean ms   | p50 ms   | p95 ms   | FPS     |
 +================+===========+==========+==========+=========+
-| model infer    | 21.93     | 21.93    | 21.93    | 45.59   |
-| preprocess     | 1.13      | 1.13     | 1.13     | 887.38  |
-| decode + NMS   | 3.76      | 3.76     | 3.76     | 266.12  |
-| frame read     | 14.13     | 14.13    | 14.13    | 70.77   |
-| annotate/save  | 17.14     | 17.14    | 17.14    | 58.36   |
-| pipeline total | 58.09     | 58.09    | 58.09    | 17.22   |
+| model infer    | 22.56     | 22.56    | 22.56    | 44.32   |
+| preprocess     | 1.10      | 1.10     | 1.10     | 910.16  |
+| decode + NMS   | 5.68      | 5.68     | 5.68     | 175.93  |
+| frame read     | 14.52     | 14.52    | 14.52    | 68.87   |
+| annotate/save  | 17.51     | 17.51    | 17.51    | 57.10   |
+| pipeline total | 61.38     | 61.38    | 61.38    | 16.29   |
 +----------------+-----------+----------+----------+---------+
-  Model-only 45.59 FPS · pipeline 17.22 FPS · wall 0.06 s
+  Model-only 44.32 FPS · pipeline 16.29 FPS · wall 0.06 s
 
   EXPOSURE (clip-level, descriptive)
   person-seconds 0.00 · vehicle-seconds 0.00 · frames with both 1 (100.0%)

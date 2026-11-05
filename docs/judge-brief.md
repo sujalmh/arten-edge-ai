@@ -29,7 +29,9 @@ surveillance system.
 3. Prints **per-frame counts** and writes `counts.csv` / `detections.jsonl`.
 4. Saves **annotated frames, a contact sheet and an optional annotated video**.
 5. Reports **p50/p95 latency, throughput, model size and memory**.
-6. Runs entirely locally: **no cloud, no identities**.
+6. Adds **on-device attributes**: image-plane direction, dwell, relative speed
+   and optional coarse vehicle colour.
+7. Runs entirely locally: **no cloud, no identities**.
 
 ## Numbers that matter
 
@@ -41,7 +43,9 @@ surveillance system.
 | COCO accuracy | 38.90% mAP@0.5:0.95 | Arm model card |
 | Dev-host model latency | 20.34 ms mean / 49.16 FPS | This repo, labelled dev |
 | Sample clip | 150 frames, peak 9 people/frame, 18 tracked people | This repo, indicative |
-| Tests | 21 passing | This repo |
+| Clip attributes | 9 left / 4 right / 2 stationary / 2 down / 1 up; mean dwell 4.5 s | This repo, derived |
+| Traffic colours | 17 cars: 9 white, 4 gray/silver, 2 blue, 1 red, 1 orange/brown | This repo, HSV heuristic |
+| Tests | 29 passing | This repo |
 
 ## Mandatory deliverables
 
@@ -60,7 +64,9 @@ surveillance system.
 - The report separates **Pi reference** from **dev-host measurement**.
 - The COCO/India gap is named: auto-rickshaws are not a class; dense-scene
   motorcycles are missed.
-- The repo ships **21 tests**, a one-command Pi setup, a checksum-verified model
+- The attribute layer is **derived, not learned**: image-plane direction,
+  uncalibrated speed, coarse HSV colour. The caveats are printed with every run.
+- The repo ships **29 tests**, a one-command Pi setup, a checksum-verified model
   and a reproducible evidence bundle.
 
 ## Practical application
@@ -68,15 +74,16 @@ surveillance system.
 A school records three 15-second clips: morning drop-off, afternoon dismissal
 and a quiet hour. It runs them on the Pi, offline, and compares peak pedestrian
 counts, vehicle counts and observed person-seconds. A high pedestrian/vehicle
-overlap at dismissal is evidence for a crossing guard, a zebra crossing or a
-no-parking zone within 20 metres of the gate. One Pi. No subscription.
+overlap at dismissal, plus direction and dwell attributes, is evidence for a
+crossing guard, a zebra crossing or a no-parking zone at the gate. One Pi. No
+subscription.
 
 ## Demo commands
 
 ```bash
 namma-drishti doctor
 namma-drishti run -i data/samples/pedestrians_15s.mp4 \
-  -o results/demo --save-video
+  -o results/demo --save-video --estimate-vehicle-colors
 namma-drishti benchmark --input data/samples/bengaluru_traffic.jpg --runs 50
 ```
 

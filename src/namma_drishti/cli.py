@@ -65,6 +65,7 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--conf", type=float, default=0.35, help="confidence threshold")
     run.add_argument("--iou", type=float, default=0.7, help="NMS IoU threshold")
     run.add_argument("--no-track", action="store_true", help="disable the indicative tracker")
+    run.add_argument("--no-attributes", action="store_true", help="disable motion attributes (direction, relative speed, dwell)")
     run.add_argument("--save-video", action="store_true", help="write annotated.mp4")
     run.add_argument(
         "--annotate-every",
@@ -75,6 +76,16 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--max-frames", type=int, default=None, help="process at most N frames/images")
     run.add_argument("--stride", type=int, default=1, help="process every Nth frame")
     run.add_argument("--threads", type=int, default=None, help="torch CPU threads")
+    run.add_argument(
+        "--zone",
+        default=None,
+        help="optional JSON polygon profile for a localized people/vehicle co-presence audit",
+    )
+    run.add_argument(
+        "--estimate-vehicle-colors",
+        action="store_true",
+        help="add heuristic HSV vehicle-color estimates (not a learned model)",
+    )
     run.add_argument("--quiet", "-q", action="store_true", help="suppress progress and the final summary")
 
     bench = sub.add_parser("benchmark", help="measure model-only latency")
@@ -106,12 +117,15 @@ def cmd_run(args: argparse.Namespace) -> int:
         conf_threshold=args.conf,
         iou_threshold=args.iou,
         track=not args.no_track,
+        attributes=not args.no_attributes,
         save_video=args.save_video,
         annotate_every=args.annotate_every,
         max_frames=args.max_frames,
         stride=args.stride,
         threads=args.threads,
         quiet=args.quiet,
+        zone_config=args.zone,
+        estimate_vehicle_colors=args.estimate_vehicle_colors,
     )
     return 0
 

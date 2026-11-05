@@ -12,8 +12,9 @@ Namma Drishti is a functional edge-AI proof of concept that detects and counts
 pedestrians and vehicles in a short street clip or a set of images, entirely on a
 Raspberry Pi. It uses an Arm-optimized YOLO11n INT8 ExecuTorch model (4.73 MB)
 running on the CPU through XNNPACK. The system writes per-frame counts, an
-annotated evidence bundle and a latency report; it makes no network calls and
-extracts no identities. On Arm's published Raspberry Pi 5 reference, the model
+annotated evidence bundle and a latency report; it also derives image-plane
+direction, dwell time, relative speed and optional coarse vehicle colour
+alongside the detections. It makes no network calls and extracts no identities. On Arm's published Raspberry Pi 5 reference, the model
 runs at 134.10 ms p50 (7.46 FPS) with 59.17 MB peak memory and 38.90%
 mAP@0.5:0.95 on COCO val2017. On the committed 15-second pedestrian clip, the
 pipeline processes 150 frames, finds up to 9 people in a frame and tracks 18
@@ -197,7 +198,33 @@ depend on tracking quality. An optional tracker adds indicative unique counts:
 The tracker is not a production MOT system; IDs can switch when people cross or
 leave frame. Every output labels the unique numbers as indicative.
 
-### 4.5 Evidence bundle
+### 4.5 Attribute layer
+
+Counting is only one part of the output. For every confirmed track, the same
+tracker exposes a small, deliberately non-learned attribute layer:
+
+- **Direction** — the sign of the smoothed bbox velocity, reduced to `left`,
+  `right`, `up`, `down` or `stationary`. This is image-plane direction, not a
+  compass bearing.
+- **Relative speed** — the velocity magnitude converted to pixels/second using
+  the source FPS and stride. It is uncalibrated and should only be compared
+  within one fixed-camera clip.
+- **Dwell time** — the number of processed frames a confirmed track survives,
+  converted to seconds. It is a visibility duration, not a queueing or waiting
+  time.
+- **Coarse vehicle colour** — an optional HSV histogram over the central vehicle
+  crop, mapped to white, black, gray/silver, red, blue, green, yellow,
+  orange/brown or unknown. It is a heuristic, not a trained attribute model.
+- **Zone co-presence** — an optional manually drawn polygon; detections are
+  assigned by their bottom-centre point. The zone reports people/vehicle
+  co-presence only, never near-misses or crash risk.
+
+No face, plate, age, gender or identity attribute is produced. Attribute rows
+are deduplicated by track id, so a person counted in 100 frames does not become
+100 attribute rows. The output is `attribute_tracks.csv` plus a compact
+`attribute_summary.json`; per-frame attributes also appear in `detections.jsonl`.
+
+### 4.6 Evidence bundle
 
 Each run writes:
 
@@ -208,6 +235,8 @@ Each run writes:
 | `counts.csv` | Frame index, source frame, timestamp, per-class counts, stage timings |
 | `detections.jsonl` | Per-frame boxes, scores, classes and optional track IDs |
 | `REPORT.md` | Self-contained Markdown report generated from the summary |
+| `attribute_tracks.csv` | Per-track direction, dwell, relative speed and optional colour |
+| `attribute_summary.json` | Aggregate attribute distributions and caveats |
 | `annotated/` | Full-resolution annotated frames |
 | `contact_sheet.jpg` | 3–6 frame overview for quick review |
 | `annotated.mp4` | Optional annotated clip |
@@ -221,7 +250,9 @@ src/namma_drishti/
   constants.py      COCO labels, default classes, model metadata
   preprocess.py     letterbox, EXIF-aware image read, inverse transform
   postprocess.py    decode, NumPy NMS, per-class counts
-  tracker.py        IoU/velocity tracker for indicative unique counts
+  tracker.py        IoU/velocity tracker for unique counts and motion attributes
+  attributes.py     colour heuristic and per-track attribute accumulator
+  zone.py           optional polygon co-presence audit
   model.py          ExecuTorch loading, timing, model info
   pipeline.py       video/image loop, evidence writing, benchmark
   report.py         terminal summary and Markdown run report
@@ -232,7 +263,7 @@ src/namma_drishti/
 Tests cover letterbox geometry and padding, inverse mapping, decode shapes,
 YOLOv5 objectness, NMS suppression, class filtering, rescaling, tracker identity,
 confirmation, class separation, latency percentiles, stride-adjusted
-person-seconds and overlap shares. `make test` runs 21 tests.
+person-seconds and overlap shares. `make test` runs 29 tests.
 
 ### 5.2 Raspberry Pi setup
 
@@ -287,7 +318,7 @@ input-agnostic and will process it at the finals.
 - **Warmup:** 3 inferences in the pipeline; 10 in the standalone benchmark.
 - **Measured runs:** all 150 pipeline frames; 50 standalone inferences on a real
   image.
-- **Stages:** read, preprocess, inference, decode/NMS, tracking, annotation.
+- **Stages:** read, preprocess, inference, decode/NMS, tracking, attribute extraction, annotation.
 - **Statistics:** mean, p50, p95, p99, min, max, standard deviation.
 - **Throughput:** model-only `1000 / mean(inference_ms)`; pipeline
   `1000 / mean(total_ms)`. They are reported separately.
@@ -338,6 +369,18 @@ namma-drishti run -i data/samples/pedestrians_15s.mp4 \
 | bus | 0 | 0.00 | 0 | 0 |
 | truck | 1 | 1.00 | 1 | 1 |
 
+The attribute layer on the same 18 confirmed person tracks:
+
+| Attribute | Value |
+|---|---|
+| Direction split | left 9 · right 4 · stationary 2 · down 2 · up 1 |
+| Mean dwell | 4.52 s |
+| Mean relative speed | 35.63 px/s |
+| Vehicle colour | white van 1 · blue car 1 |
+
+Direction is image-plane; speed is uncalibrated. These are aggregate movement
+cues, not identity attributes.
+
 The car and truck are background vehicles — a parked white van and a blue car;
 both are real detections, but they illustrate that per-frame counts include
 stationary and background vehicles. This matters for a traffic-exposure metric
@@ -353,8 +396,13 @@ numbers.
 
 ![Dense traffic](../results/demo_traffic/annotated/bengaluru_traffic.jpg)
 
-Detected: **17 cars, 1 bus, 1 truck, 2 people** in one frame. The scene contains
-many motorcycles and auto-rickshaws that are not detected or not representable:
+Detected: **17 cars, 1 bus, 1 truck, 2 people** in one frame. The optional
+colour heuristic labels the 17 cars as **9 white, 4 gray/silver, 2 blue, 1 red,
+1 orange/brown**; the bus as white and the truck as orange/brown. These labels
+are coarse and visibly imperfect (the red truck in the sample is labelled
+orange/brown), so they are a demo of derived attributes, not a reliable colour
+measurement. The scene contains many motorcycles and auto-rickshaws that are not
+detected or not representable:
 
 - **motorcycle: 0** despite clearly visible riders — small, occluded objects at
   640×640 are the model's weak point;
@@ -385,12 +433,12 @@ Pipeline run (150 frames):
 
 | Stage | Mean ms | p50 ms | p95 ms | FPS from mean |
 |---|---:|---:|---:|---:|
-| Model inference | 20.71 | 20.68 | 21.36 | 48.29 |
-| Preprocess | 0.59 | 0.57 | 0.65 | 1697.79 |
-| Decode + NMS | 0.67 | 0.65 | 0.71 | 1484.61 |
-| Frame read | 0.19 | 0.16 | 0.22 | 5145.61 |
-| Annotate/save | 2.92 | 2.81 | 3.72 | 342.66 |
-| **Pipeline total** | **25.39** | **25.20** | **26.29** | **39.38** |
+| Model inference | 20.99 | 20.84 | 21.78 | 47.63 |
+| Preprocess | 0.66 | 0.57 | 0.69 | 1525.59 |
+| Decode + NMS | 0.78 | 0.75 | 0.84 | 1285.70 |
+| Frame read | 0.19 | 0.16 | 0.21 | 5272.24 |
+| Annotate/save | 3.24 | 3.14 | 4.08 | 309.01 |
+| **Pipeline total** | **26.19** | **25.86** | **27.27** | **38.19** |
 
 Standalone benchmark (50 runs, 10 warmups, real traffic image):
 
@@ -403,7 +451,8 @@ Standalone benchmark (50 runs, 10 warmups, real traffic image):
 | Peak process RSS | 437.8 MB (includes Python/PyTorch) |
 
 The standalone and pipeline inference numbers differ slightly because of frame
-content, thermal state and measurement overhead; both are reported rather than
+content, thermal state and measurement overhead; the pipeline also performs
+attribute extraction and colour estimation. Both are reported rather than
 cherry-picked.
 
 ### 7.5 Raspberry Pi 5 reference
@@ -436,9 +485,10 @@ These are projections from the reference latency, not measured clip runtimes.
 | Pi 5 memory | 59.17 MB peak | Arm model card |
 | COCO accuracy | 38.90% mAP@0.5:0.95 | Arm model card |
 | Committed clip counts | 150 frames, peak 9 people, 18 tracked people | This repo |
-| Dev-host model latency (1.5.1) | 20.34 ms mean / 49.16 FPS (standalone); 20.71 ms in the 150-frame run | This repo, labelled dev |
+| Committed clip attributes | 9 left / 4 right / 2 stationary / 2 down / 1 up; mean dwell 4.5 s | This repo |
+| Dev-host model latency (1.5.1) | 20.34 ms mean / 49.16 FPS (standalone); 20.99 ms in the 150-frame attribute run | This repo, labelled dev |
 | Exact Pi stack on dev host (1.1.0) | 23.83 ms mean / 22.52 ms p50 / 41.96 FPS | `results/benchmark_pi_stack_dev.json` |
-| Tests | 21 passing | This repo |
+| Tests | 29 passing | This repo |
 
 ## 8. Discussion
 
@@ -479,7 +529,17 @@ stationary tracks, or define a polygon zone and count only tracks that enter it.
 The current report labels the exposure numbers as descriptive, not a conflict
 measure.
 
-### 8.4 Tracker limitations
+### 8.4 Attributes are derived, not learned
+
+The attribute layer is intentionally classical. Direction and speed inherit the
+tracker's ID churn and bbox noise. Dwell is visibility duration, not queue time.
+Colour is an HSV heuristic over a crop; it samples glass, shadows and background
+as well as paint, so it can be wrong even when the detection is correct. These
+caveats are printed with every run and in `attribute_summary.json`. The layer is
+useful for comparing movement patterns within one clip; it is not a trained
+attribute classifier and should not be used for enforcement.
+
+### 8.5 Tracker limitations
 
 The IoU/velocity tracker is intentionally simple. It can switch IDs when two
 people cross, and it can create a new ID after a long occlusion. That is why
@@ -487,7 +547,7 @@ unique counts are labelled indicative and the per-frame counts remain the
 mandatory output. A production system would use a motion model, appearance
 features or a dedicated MOT algorithm; none of that is required for this PoC.
 
-### 8.5 Privacy and power
+### 8.6 Privacy and power
 
 The pipeline makes no network calls in the inference path. The model and code are
 local, and the default output is aggregate counts plus a few annotated frames.
@@ -507,7 +567,10 @@ and prefer aggregate outputs. Power consumption was not measured; a Pi 5 with a
 - **Transparency:** every number is traceable to a CSV/JSON file and a command;
   the report separates measured from reference values.
 - **Fairness and bias:** COCO is not representative of Indian streets; the report
-  names the gap rather than claiming general accuracy.
+  names the gap rather than claiming general accuracy. Colour estimates are
+  lighting- and viewpoint-sensitive; direction is image-plane only.
+- **No identity attributes:** the attribute layer deliberately contains no face,
+  plate, age, gender or identity fields.
 - **Human oversight:** the output is decision support; a human interprets the
   counts and checks the annotated frames.
 - **Licence compliance:** YOLO11n and the Arm `.pte` are AGPL-3.0; the repository
@@ -532,7 +595,7 @@ make demo
 ```
 
 - Model SHA-256: `154c54b52389219ebd982e1003227c1abbc3f29a99bdad241147b684d3041b96`
-- Tests: `make test` → 21 passing.
+- Tests: `make test` → 29 passing.
 - Sample media: `data/README.md`.
 - Model card and licence: `models/README.md`.
 
@@ -557,7 +620,8 @@ make demo
 Namma Drishti demonstrates that a 4.73 MB INT8 ExecuTorch model on a CPU-only
 Raspberry Pi 5 can count pedestrians and vehicles in a short street clip at 7.46
 FPS, with no cloud and no identities. The PoC ships a complete evidence bundle,
-a one-command Pi setup, 21 tests and an honest account of its limits. Its
+a one-command Pi setup, 29 tests, on-device motion/colour attributes and an
+honest account of its limits. Its
 practical application — a school-zone safety audit — turns the counts into a
 specific, low-cost decision. The next step is to run it on the organiser clip,
 replace the reference numbers with on-device measurements, and validate the
@@ -599,6 +663,10 @@ namma-drishti run -i data/samples/bengaluru_traffic.jpg \
 # Street image
 namma-drishti run -i data/samples/bengaluru_street.jpg \
   -o results/demo_street --annotate-every 1 --no-track
+
+# Attributes + coarse vehicle-colour estimates
+namma-drishti run -i data/samples/bengaluru_traffic.jpg \
+  -o results/demo_traffic --annotate-every 1 --no-track --estimate-vehicle-colors
 
 # Model-only benchmark
 namma-drishti benchmark --input data/samples/bengaluru_traffic.jpg \

@@ -22,18 +22,24 @@
 +----------------+------------+------------+-------+----------+
   * unique is indicative, from a lightweight IoU/velocity tracker.
 
+  ATTRIBUTES (unique tracks, on-device)
+  truck          1 tracks  stationary 1 · white 1 · dwell 14.9s · 0.6px/s
+  car            1 tracks  stationary 1 · blue 1 · dwell 14.9s · 0.4px/s
+  person        18 tracks  down 2, left 9, right 4, stationary 2, up 1 · — · dwell 4.5s · 35.6px/s
+  Motion is image-plane; speed is uncalibrated. Colour is optional HSV.
+
   LATENCY / THROUGHPUT
 +----------------+-----------+----------+----------+---------+
 | stage          | mean ms   | p50 ms   | p95 ms   | FPS     |
 +================+===========+==========+==========+=========+
-| model infer    | 20.71     | 20.68    | 21.36    | 48.29   |
-| preprocess     | 0.59      | 0.57     | 0.65     | 1697.79 |
-| decode + NMS   | 0.67      | 0.65     | 0.71     | 1484.61 |
-| frame read     | 0.19      | 0.16     | 0.22     | 5145.61 |
-| annotate/save  | 2.92      | 2.81     | 3.72     | 342.66  |
-| pipeline total | 25.39     | 25.20    | 26.29    | 39.38   |
+| model infer    | 20.99     | 20.84    | 21.78    | 47.63   |
+| preprocess     | 0.66      | 0.57     | 0.69     | 1525.59 |
+| decode + NMS   | 0.78      | 0.75     | 0.84     | 1285.70 |
+| frame read     | 0.19      | 0.16     | 0.21     | 5272.24 |
+| annotate/save  | 3.24      | 3.14     | 4.08     | 309.01  |
+| pipeline total | 26.19     | 25.86    | 27.27    | 38.19   |
 +----------------+-----------+----------+----------+---------+
-  Model-only 48.29 FPS · pipeline 39.38 FPS · wall 3.90 s
+  Model-only 47.63 FPS · pipeline 38.19 FPS · wall 4.04 s
 
   EXPOSURE (clip-level, descriptive)
   person-seconds 82.50 · vehicle-seconds 30.00 · frames with both 150 (100.0%)

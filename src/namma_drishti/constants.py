@@ -151,3 +151,14 @@ PI5_REFERENCE = {
     "model_size_mb": 4.73,
     "source": MODEL_SOURCE_URL,
 }
+
+# Image-plane motion labels. These are derived from the tracker's velocity,
+# not from a compass or a calibrated camera. The arrows are for annotations.
+DIRECTION_ARROWS: dict[str, str] = {
+    "left": "←",
+    "right": "→",
+    "up": "↑",
+    "down": "↓",
+    "stationary": "•",
+    "unknown": "?",
+}

@@ -243,3 +243,45 @@ class IoUTracker:
 
     def unique_counts_for(self, classes: list[str] | tuple[str, ...]) -> dict[str, int]:
         return {name: int(self.unique_counts.get(name, 0)) for name in classes}
+
+    def annotate_motion_attributes(
+        self, detections: list[Detection], source_fps: float, stride: int = 1
+    ) -> list[Detection]:
+        """Attach image-plane direction, relative speed and dwell time.
+
+        These are derived from the tracker's smoothed bbox velocity, not from a
+        calibrated camera. Speed is pixels/second and is useful for comparing
+        motion within a clip, not for km/h claims.
+        """
+
+        tracks_by_id = {track.track_id: track for track in self.tracks}
+        seconds_per_processed_frame = stride / source_fps if source_fps > 0 else 0.0
+        for detection in detections:
+            if detection.track_id is None:
+                continue
+            track = tracks_by_id.get(detection.track_id)
+            if track is None or not track.confirmed:
+                continue
+            vx, vy = float(track.velocity[0]), float(track.velocity[1])
+            speed_px_frame = float(np.hypot(vx, vy))
+            if speed_px_frame < 0.75:
+                direction = "stationary"
+            elif abs(vx) >= abs(vy):
+                direction = "right" if vx > 0 else "left"
+            else:
+                direction = "down" if vy > 0 else "up"
+            speed_px_s = (
+                speed_px_frame / seconds_per_processed_frame
+                if seconds_per_processed_frame > 0
+                else 0.0
+            )
+            dwell_s = max(0, track.last_frame - track.first_frame) * seconds_per_processed_frame
+            detection.attributes.update(
+                {
+                    "direction": direction,
+                    "speed_px_s": round(speed_px_s, 1),
+                    "dwell_s": round(dwell_s, 2),
+                    "hits": track.hits,
+                }
+            )
+        return detections

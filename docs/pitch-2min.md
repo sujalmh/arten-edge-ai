@@ -30,32 +30,33 @@ terminal summary. Do not read slides.
 
 > Namma Drishti is an offline edge counting kit. A 15-second clip goes in. A
 > **4.7 MB** YOLO11n INT8 model runs through **ExecuTorch** on the Pi's CPU at
-> **7.5 frames per second**. Out come per-frame counts of people, cars,
-> motorcycles, buses and trucks — plus annotated frames. No cloud. No
+> **7.5 frames per second**. Out come per-frame counts for people, cars,
+> motorcycles, buses and trucks. No cloud. No
 > identities. Nothing leaves the device.
 
 ## 0:52–1:15 — Demo
 
 *Play the clip or point to the contact sheet.*
 
-> 150 frames. The model finds up to **9 people in a single frame** and
-> tracks **18 distinct people** across the clip — that number is indicative, not
-> a production tracker. Every frame has a count in the CSV; the boxes show what was
-> counted. On this dev machine the model takes **20 ms**; on the Pi 5, Arm's
-> reference is **134 ms**.
+> 150 frames, up to **9 people in one frame**, 18 indicative tracks. Every
+> frame is in the CSV. Each track also carries image-plane direction,
+> dwell time and relative speed; on vehicles, an optional coarse colour — nine
+> white cars, four silver, two blue on the traffic image. This host takes
+> **20 ms** per frame; Arm's Pi 5 reference is **134 ms**.
 
 ## 1:15–1:35 — Rigour
 
-> We time every stage and report **p50 and p95**, not just an average. We report the model card's **38.9
-> mAP** on COCO, and we show where it fails: auto-rickshaws are not a COCO class,
-> and small occluded motorcycles are missed in dense traffic.
+> We time every stage and report **p50 and p95**, not just an average. Attributes
+> are derived: image-plane direction, uncalibrated speed, heuristic colour. The model card reports **38.9 mAP** on COCO, and we
+> show where it fails: auto-rickshaws are not a COCO class, and small occluded
+> motorcycles are missed in dense traffic.
 
 ## 1:35–1:55 — Impact
 
 > A school records three 15-second clips — drop-off, dismissal, quiet hour —
 > and runs them on the Pi, offline. If dismissal shows **40 children crossing with 60 vehicles**, that
-> is a case for a crossing guard at 3:30, a zebra crossing, or a no-parking zone
-> within 20 metres of the gate. One Pi. No subscription.
+> is a case for a crossing guard, a zebra crossing, or a no-parking zone at the
+> gate. One Pi. No subscription.
 
 ## 1:55–2:00 — Close
 
@@ -109,9 +110,14 @@ apologise repeatedly; move to the impact line.
 > model actually knows and label the limitation.
 
 **“What is novel?”**
-> The combination: a verified edge artifact, a full-pipeline measurement, a
-> privacy-preserving output, and a concrete civic workflow — at a cost a school
-> can actually pay.
+> The combination: a verified edge artifact, a full-pipeline measurement,
+> on-device movement attributes, a privacy-preserving output, and a concrete
+> civic workflow — at a cost a school can actually pay.
+
+**“Are the attributes accurate?”**
+> They are deliberately derived, not learned: direction is image-plane, speed is
+> uncalibrated pixels/second, colour is a coarse heuristic. They are useful for
+> comparing movement within one fixed-camera clip, not for enforcement.
 
 **“Do you store faces or plates?”**
 > No. The model has no face or plate head, and the pipeline never extracts

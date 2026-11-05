@@ -27,11 +27,13 @@ from .metrics import (
     summarise_latencies,
     write_json,
 )
+from .attributes import AttributeAccumulator, estimate_vehicle_color
 from .model import ExecuTorchDetector
 from .postprocess import count_by_class, decode
 from .preprocess import letterbox, read_image
 from .tracker import IoUTracker
 from .visualize import annotate_frame, make_contact_sheet
+from .zone import ZoneProfile, count_detections_in_zone, load_zone_profile, summarise_zone
 
 VIDEO_EXTENSIONS = {".mp4", ".avi", ".mov", ".mkv", ".webm", ".m4v"}
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".bmp", ".webp", ".tif", ".tiff"}
@@ -52,6 +54,7 @@ class FrameRecord:
     annotate_ms: float = 0.0
     total_ms: float = 0.0
     detections: list[dict] = field(default_factory=list)
+    zone_counts: dict[str, int] | None = None
 
 
 def _is_video(path: Path) -> bool:
@@ -95,6 +98,8 @@ def _annotate_and_save(
     show_track_ids: bool,
     output_dir: Path,
     filename: str,
+    zone_profile: ZoneProfile | None = None,
+    zone_counts: dict[str, int] | None = None,
 ) -> tuple[np.ndarray, float]:
     started = time.perf_counter()
     annotated = annotate_frame(
@@ -106,6 +111,9 @@ def _annotate_and_save(
         inference_ms=inference_ms,
         classes=classes,
         show_track_ids=show_track_ids,
+        zone_name=zone_profile.name if zone_profile else None,
+        zone_points=zone_profile.points if zone_profile else None,
+        zone_counts=zone_counts,
     )
     path = output_dir / filename
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -116,7 +124,7 @@ def _annotate_and_save(
 def _write_csv(path: Path, records: list[FrameRecord], classes: tuple[str, ...]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", newline="", encoding="utf-8") as handle:
-        writer = csv.writer(handle)
+        writer = csv.writer(handle, lineterminator="\n")
         header = [
             "frame_idx",
             "source_frame_idx",
@@ -131,10 +139,12 @@ def _write_csv(path: Path, records: list[FrameRecord], classes: tuple[str, ...])
             "annotate_ms",
             "total_ms",
         ]
+        has_zone = any(rec.zone_counts is not None for rec in records)
+        if has_zone:
+            header.extend(["zone_person", "zone_vehicle", "zone_both"])
         writer.writerow(header)
         for rec in records:
-            writer.writerow(
-                [
+            row = [
                     rec.frame_idx,
                     rec.source_frame_idx,
                     f"{rec.timestamp_s:.3f}",
@@ -148,7 +158,10 @@ def _write_csv(path: Path, records: list[FrameRecord], classes: tuple[str, ...])
                     f"{rec.annotate_ms:.2f}",
                     f"{rec.total_ms:.2f}",
                 ]
-            )
+            if has_zone:
+                zone = rec.zone_counts or {"person": 0, "vehicle": 0}
+                row.extend([zone["person"], zone["vehicle"], int(zone["person"] > 0 and zone["vehicle"] > 0)])
+            writer.writerow(row)
 
 
 def _write_jsonl(path: Path, records: list[FrameRecord]) -> None:
@@ -163,7 +176,36 @@ def _write_jsonl(path: Path, records: list[FrameRecord]) -> None:
                 "inference_ms": round(rec.inference_ms, 2),
                 "detections": rec.detections,
             }
+            if rec.zone_counts is not None:
+                payload["zone_counts"] = rec.zone_counts
             handle.write(json.dumps(payload, ensure_ascii=False) + "\n")
+
+
+def _write_zone_csv(path: Path, records: list[FrameRecord]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", newline="", encoding="utf-8") as handle:
+        writer = csv.writer(handle, lineterminator="\n")
+        writer.writerow(["frame_idx", "source_frame_idx", "timestamp_s", "zone_person", "zone_vehicle", "zone_both"])
+        for rec in records:
+            zone = rec.zone_counts or {"person": 0, "vehicle": 0}
+            writer.writerow([
+                rec.frame_idx,
+                rec.source_frame_idx,
+                f"{rec.timestamp_s:.3f}",
+                zone["person"],
+                zone["vehicle"],
+                int(zone["person"] > 0 and zone["vehicle"] > 0),
+            ])
+
+
+def _write_attribute_csv(path: Path, rows: list[dict]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fields = ["class", "track_id", "color", "direction", "speed_px_s", "dwell_s", "hits", "score"]
+    with open(path, "w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore", lineterminator="\n")
+        writer.writeheader()
+        for row in rows:
+            writer.writerow(row)
 
 
 def _aggregate_counts(
@@ -195,12 +237,15 @@ def run_input(
     conf_threshold: float = 0.35,
     iou_threshold: float = 0.7,
     track: bool = True,
+    attributes: bool = True,
     save_video: bool = False,
     annotate_every: int = 10,
     max_frames: int | None = None,
     stride: int = 1,
     threads: int | None = None,
     quiet: bool = False,
+    zone_config: str | Path | None = None,
+    estimate_vehicle_colors: bool = False,
 ) -> dict:
     """Process a video, one image, or a directory of images.
 
@@ -217,6 +262,7 @@ def run_input(
         raise ValueError("stride must be >= 1")
     if annotate_every < 0:
         raise ValueError("annotate_every must be >= 0")
+    zone_profile = load_zone_profile(zone_config) if zone_config else None
 
     is_video = _is_video(input_path)
     image_paths = [] if is_video else _list_images(input_path)
@@ -229,6 +275,7 @@ def run_input(
 
     detector = ExecuTorchDetector(model_path, threads=threads, warmup=3)
     tracker = IoUTracker() if (track and is_video) else None
+    attribute_acc = AttributeAccumulator() if (attributes or estimate_vehicle_colors) else None
     if not quiet:
         print(f"\nNamma Drishti · {MODEL_NAME}")
         print(f"  model     {Path(model_path).name} ({detector.model_size_mb:.2f} MB)")
@@ -236,6 +283,10 @@ def run_input(
         print(f"  input     {input_path}")
         print(f"  classes   {', '.join(classes)}")
         print(f"  tracking  {'on (indicative unique counts)' if tracker else 'off'}")
+        if attribute_acc:
+            print("  attrs     on-device motion (direction, relative speed, dwell)" + (" + vehicle colour" if estimate_vehicle_colors else ""))
+        if zone_profile:
+            print(f"  zone      {zone_profile.name} (manual polygon; co-presence only)")
         print(f"  output    {output_dir}\n")
 
     records: list[FrameRecord] = []
@@ -295,7 +346,18 @@ def run_input(
                 conf_threshold=conf_threshold,
                 iou_threshold=iou_threshold,
             )
+            if estimate_vehicle_colors:
+                for detection in detections:
+                    if detection.class_name in VEHICLE_CLASSES:
+                        detection.attributes["color_estimate"] = estimate_vehicle_color(
+                            frame, detection.box
+                        )
             counts = count_by_class(detections, classes)
+            zone_counts = (
+                count_detections_in_zone(detections, zone_profile, frame.shape[1], frame.shape[0])
+                if zone_profile
+                else None
+            )
             postprocess_ms = (time.perf_counter() - t_post) * 1000.0
 
             track_ms = 0.0
@@ -303,8 +365,12 @@ def run_input(
             if tracker is not None:
                 t_track = time.perf_counter()
                 tracker.update(detections, processed)
+                if attributes:
+                    tracker.annotate_motion_attributes(detections, source_fps, stride)
                 track_ms = (time.perf_counter() - t_track) * 1000.0
                 tracked_counts = tracker.unique_counts_for(classes)
+            if attribute_acc is not None:
+                attribute_acc.update(detections, processed)
 
             annotate_ms = 0.0
             annotated_for_video: np.ndarray | None = None
@@ -323,6 +389,8 @@ def run_input(
                     tracker is not None,
                     annotated_dir,
                     f"frame_{processed:05d}.jpg",
+                    zone_profile,
+                    zone_counts,
                 )
                 saved_annotated.append(annotated_dir / f"frame_{processed:05d}.jpg")
                 annotated_for_video = last_annotated
@@ -341,6 +409,9 @@ def run_input(
                         inference_ms=inference_ms,
                         classes=classes,
                         show_track_ids=tracker is not None,
+                        zone_name=zone_profile.name if zone_profile else None,
+                        zone_points=zone_profile.points if zone_profile else None,
+                        zone_counts=zone_counts,
                     )
                     annotate_ms = (time.perf_counter() - t_ann) * 1000.0
                     last_annotated = annotated_for_video
@@ -369,6 +440,7 @@ def run_input(
                     annotate_ms=annotate_ms,
                     total_ms=total_ms,
                     detections=[d.to_dict() for d in detections],
+                    zone_counts=zone_counts,
                 )
             )
             processed += 1
@@ -410,7 +482,20 @@ def run_input(
                 conf_threshold=conf_threshold,
                 iou_threshold=iou_threshold,
             )
+            if estimate_vehicle_colors:
+                for detection in detections:
+                    if detection.class_name in VEHICLE_CLASSES:
+                        detection.attributes["color_estimate"] = estimate_vehicle_color(
+                            frame, detection.box
+                        )
             counts = count_by_class(detections, classes)
+            zone_counts = (
+                count_detections_in_zone(detections, zone_profile, frame.shape[1], frame.shape[0])
+                if zone_profile
+                else None
+            )
+            if attribute_acc is not None:
+                attribute_acc.update(detections, idx)
             postprocess_ms = (time.perf_counter() - t_post) * 1000.0
 
             annotate_ms = 0.0
@@ -426,6 +511,8 @@ def run_input(
                     False,
                     annotated_dir,
                     f"{path.stem}.jpg",
+                    zone_profile,
+                    zone_counts,
                 )
                 saved_annotated.append(annotated_dir / f"{path.stem}.jpg")
 
@@ -444,6 +531,7 @@ def run_input(
                     annotate_ms=annotate_ms,
                     total_ms=total_ms,
                     detections=[d.to_dict() for d in detections],
+                    zone_counts=zone_counts,
                 )
             )
             if not quiet:
@@ -488,6 +576,20 @@ def run_input(
         )["share"],
     }
 
+    zone_result = None
+    if zone_profile:
+        zone_rows = [
+            {"source_frame_idx": rec.source_frame_idx, **(rec.zone_counts or {"person": 0, "vehicle": 0})}
+            for rec in records
+        ]
+        zone_result = {
+            "name": zone_profile.name,
+            "points_normalized": [list(point) for point in zone_profile.points],
+            "counts": summarise_zone(
+                zone_rows, source_fps=source_fps, stride=stride, is_video=is_video
+            ),
+        }
+
     model_info = detector.info()
     summary = {
         "project": "Namma Drishti",
@@ -507,9 +609,11 @@ def run_input(
             "confidence_threshold": conf_threshold,
             "iou_threshold": iou_threshold,
             "tracking": tracker is not None,
+            "attributes": attribute_acc is not None,
             "threads": threads,
             "annotate_every": annotate_every,
             "save_video": save_video,
+            "vehicle_color_estimate": estimate_vehicle_colors,
         },
         "model": model_info["model"],
         "environment": {k: v for k, v in model_info.items() if k not in ("model", "reference")},
@@ -530,10 +634,15 @@ def run_input(
             else None,
         },
         "exposure": exposure,
+        "zone": zone_result,
+        "attributes": attribute_acc.summary() if attribute_acc else None,
         "peak_rss_mb": peak_rss_mb(),
         "reference": PI5_REFERENCE,
         "outputs": {
             "counts_csv": str(output_dir / "counts.csv"),
+            "zone_counts_csv": str(output_dir / "zone_counts.csv") if zone_profile else None,
+            "attribute_tracks_csv": str(output_dir / "attribute_tracks.csv") if attribute_acc and attribute_acc.tracks else None,
+            "attribute_summary_json": str(output_dir / "attribute_summary.json") if attribute_acc and attribute_acc.tracks else None,
             "detections_jsonl": str(output_dir / "detections.jsonl"),
             "summary_json": str(output_dir / "summary.json"),
             "summary_txt": str(output_dir / "summary.txt"),
@@ -560,10 +669,18 @@ def run_input(
             "processed locally and only the requested evidence is written.",
             "Annotated-video encoding is an output convenience and is not included "
             "in the pipeline latency; model-only and per-stage timings are unaffected.",
+            "Direction and speed are image-plane attributes from the tracker. Speed "
+            "is uncalibrated pixels/second, not km/h. Colour is an optional HSV "
+            "heuristic on vehicle crops, not a trained attribute model.",
         ],
     }
 
     _write_csv(output_dir / "counts.csv", records, classes)
+    if attribute_acc and attribute_acc.tracks:
+        _write_attribute_csv(output_dir / "attribute_tracks.csv", attribute_acc.rows())
+        write_json(output_dir / "attribute_summary.json", {"summary": attribute_acc.summary(), "tracks": attribute_acc.rows()})
+    if zone_profile:
+        _write_zone_csv(output_dir / "zone_counts.csv", records)
     _write_jsonl(output_dir / "detections.jsonl", records)
     write_json(output_dir / "summary.json", summary)
 

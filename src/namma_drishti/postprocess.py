@@ -23,6 +23,7 @@ class Detection:
     score: float
     box: tuple[float, float, float, float]
     track_id: int | None = None
+    attributes: dict[str, str] = field(default_factory=dict)
 
     def to_dict(self, ndigits: int = 2) -> dict:
         return {
@@ -30,6 +31,7 @@ class Detection:
             "class": self.class_name,
             "score": round(float(self.score), 4),
             "box": [round(float(v), ndigits) for v in self.box],
+            **({"attributes": dict(self.attributes)} if self.attributes else {}),
             **({"track_id": self.track_id} if self.track_id is not None else {}),
         }
 

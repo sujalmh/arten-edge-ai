@@ -32,8 +32,8 @@ cameras — it is an affordable way to count movement. Namma Drishti is an offli
 edge-AI PoC that processes a 10–20 second clip or images on a Raspberry Pi 5.
 A 4.73 MB YOLO11n INT8 model runs through ExecuTorch with XNNPACK at 7.46 FPS,
 detecting people, cars, motorcycles, buses, trucks and bicycles. It outputs
-per-frame counts, annotated frames, a CSV/JSON evidence bundle and honest
-latency percentiles. No footage leaves the device and no identities are
+per-frame counts, on-device motion attributes and optional vehicle colour,
+annotated frames, a CSV/JSON evidence bundle and honest latency percentiles. No footage leaves the device and no identities are
 extracted. The practical use case is a school-zone safety audit: compare
 dismissal-time clips and make a case for a crossing guard or zebra crossing.
 
@@ -51,8 +51,10 @@ letterboxes each frame to 640×640, runs the `.pte` through the ExecuTorch
 runtime, decodes the 4 xywh + 80 class outputs, applies per-class NMS, and maps
 boxes back to the original image. Counts are written per frame to CSV and JSONL;
 annotated frames, a contact sheet and an optional annotated video make the result
-auditable. An optional IoU/velocity tracker adds indicative unique counts, clearly
-labelled as such.
+auditable. An optional IoU/velocity tracker adds indicative unique counts plus image-plane
+direction, dwell time and relative speed; an optional HSV pass adds a coarse
+vehicle colour. All of these are labelled as derived attributes, not learned
+predictions.
 
 The societal application is a school-zone safety audit. A school records three
 15-second clips — morning drop-off, afternoon dismissal and a quiet hour — and
@@ -61,9 +63,8 @@ observed person-seconds gives a ward officer or school committee concrete
 evidence for a crossing guard, a zebra crossing or a no-parking zone. The footage
 never leaves the school, and the output is aggregate counts, not identities.
 
-The project is already beyond a concept: the repository contains a working
-pipeline, 21 unit tests, a one-command Pi setup, a committed model with checksum
-verification, sample evidence bundles and a 21-second demo. At the finals we will
+The repository already contains a working pipeline, 29 tests, a one-command Pi
+setup, a checksum-verified model, evidence bundles and a 21-second demo. At the finals we will
 run the organiser clip on the Pi and replace the reference numbers with on-device
 measurements.
 
@@ -90,16 +91,19 @@ must run on the target, not just on a laptop.
    confidence, converted from xywh to xyxy, and passed through per-class NumPy
    NMS. The decoder also accepts YOLOv5-style `[N, 85]` outputs, so a different
    approved model can be dropped in with `--model`.
-5. **Count** — per-category counts per frame. An optional greedy IoU/velocity
-   tracker provides indicative unique counts; it is explicitly not a production
-   MOT system.
-6. **Evidence** — `counts.csv`, `detections.jsonl`, `summary.json`,
-   `summary.txt`, `REPORT.md`, annotated frames, a contact sheet and an optional
-   `annotated.mp4`.
+5. **Count + attribute** — per-category counts per frame. An optional greedy
+   IoU/velocity tracker provides indicative unique counts and image-plane
+   direction, dwell and relative speed. An optional HSV pass adds a coarse
+   vehicle colour; an optional polygon adds a descriptive zone co-presence
+   count. None of these is a production MOT or identity system.
+6. **Evidence** — `counts.csv`, `detections.jsonl`, `attribute_tracks.csv`,
+   `attribute_summary.json`, `summary.json`, `summary.txt`, `REPORT.md`,
+   annotated frames, a contact sheet and an optional `annotated.mp4`.
 
 **Measurement.** The standalone benchmark runs 10 warmups and 50 measured
 inferences on a real frame. The pipeline records read, preprocess, inference,
-decode/NMS, tracking and annotation times separately, then reports mean, p50,
+decode/NMS, tracking, attribute extraction and annotation times separately,
+then reports mean, p50,
 p95 and p99. Throughput is reported twice — model-only FPS and full-pipeline FPS
 — and never conflated. The report distinguishes the Pi 5 reference numbers from
 the development-host numbers; the team replaces the dev row with an on-device row
@@ -107,8 +111,8 @@ at the finals.
 
 **Reproducibility.** The model is committed and checksum-verified. `setup_pi.sh`
 pins ExecuTorch 1.1.0 and CPU PyTorch, creates a venv, installs the package and
-runs `doctor`. Twenty-one unit tests cover letterboxing, NMS, decode, tracker
-identity and metrics. A fallback export script reproduces the model through
+runs `doctor`. Twenty-nine unit tests cover letterboxing, NMS, decode, tracker
+identity, attributes, zone metrics and latency statistics. A fallback export script reproduces the model through
 Ultralytics if the prebuilt artifact is unavailable.
 
 **Why edge, why now.** A Raspberry Pi 5 plus a phone clip is within reach of a
@@ -122,9 +126,11 @@ That changes the deployment conversation from "install a surveillance system" to
 Most hackathon object-detection demos stop at a laptop and a bounding box. Namma
 Drishti is built around the constraints of the target: a 4.73 MB INT8 ExecuTorch
 model, CPU-only XNNPACK inference, a one-command Pi setup and a checksum-verified
-artifact. It measures the full pipeline, not just the model, and separates p50
-from p95. It is privacy-preserving by design: no faces, plates or identities, and
-no network calls. It is honest about failure: the dense Bengaluru stress test
+artifact. It adds derived movement attributes — image-plane direction, dwell and
+relative speed — plus optional coarse vehicle colour, all on the same tracker.
+It measures the full pipeline, not just the model, and separates p50 from p95.
+It is privacy-preserving by design: no faces, plates or identities, and no
+network calls. It is honest about failure: the dense Bengaluru stress test
 misses small motorcycles, and auto-rickshaws are not a COCO class. Finally, it
 ships evidence, not screenshots — per-frame CSV, detections JSONL, annotated
 frames, a generated report and a reproducible benchmark.
