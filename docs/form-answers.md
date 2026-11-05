@@ -19,8 +19,8 @@ Alternative if a shorter title is needed: **Arten — count movement, not people
 ## 50-word elevator pitch
 
 Arten turns a 15-second street clip into offline, privacy-preserving
-counts of pedestrians and vehicles on a Raspberry Pi. Using an Arm-optimized
-YOLO11n INT8 model in ExecuTorch, it runs at 7.46 FPS with no cloud, GPU or
+counts and movement attributes of pedestrians and vehicles on a Raspberry Pi.
+Using an Arm-optimized YOLO11n INT8 model in ExecuTorch, it runs at 7.46 FPS with no cloud, GPU or
 identities — evidence for safer crossings, not surveillance.
 
 ## 150-word summary
