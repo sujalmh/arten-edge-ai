@@ -93,10 +93,10 @@ deliberately classical and transparent, and its limits are stated with the
 output. That combination — offline counting plus on-device movement context,
 designed for a real community decision — is the novelty.
 
-**Plan.** The work is scoped to one day. First, verify the Raspberry Pi and the
-local runtime, then run a short clip end to end to confirm detection, counting
-and attributes. Next, tune the confidence and tracking settings on a few frames
-and freeze them so the final numbers are defensible. Then run the full organiser
+**Plan.** The work is scoped to the hackathon day. First, verify the Raspberry
+Pi and the local runtime, then run a short clip end to end to confirm detection, counting
+and attributes. Next, tune the confidence and tracking settings on sample frames
+and freeze them so the final run is defensible. Then run the full organiser
 clip, benchmark the model, and save the counts, attribute evidence and annotated
 frames. After that, assemble the report and the short spoken story around one
 concrete use case: a school gate at dismissal. The final block is reserved for
