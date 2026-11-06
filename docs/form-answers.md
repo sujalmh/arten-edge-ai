@@ -71,38 +71,34 @@ measurements.
 
 ## Approach and overall plan (application answer)
 
-**Approach.** Arten is an offline edge-AI tool that turns a short street clip or
-a small set of images into a clear picture of pedestrian and vehicle movement.
-The problem is not a lack of cameras; it is the lack of affordable, trustworthy
-data. A school, ward office or resident group cannot justify an expensive camera
-platform or a cloud subscription just to learn how many people cross a road.
-Arten runs a compact pretrained object detector through ExecuTorch on a low-cost
-Raspberry Pi. It counts people, bicycles, cars, motorcycles, buses and trucks in
-each frame, then adds a lightweight movement layer: the direction each tracked
-object travels across the image, how long it stays visible, and its relative
-speed. For vehicles, it also offers a coarse colour estimate. The result is a
-count table and a few annotated frames that a non-specialist can read.
+Arten is an offline edge-AI system that turns a short street clip or a small
+image set into a clear picture of pedestrian and vehicle movement. The problem
+is not a lack of cameras; it is a lack of affordable, trustworthy data. A school
+or ward office cannot justify an expensive camera platform or cloud subscription
+just to count people crossing a road. Arten runs a compact pretrained detector
+through ExecuTorch on a low-cost Raspberry Pi. It counts people, bicycles, cars,
+motorcycles, buses and trucks per frame, then adds movement context: direction
+across the image, dwell time, and relative speed. For vehicles, it also estimates
+a coarse colour. The output is a count table and annotated frames a
+non-specialist can read.
 
-**Novelty.** Most object-detection demonstrations stop at boxes and a total.
-Arten makes the total useful by explaining the movement behind it. The
-direction, dwell and speed attributes come from the same lightweight tracker
-used for counting, not from a second model, so the system stays small and
-explainable. The design is edge-first: the model is compact, the footage stays
-on the device, and no identity recognition is performed. The attribute layer is
-deliberately classical and transparent, and its limits are stated with the
-output. That combination — offline counting plus on-device movement context,
-designed for a real community decision — is the novelty.
+The novelty is that the count is explained, not just reported. Most demos stop at
+boxes and a total. Direction, dwell and speed come from the same lightweight
+tracker used for counting, not a second model, so the system stays small and
+transparent. It is edge-first: the model is compact, footage stays on the
+device, and no identities are recognised. The attribute layer is deliberately
+classical, and its limits are stated with the output.
 
-**Plan.** The work is scoped to the hackathon day. First, verify the Raspberry
-Pi and the local runtime, then run a short clip end to end to confirm detection, counting
-and attributes. Next, tune the confidence and tracking settings on sample frames
-and freeze them so the final run is defensible. Then run the full organiser
-clip, benchmark the model, and save the counts, attribute evidence and annotated
-frames. After that, assemble the report and the short spoken story around one
-concrete use case: a school gate at dismissal. The final block is reserved for
-rehearsal, a backup of the evidence and a clean submission. If the hardware or
-the clip causes a problem, the fallback is a prebuilt model, a reproducible
-export path and pre-generated evidence, so the demonstration still runs.
+The plan is scoped to the hackathon day. First, verify the Raspberry Pi and
+runtime, then run a short clip end to end to confirm detection, counting and
+attributes. Next, tune confidence and tracking settings on sample frames and
+freeze them so the final run is defensible. Then run the full organiser clip,
+benchmark the model, and save counts, attribute evidence and annotated frames.
+Then assemble the report and short spoken story around one concrete use case: a
+school gate at dismissal. The final block is reserved for rehearsal, a backup of
+the evidence and a clean submission. If hardware or the clip fails, fall back to
+the prebuilt model, a reproducible export path and pre-generated evidence so the
+demonstration still runs.
 
 ## 500-word technical approach
 
