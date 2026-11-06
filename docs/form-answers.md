@@ -64,43 +64,54 @@ evidence for a crossing guard, a zebra crossing or a no-parking zone. The footag
 never leaves the school, and the output is aggregate counts, not identities.
 
 The repository already contains a working pipeline, 29 tests, a one-command Pi
-setup, a checksum-verified model, evidence bundles and a 21-second demo. At the finals we will
+setup, a checksum-verified model, evidence bundles and a 21-second demo. At the finals I will
 run the organiser clip on the Pi and replace the reference numbers with on-device
 measurements.
 
 
 ## Approach and overall plan (application answer)
 
-**Approach.** Treat the street clip as an evidence problem, not a surveillance
-problem. We run a 4.73 MB YOLO11n INT8 ExecuTorch model entirely on a Raspberry
-Pi 5 CPU, at Arm's verified 134.10 ms p50 / 7.46 FPS. The pipeline letterboxes
-to 640×640, runs the `.pte` through XNNPACK, decodes the 4 xywh + 80 class
-outputs, applies per-class NMS, and writes per-frame counts plus annotated
-frames. We then add a deliberately non-learned attribute layer on the same
-tracker: image-plane direction, dwell time, relative speed and optional coarse
-vehicle colour. Outputs are `counts.csv`, `detections.jsonl`,
-`attribute_tracks.csv`, `attribute_summary.json`, a contact sheet, an optional
-annotated video, and p50/p95 latency. No cloud, no identity extraction, no
-second model.
+**Approach.** Arten is an offline edge-AI tool that turns a short street clip or
+a small set of images into a clear picture of pedestrian and vehicle movement.
+The problem is not a lack of cameras; it is the lack of affordable, trustworthy
+data. A school, ward office or resident group cannot justify an expensive camera
+platform or a cloud subscription just to learn how many people cross a road.
+Arten runs a compact pretrained object detector through ExecuTorch on a low-cost
+Raspberry Pi. It counts people, bicycles, cars, motorcycles, buses and trucks in
+each frame, then adds a lightweight movement layer: the direction each tracked
+object travels across the image, how long it stays visible, and its relative
+speed. For vehicles, it also offers a coarse colour estimate. The result is a
+count table and a few annotated frames that a non-specialist can read.
 
-**Overall plan (one-day finals).** 0:00–0:45 verify the Pi, run
-`setup_pi.sh`, `doctor` and a smoke test. 0:45–1:30 run the organiser clip and
-inspect counts/attributes on a few frames. 1:30–2:30 freeze confidence, IoU and
-stride. 2:30–3:30 run the full clip, benchmark 50 runs, save the evidence
-bundle. 3:30–4:30 fill the report, regenerate the contact sheet and update the
-numbers. 4:30–5:30 rehearse the two-minute pitch and prepare a USB backup.
-5:30–6:00 buffer and submission. Fallbacks: prebuilt model, FP32 export path,
-pre-generated evidence, and the exact Pi runtime stack already smoke-tested on
-the dev host.
+**Novelty.** Most object-detection demonstrations stop at boxes and a total.
+Arten makes the total useful by explaining the movement behind it. The
+direction, dwell and speed attributes come from the same lightweight tracker
+used for counting, not from a second model, so the system stays small and
+explainable. The design is edge-first: the model is compact, the footage stays
+on the device, and no identity recognition is performed. The attribute layer is
+deliberately classical and transparent, and its limits are stated with the
+output. That combination — offline counting plus on-device movement context,
+designed for a real community decision — is the novelty.
+
+**Plan.** The work is scoped to one day. First, verify the Raspberry Pi and the
+local runtime, then run a short clip end to end to confirm detection, counting
+and attributes. Next, tune the confidence and tracking settings on a few frames
+and freeze them so the final numbers are defensible. Then run the full organiser
+clip, benchmark the model, and save the counts, attribute evidence and annotated
+frames. After that, assemble the report and the short spoken story around one
+concrete use case: a school gate at dismissal. The final block is reserved for
+rehearsal, a backup of the evidence and a clean submission. If the hardware or
+the clip causes a problem, the fallback is a prebuilt model, a reproducible
+export path and pre-generated evidence, so the demonstration still runs.
 
 ## 500-word technical approach
 
-**Model and runtime.** We use YOLO11n, a 2.6M-parameter COCO detector, statically
+**Model and runtime.** I use YOLO11n, a 2.6M-parameter COCO detector, statically
 quantized to INT8 by Arm and exported to ExecuTorch `.pte`. The artifact is 4.73
 MB; the stem convolution and detection head remain FP32. On Raspberry Pi 5 with
 ExecuTorch 1.1.0 and XNNPACK, Arm's model card reports 134.10 ms p50 latency,
 7.46 FPS, 59.17 MB peak memory and 38.90% mAP@0.5:0.95 (54.66% mAP@0.5) on COCO
-val2017. We chose this verified artifact over a larger FP32 model because the PoC
+val2017. I chose this verified artifact over a larger FP32 model because the PoC
 must run on the target, not just on a laptop.
 
 **Pipeline.** The package is deliberately small and testable:

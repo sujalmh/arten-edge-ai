@@ -82,7 +82,7 @@ Why it matters: a school-zone audit can separate “40 people crossed” from �
 | Motion attributes (clip) | 18 tracks: **9 left, 4 right, 2 stationary, 2 down, 1 up** · mean dwell **4.5 s** · mean **35.6 px/s** | `results/demo_pedestrians/attribute_summary.json` |
 | Colour attributes (traffic image) | 17 cars: **9 white, 4 gray/silver, 2 blue, 1 red, 1 orange/brown** | `results/demo_traffic/attribute_summary.json` |
 
-> **Read the labels.** The Pi 5 numbers are Arm's published reference for the prebuilt model. The dev-host numbers are what this repository measured on an Apple Silicon machine. The repo includes the exact benchmark harness so the final Pi run can replace the dev row at the event. We do not present dev-host numbers as Pi performance.
+> **Read the labels.** The Pi 5 numbers are Arm's published reference for the prebuilt model. The dev-host numbers are what this repository measured on an Apple Silicon machine. The repo includes the exact benchmark harness so the final Pi run can replace the dev row at the event. The report does not present dev-host numbers as Pi performance.
 
 <p align="center">
   <img src="results/demo_traffic/annotated/bengaluru_traffic.jpg" width="49%" alt="Bengaluru traffic detections">
@@ -124,7 +124,7 @@ arten doctor
 make demo
 ```
 
-The prebuilt model loads on ExecuTorch 1.5.1 in our Mac tests; the Pi pins 1.1.0
+The prebuilt model loads on ExecuTorch 1.5.1 in the Mac tests; the Pi pins 1.1.0
 to match Arm's model card. Both are exercised by the report.
 
 ### Commands that matter
@@ -192,11 +192,11 @@ against the expected transform.
 ## Why this is different
 
 - **It is actually ExecuTorch on the edge.** The primary artifact is a 4.73 MB INT8 `.pte` running through the ExecuTorch runtime with XNNPACK — not a PyTorch script on a laptop with “edge” in the title.
-- **It uses Arm's verified optimization.** We start from Arm's pre-optimized YOLO11n INT8 build for Raspberry Pi 5, with a model card reporting 2.23× speedup and 1.56× lower peak memory over the FP32 baseline.
+- **It uses Arm's verified optimization.** Arten starts from Arm's pre-optimized YOLO11n INT8 build for Raspberry Pi 5, with a model card reporting 2.23× speedup and 1.56× lower peak memory over the FP32 baseline.
 - **It measures the whole pipeline, not just the model.** Preprocess, inference, decode/NMS, tracking and annotation are timed separately, so the throughput claim is auditable.
 - **It is privacy-preserving by construction.** No faces, no plates, no identities, no network calls. The default output is aggregate counts and a handful of annotated frames.
 - **Attributes, not just boxes.** Direction, dwell, relative speed and optional colour ride along with the same detections and the same tracker — no second model, no cloud, no identity attributes.
-- **It is honest about accuracy.** We report COCO reference mAP, not a made-up “accuracy” on the organiser clip, and we show the model's India-specific failure mode (auto-rickshaws are not a COCO class).
+- **It is honest about accuracy.** Arten reports COCO reference mAP, not a made-up “accuracy” on the organiser clip, and shows the model's India-specific failure mode (auto-rickshaws are not a COCO class).
 - **It is a kit, not a one-off script.** One-command setup, tests, sample media, checksum verification, model-agnostic `.pte` loading, and a documented fallback export path.
 
 ## Mandatory deliverables — where to find them
@@ -262,7 +262,7 @@ The full mapping, including what to say at the booth, is in
   are not COCO classes. In the dense traffic sample, the model finds 17 cars but
   **0 motorcycles** — small, occluded riders are a known failure mode. Do not use
   this PoC for enforcement or as a complete traffic census.
-- **No ground-truth mAP on organiser data.** We report the model card's COCO
+- **No ground-truth mAP on organiser data.** The report cites the model card's COCO
   mAP and qualitative sample outputs. At the finals, the organiser clip will be
   processed and its counts reported as counts, not as accuracy.
 - **Unique counts are indicative.** The IoU/velocity tracker is not a production
