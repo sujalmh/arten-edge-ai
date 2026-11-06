@@ -89,16 +89,13 @@ transparent. It is edge-first: the model is compact, footage stays on the
 device, and no identities are recognised. The attribute layer is deliberately
 classical, and its limits are stated with the output.
 
-The plan is scoped to the hackathon day. First, verify the Raspberry Pi and
-runtime, then run a short clip end to end to confirm detection, counting and
-attributes. Next, tune confidence and tracking settings on sample frames and
-freeze them so the final run is defensible. Then run the full organiser clip,
-benchmark the model, and save counts, attribute evidence and annotated frames.
-Then assemble the report and short spoken story around one concrete use case: a
-school gate at dismissal. The final block is reserved for rehearsal, a backup of
-the evidence and a clean submission. If hardware or the clip fails, fall back to
-the prebuilt model, a reproducible export path and pre-generated evidence so the
-demonstration still runs.
+The plan is to build the smallest reliable end-to-end path first: run the
+pretrained detector on a sample clip, confirm the counts, then add tracking and
+the attribute layer. Next, package the pipeline so the same command handles
+video or images, writes counts and annotated evidence, and reports latency.
+Then validate it on the supplied material, document the limits and prepare the
+short demonstration. A fallback model path and pre-generated evidence keep the
+demonstration reproducible if the hardware or the clip changes.
 
 ## 500-word technical approach
 
