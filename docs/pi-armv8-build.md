@@ -47,6 +47,17 @@ pipeline total 2173.86 ms   (0.46 FPS)
 person 2 · car 19 · bus 1 · truck 1
 ```
 
+Five-run benchmark (`results/benchmark_pi3b_armv8.json`, warmup 1):
+
+| Metric | Pi 3B+ |
+|---|---:|
+| model load | 126.28 ms |
+| mean | 1298.78 ms |
+| p50 | 1300.08 ms |
+| p95 | 1300.43 ms |
+| throughput | 0.77 FPS |
+| peak RSS | 443.8 MB |
+
 Instruction check on the installed binding:
 
 ```text

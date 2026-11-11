@@ -1,0 +1,69 @@
+{
+  "model": {
+    "name": "YOLO11n (COCO) — Arm-optimized INT8",
+    "description": "Ultralytics YOLO11n, 80-class COCO detector, statically quantized to INT8 by Arm and exported to ExecuTorch .pte with the XNNPACK delegate.",
+    "path": "/home/pi/arten/models/yolo11n_int8_xnnpack.pte",
+    "size_mb": 4.73,
+    "sha256": "154c54b52389219ebd982e1003227c1abbc3f29a99bdad241147b684d3041b96",
+    "expected_sha256": "154c54b52389219ebd982e1003227c1abbc3f29a99bdad241147b684d3041b96",
+    "sha256_match": true,
+    "format": "ExecuTorch .pte",
+    "backend": "XNNPACK (prebuilt with Arm KleidiAI kernels)",
+    "quantization": "INT8 static post-training quantization; stem conv and detection head remain FP32 (per Arm model card)",
+    "input_shape": [
+      1,
+      3,
+      640,
+      640
+    ],
+    "input_range": [
+      0.0,
+      1.0
+    ],
+    "classes": 80,
+    "dataset": "COCO 2017",
+    "source": "https://huggingface.co/Arm/yolo11n-int8-xnnpack-executorch-raspberrypi5",
+    "load_ms": 126.28,
+    "torch": "2.9.0+cpu",
+    "executorch": "1.1.0a0+17adba1"
+  },
+  "environment": {
+    "platform": "Linux-6.12.25+rpt-rpi-v8-aarch64-with-glibc2.36",
+    "machine": "aarch64",
+    "processor": "unknown",
+    "python": "3.11.2",
+    "timestamp_utc": "2026-11-11T22:34:33+00:00",
+    "peak_rss_mb": 443.8,
+    "threads": null,
+    "torch": "2.9.0+cpu",
+    "executorch": "1.1.0a0+17adba1",
+    "opencv": "4.10.0"
+  },
+  "input": "data/samples/bengaluru_traffic.jpg",
+  "warmup": 1,
+  "runs": 5,
+  "latency": {
+    "count": 5.0,
+    "mean_ms": 1298.78,
+    "p50_ms": 1300.08,
+    "p95_ms": 1300.43,
+    "p99_ms": 1300.44,
+    "min_ms": 1295.21,
+    "max_ms": 1300.44,
+    "std_ms": 2.03,
+    "fps_from_mean": 0.77
+  },
+  "peak_rss_mb": 443.8,
+  "reference_pi5": {
+    "device": "Raspberry Pi 5 (Cortex-A76, 4 cores @ 2.4 GHz)",
+    "runtime": "ExecuTorch 1.1.0, XNNPACK + KleidiAI, 1 thread",
+    "p50_latency_ms": 134.1,
+    "fps": 7.46,
+    "peak_memory_mb": 59.17,
+    "map_50_95": 38.9,
+    "map_50": 54.66,
+    "model_size_mb": 4.73,
+    "source": "https://huggingface.co/Arm/yolo11n-int8-xnnpack-executorch-raspberrypi5"
+  },
+  "note": "Model-only latency; excludes preprocessing, decode, NMS and annotation. Do not compare across different devices."
+}
