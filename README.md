@@ -110,8 +110,11 @@ arten benchmark --input data/samples/bengaluru_traffic.jpg --runs 50
 ```
 
 `setup_pi.sh` creates a venv, installs the pinned ExecuTorch 1.1.0 + CPU PyTorch
-wheels, installs the package, verifies the model checksum and runs a smoke test.
-The model is committed, so the demo works without downloading anything.
+wheels, installs the package, verifies the model checksum and runs a one-frame
+smoke test. The model is committed, so the demo works without downloading it.
+
+Full hardware runbook: [`docs/pi-setup.md`](docs/pi-setup.md). For a scripted
+proof, run `bash scripts/run_pi5_hardware_proof.sh`.
 
 ### On a development host (macOS Apple Silicon / Linux x86_64)
 
@@ -227,7 +230,7 @@ The full mapping, including what to say at the booth, is in
 ├── models/                   # 4.73 MB INT8 .pte, model card, AGPL notice
 ├── data/samples/             # 15 s pedestrian clip + two CC0/PD Bengaluru images
 ├── results/                  # committed evidence bundles and demo video
-├── docs/                     # project report, pitch, form answers, research, checklist
+├── docs/                     # project report, Pi runbook, pitch, form answers, checklist
 └── assets/                   # icon and architecture diagram
 ```
 
