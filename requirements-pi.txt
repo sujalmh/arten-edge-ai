@@ -1,4 +1,8 @@
-# Raspberry Pi 5 (aarch64, Python 3.13), 64-bit Raspberry Pi OS.
+# Raspberry Pi 5 (Cortex-A76, ARMv8.2), aarch64, Python 3.11+.
+#
+# Pi 3 / Pi 4 / CM4 are ARMv8.0 and cannot run these wheels: torch 2.10 and
+# the prebuilt ExecuTorch runtime use ARMv8.2 dot-product (`sdot`) kernels and
+# trap with SIGILL. Use requirements-pi-armv8.txt on those boards.
 #
 # ExecuTorch 1.1.0 is installed separately with --no-deps by setup_pi.sh.
 # Its declared Linux dependency set includes coremltools, which has no
