@@ -161,6 +161,8 @@ KNOWN_MODELS: dict[str, dict] = {
         "description": MODEL_DESCRIPTION,
         "size_mb": MODEL_SIZE_MB,
         "source": MODEL_SOURCE_URL,
+        "classes": 80,
+        "task": "detection",
         "reference": PI5_REFERENCE,
     },
     "7a8a56b82280a4032f3a9da69fe2599c1eb140bcd143413076120b2c1047a578": {
@@ -172,6 +174,8 @@ KNOWN_MODELS: dict[str, dict] = {
         ),
         "size_mb": 13.24,
         "source": "https://huggingface.co/Arm/yolov8s-int8-xnnpack-executorch",
+        "classes": 80,
+        "task": "detection",
         "reference": {
             "device": "Raspberry Pi 5 (Cortex-A76, 4 cores @ 2.4 GHz)",
             "runtime": "ExecuTorch 1.1.0, XNNPACK + KleidiAI",
@@ -193,6 +197,8 @@ KNOWN_MODELS: dict[str, dict] = {
         ),
         "size_mb": 11.87,
         "source": "https://huggingface.co/Arm/yolov9s-int8-xnnpack-executorch",
+        "classes": 80,
+        "task": "detection",
         "reference": {
             "device": "Raspberry Pi 5 (Cortex-A76, 4 cores @ 2.4 GHz)",
             "runtime": "ExecuTorch 1.1.0, XNNPACK + KleidiAI",

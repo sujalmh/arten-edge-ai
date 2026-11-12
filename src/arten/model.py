@@ -76,6 +76,7 @@ class ExecuTorchDetector:
             self.model_description = self.model_entry["description"]
             self.model_source = self.model_entry["source"]
             self.model_reference = self.model_entry["reference"]
+            self.model_classes = self.model_entry.get("classes")
             self.expected_sha256 = self.sha256
         else:
             self.model_name = f"{self.model_path.stem} (custom .pte)"
@@ -84,6 +85,7 @@ class ExecuTorchDetector:
             )
             self.model_source = None
             self.model_reference = PI5_REFERENCE
+            self.model_classes = None
             self.expected_sha256 = None
 
         self.model_tag = (
@@ -145,14 +147,16 @@ class ExecuTorchDetector:
                         else None
                     ),
                     "format": "ExecuTorch .pte",
-                    "backend": "XNNPACK (prebuilt with Arm KleidiAI kernels)",
+                    "backend": "XNNPACK (CPU)",
                     "quantization": (
                         "INT8 static post-training quantization; stem conv and "
                         "detection head remain FP32 (per Arm model card)"
+                        if self.model_entry
+                        else "unknown (custom .pte)"
                     ),
                     "input_shape": [1, 3, INPUT_SIZE[0], INPUT_SIZE[1]],
                     "input_range": [0.0, 1.0],
-                    "classes": 80,
+                    "classes": self.model_classes if self.model_classes else "unknown",
                     "dataset": "COCO 2017",
                     "source": self.model_source,
                     "load_ms": self.load_ms,
