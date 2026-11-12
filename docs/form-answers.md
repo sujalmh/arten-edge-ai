@@ -96,9 +96,10 @@ video or images, writes counts and annotated evidence, and reports latency.
 Then validate it on the supplied material, document the limits and prepare the
 short demonstration. A fallback model path and pre-generated evidence keep the
 demonstration reproducible if the hardware or the clip changes. The detector now
-defaults to a calibrated 0.2 threshold, runs on Pi 4/5 through a source-built
-ARMv8.0 runtime, supports tiled native-resolution inference for dense scenes,
-and installs offline from a local wheelhouse.
+defaults to a calibrated 0.2 threshold, runs on Pi 4 through a source-built
+ARMv8.0 runtime and on Pi 5 with the prebuilt one, supports tiled
+native-resolution inference for dense scenes, and installs offline from a local
+wheelhouse.
 
 ## 500-word technical approach
 
