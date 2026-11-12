@@ -59,7 +59,7 @@ def annotate_frame(
     frame_idx: int = 0,
     total_frames: int | None = None,
     inference_ms: float | None = None,
-    model_tag: str = "YOLO11n INT8 · ExecuTorch",
+    model_tag: str = "ExecuTorch INT8",
     classes: tuple[str, ...] = DEFAULT_CLASSES,
     show_track_ids: bool = False,
     footer: str = "Local inference · no cloud · no identities",

@@ -101,6 +101,7 @@ def _annotate_and_save(
     filename: str,
     zone_profile: ZoneProfile | None = None,
     zone_counts: dict[str, int] | None = None,
+    model_tag: str = "ExecuTorch INT8",
 ) -> tuple[np.ndarray, float]:
     started = time.perf_counter()
     annotated = annotate_frame(
@@ -112,6 +113,7 @@ def _annotate_and_save(
         inference_ms=inference_ms,
         classes=classes,
         show_track_ids=show_track_ids,
+        model_tag=model_tag,
         zone_name=zone_profile.name if zone_profile else None,
         zone_points=zone_profile.points if zone_profile else None,
         zone_counts=zone_counts,
@@ -442,6 +444,7 @@ def run_input(
                     f"frame_{processed:05d}.jpg",
                     zone_profile,
                     zone_counts,
+                    detector.model_tag,
                 )
                 saved_annotated.append(annotated_dir / f"frame_{processed:05d}.jpg")
                 annotated_for_video = last_annotated
@@ -460,6 +463,7 @@ def run_input(
                         inference_ms=inference_ms,
                         classes=classes,
                         show_track_ids=tracker is not None,
+                        model_tag=detector.model_tag,
                         zone_name=zone_profile.name if zone_profile else None,
                         zone_points=zone_profile.points if zone_profile else None,
                         zone_counts=zone_counts,
@@ -555,6 +559,7 @@ def run_input(
                     f"{path.stem}.jpg",
                     zone_profile,
                     zone_counts,
+                    detector.model_tag,
                 )
                 saved_annotated.append(annotated_dir / f"{path.stem}.jpg")
 

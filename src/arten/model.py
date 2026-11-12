@@ -85,6 +85,12 @@ class ExecuTorchDetector:
             self.model_source = None
             self.model_reference = PI5_REFERENCE
             self.expected_sha256 = None
+
+        self.model_tag = (
+            f"{self.model_entry['name'].split(' (')[0]} INT8"
+            if self.model_entry
+            else f"{self.model_path.stem} INT8"
+        )
         try:
             from importlib.metadata import version
 
