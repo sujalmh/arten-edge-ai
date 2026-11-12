@@ -83,7 +83,51 @@ absolute numbers.
 **Pi 4 / Pi 5:** the layered YOLOv8s combination is the most complete
 solution. Use YOLO11n only if the demo must run continuously in real time.
 
-## 5. Caveats
+## 5. Ground-truth check (manual count)
+
+Counted from four non-overlapping 2x crops of the original 1040x780 image.
+Approximate: dense occlusion, tiny distant vehicles and auto-rickshaws make an
+exact count impossible. Ranges are given where the count is uncertain.
+
+| Class | Approx. actual | YOLO11n @0.15 | YOLOv8s @0.2 | YOLOv9s @0.2 |
+|---|---:|---:|---:|---:|
+| person | 30–40 | 16 | 18 | 18 |
+| motorcycle | 25–30 | 5 | 13 | 12 |
+| car | 45–55 | 26 | 25 | 24 |
+| bus | 1 | 2 | 1 | 1 |
+| truck | 3–4 | 2 | 3 | 4 |
+| auto-rickshaw (not COCO) | 3 | — | — | — |
+
+Recall at the midpoint of each range:
+
+| Model | person | motorcycle | car | mean |
+|---|---:|---:|---:|---:|
+| YOLO11n @0.15 | 46% | **18%** | 52% | 39% |
+| **YOLOv8s @0.2** | **51%** | **46%** | 50% | **49%** |
+| YOLOv9s @0.2 | 51% | 43% | 48% | 47% |
+
+YOLOv8s and YOLOv9s are effectively tied on recall; YOLOv8s reaches that
+recall in 3.2 s instead of 5.8 s. YOLO11n’s motorcycle recall is the outlier:
+it sees roughly one in five two-wheelers.
+
+## 6. Trade-offs
+
+- **Recall vs latency.** YOLOv8s costs 2.5x YOLO11n but recovers 2.6x more
+  motorcycles. For a two-wheeler-heavy Indian street, that is the right trade.
+- **Resolution is the ceiling.** All models sit near 50% person recall at
+  640x640. A 960 export or 2x tiling would raise recall, but costs ~2.25x or
+  ~4x per frame and needs a new `.pte`; the prebuilt models do not support it.
+- **Class mismatch.** Auto-rickshaws are not in COCO. They are missed or
+  counted as car/truck, so “car” counts are not exact for Indian scenes.
+- **Threshold.** Lowering to 0.1 would raise recall but add false positives and
+  duplicates. 0.2 on YOLOv8s was the best tested operating point.
+- **Distant objects.** The 640 input cannot resolve the far traffic; manual
+  counts include those vehicles, so model recall on the full frame is
+  understated relative to a foreground-only count.
+- **Board cap.** All latencies are at 600 MHz. Fix the supply before quoting
+  absolute numbers.
+
+## 7. Caveats
 
 - Pose and segmentation need new decoders; the current `arten` CLI decodes
   detection boxes only. The latency numbers above are runtime-only.
