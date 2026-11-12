@@ -14,11 +14,7 @@ import numpy as np
 
 from .constants import (
     INPUT_SIZE,
-    MODEL_DESCRIPTION,
-    MODEL_NAME,
-    MODEL_SHA256,
-    MODEL_SIZE_MB,
-    MODEL_SOURCE_URL,
+    KNOWN_MODELS,
     PI5_REFERENCE,
 )
 from .metrics import environment_info, file_size_mb, sha256_file
@@ -74,6 +70,29 @@ class ExecuTorchDetector:
 
         self.model_size_mb = file_size_mb(self.model_path)
         self.sha256 = sha256_file(self.model_path)
+        self.model_entry = KNOWN_MODELS.get(self.sha256)
+        if self.model_entry:
+            self.model_name = self.model_entry["name"]
+            self.model_description = self.model_entry["description"]
+            self.model_source = self.model_entry["source"]
+            self.model_reference = self.model_entry["reference"]
+            self.model_classes = self.model_entry.get("classes")
+            self.expected_sha256 = self.sha256
+        else:
+            self.model_name = f"{self.model_path.stem} (custom .pte)"
+            self.model_description = (
+                "Custom ExecuTorch .pte; no matching Arm model card."
+            )
+            self.model_source = None
+            self.model_reference = PI5_REFERENCE
+            self.model_classes = None
+            self.expected_sha256 = None
+
+        self.model_tag = (
+            f"{self.model_entry['name'].split(' (')[0]} INT8"
+            if self.model_entry
+            else f"{self.model_path.stem} INT8"
+        )
         try:
             from importlib.metadata import version
 
@@ -116,29 +135,35 @@ class ExecuTorchDetector:
         env.update(
             {
                 "model": {
-                    "name": MODEL_NAME,
-                    "description": MODEL_DESCRIPTION,
+                    "name": self.model_name,
+                    "description": self.model_description,
                     "path": str(self.model_path),
                     "size_mb": self.model_size_mb,
                     "sha256": self.sha256,
-                    "expected_sha256": MODEL_SHA256,
-                    "sha256_match": self.sha256 == MODEL_SHA256,
+                    "expected_sha256": self.expected_sha256,
+                    "sha256_match": (
+                        self.sha256 == self.expected_sha256
+                        if self.expected_sha256
+                        else None
+                    ),
                     "format": "ExecuTorch .pte",
-                    "backend": "XNNPACK (prebuilt with Arm KleidiAI kernels)",
+                    "backend": "XNNPACK (CPU)",
                     "quantization": (
                         "INT8 static post-training quantization; stem conv and "
                         "detection head remain FP32 (per Arm model card)"
+                        if self.model_entry
+                        else "unknown (custom .pte)"
                     ),
                     "input_shape": [1, 3, INPUT_SIZE[0], INPUT_SIZE[1]],
                     "input_range": [0.0, 1.0],
-                    "classes": 80,
+                    "classes": self.model_classes if self.model_classes else "unknown",
                     "dataset": "COCO 2017",
-                    "source": MODEL_SOURCE_URL,
+                    "source": self.model_source,
                     "load_ms": self.load_ms,
                     "torch": self.torch_version,
                     "executorch": self.executorch_version,
                 },
-                "reference": PI5_REFERENCE,
+                "reference": self.model_reference,
             }
         )
         return env

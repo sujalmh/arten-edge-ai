@@ -29,6 +29,7 @@ def _table(headers: list[str], rows: list[list[str]], widths: list[int]) -> str:
 
 
 def format_summary(summary: dict) -> str:
+    reference = summary.get("reference") or PI5_REFERENCE
     run = summary["run"]
     model = summary["model"]
     env = summary["environment"]
@@ -180,10 +181,10 @@ def format_summary(summary: dict) -> str:
 
     lines.append("  REFERENCE (not measured here)")
     lines.append(
-        f"  Arm model card, {PI5_REFERENCE['device']}: "
-        f"{PI5_REFERENCE['p50_latency_ms']:.2f} ms p50 · "
-        f"{PI5_REFERENCE['fps']:.2f} FPS · "
-        f"{PI5_REFERENCE['peak_memory_mb']:.2f} MB peak"
+        f"  Arm model card, {reference['device']}: "
+        f"{reference['p50_latency_ms']:.2f} ms p50 · "
+        f"{reference['fps']:.2f} FPS · "
+        f"{reference['peak_memory_mb']:.2f} MB peak"
     )
     lines.append(
         "  Cite this only as a reference; replace it with your own Pi run at the event."
@@ -193,6 +194,7 @@ def format_summary(summary: dict) -> str:
 
 
 def write_markdown_report(summary: dict, path: str | Path) -> Path:
+    reference = summary.get("reference") or PI5_REFERENCE
     run = summary["run"]
     model = summary["model"]
     env = summary["environment"]
@@ -235,10 +237,13 @@ def write_markdown_report(summary: dict, path: str | Path) -> Path:
     lines.append(f"- **Quantization:** {model['quantization']}")
     lines.append(f"- **SHA-256:** `{model['sha256']}`")
     lines.append(f"- **Source:** {model['source']}")
-    lines.append(
+    accuracy = (
         f"- **Reference accuracy (COCO val2017):** mAP@0.5:0.95 "
-        f"{PI5_REFERENCE['map_50_95']:.2f}%, mAP@0.5 {PI5_REFERENCE['map_50']:.2f}%"
+        f"{reference['map_50_95']:.2f}%"
     )
+    if reference.get("map_50") is not None:
+        accuracy += f", mAP@0.5 {reference['map_50']:.2f}%"
+    lines.append(accuracy)
     lines.append("")
 
     lines.append("## Counts per frame\n")
@@ -378,10 +383,10 @@ def write_markdown_report(summary: dict, path: str | Path) -> Path:
 
     lines.append("## Reference benchmark (not this run)\n")
     lines.append(
-        f"Arm's model card reports **{PI5_REFERENCE['p50_latency_ms']:.2f} ms "
-        f"p50 / {PI5_REFERENCE['fps']:.2f} FPS** on a Raspberry Pi 5 "
-        f"({PI5_REFERENCE['runtime']}), with "
-        f"**{PI5_REFERENCE['peak_memory_mb']:.2f} MB** peak memory. "
+        f"Arm's model card reports **{reference['p50_latency_ms']:.2f} ms "
+        f"p50 / {reference['fps']:.2f} FPS** on a Raspberry Pi 5 "
+        f"({reference['runtime']}), with "
+        f"**{reference['peak_memory_mb']:.2f} MB** peak memory. "
         f"Those numbers are a reference for the prebuilt model; the table above "
         f"is the only latency measured in this run."
     )

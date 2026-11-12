@@ -1,0 +1,28 @@
+# Raspberry Pi 3 / Pi 4 / CM4 (ARMv8.0, aarch64), 64-bit Raspberry Pi OS.
+#
+# PyTorch 2.10 and the prebuilt ExecuTorch 1.1.0 wheel are compiled with
+# ARMv8.2 dot-product instructions (`sdot`). Cortex-A53 (Pi 3) and Cortex-A72
+# (Pi 4) are ARMv8.0 and trap with SIGILL, so this set pins torch 2.9.0 — the
+# last release that runs on ARMv8.0 — and pairs it with an ExecuTorch runtime
+# built from source with `-march=armv8-a` and KleidiAI/dot-product kernels
+# disabled.
+#
+# Build that runtime once on an arm64 Linux host:
+#   bash scripts/build_executorch_armv8.sh
+# Then install the wheel from vendor/ (setup_pi.sh does this automatically).
+#
+# OpenCV 5 requires NumPy 2; the ARMv8.0 set stays on the proven
+# NumPy 1.26 + OpenCV 4.10 combination.
+--index-url https://pypi.org/simple
+
+torch==2.9.0
+numpy==1.26.4
+opencv-python-headless==4.10.0.84
+pillow==10.4.0
+psutil>=5.9
+
+# Build tooling for the editable install (kept in the offline wheelhouse).
+setuptools>=68
+wheel
+hatchling
+editables

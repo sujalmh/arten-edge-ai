@@ -93,9 +93,13 @@ Why it matters: a school-zone audit can separate “40 people crossed” from �
 
 ## Quickstart
 
-### On a Raspberry Pi 5 (recommended)
+### On a Raspberry Pi (3B+, 4 or 5)
 
-64-bit Raspberry Pi OS (Trixie or Bookworm), Python 3.10–3.13, ~2 GB free disk.
+64-bit Raspberry Pi OS (Bookworm), Python 3.10+, ~2 GB free disk.
+
+Pi 5 uses the prebuilt Arm wheels. Pi 3 and Pi 4 are ARMv8.0, so the setup
+script installs torch 2.9.0 plus the ARMv8.0 ExecuTorch wheel built from source
+and committed under `vendor/executorch-armv8/`.
 
 ```bash
 git clone https://github.com/sujalmh/arten-edge-ai arten
@@ -107,14 +111,23 @@ arten doctor
 arten run -i data/samples/pedestrians_15s.mp4 \
   -o results/pi_run --save-video
 arten benchmark --input data/samples/bengaluru_traffic.jpg --runs 50
+
+# Dense or high-resolution frames: 2x2 tiled inference (about 4x the cost)
+arten run -i data/samples/bengaluru_traffic.jpg --tile 2 --conf 0.2 \
+  -o results/tiled
 ```
 
-`setup_pi.sh` creates a venv, installs the pinned ExecuTorch 1.1.0 + CPU PyTorch
-wheels, installs the package, verifies the model checksum and runs a one-frame
-smoke test. The model is committed, so the demo works without downloading it.
+`setup_pi.sh` detects the board and creates a venv. On Pi 5 it installs the
+pinned ExecuTorch 1.1.0 + PyTorch 2.10 wheels. On Pi 3/4 it installs torch
+2.9.0 and the ARMv8.0 ExecuTorch wheel from `vendor/executorch-armv8/`. It then
+installs the package, verifies the model checksum and runs a one-frame smoke
+test. The model is committed, so the demo works without downloading it.
 
 Full hardware runbook: [`docs/pi-setup.md`](docs/pi-setup.md). For a scripted
 proof, run `bash scripts/run_pi5_hardware_proof.sh`.
+
+Hackathon setup, best operating points and the offline checklist:
+[`docs/hackathon-runbook.md`](docs/hackathon-runbook.md).
 
 ### On a development host (macOS Apple Silicon / Linux x86_64)
 

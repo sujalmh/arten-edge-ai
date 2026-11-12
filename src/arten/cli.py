@@ -15,8 +15,6 @@ from .constants import (
     DEFAULT_DATA_DIR,
     DEFAULT_MODEL_PATH,
     DEFAULT_OUTPUT_DIR,
-    MODEL_NAME,
-    MODEL_SOURCE_URL,
     PI5_REFERENCE,
 )
 from .metrics import environment_info, write_json
@@ -62,8 +60,14 @@ def build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_CLASSES,
         help="comma-separated COCO categories (default: person,bicycle,car,motorcycle,bus,truck)",
     )
-    run.add_argument("--conf", type=float, default=0.35, help="confidence threshold")
+    run.add_argument("--conf", type=float, default=0.2, help="confidence threshold (0.15 for very dense scenes)")
     run.add_argument("--iou", type=float, default=0.7, help="NMS IoU threshold")
+    run.add_argument(
+        "--tile",
+        type=int,
+        default=0,
+        help="split each frame into an NxN grid of 640 crops (0/1 off; 2 = 2x2, about 4x cost)",
+    )
     run.add_argument("--no-track", action="store_true", help="disable the indicative tracker")
     run.add_argument("--no-attributes", action="store_true", help="disable motion attributes (direction, relative speed, dwell)")
     run.add_argument("--save-video", action="store_true", help="write annotated.mp4")
@@ -126,6 +130,7 @@ def cmd_run(args: argparse.Namespace) -> int:
         quiet=args.quiet,
         zone_config=args.zone,
         estimate_vehicle_colors=args.estimate_vehicle_colors,
+        tile_grid=args.tile,
     )
     return 0
 
@@ -143,8 +148,9 @@ def cmd_benchmark(args: argparse.Namespace) -> int:
         write_json(args.output, result)
         print(f"Wrote {args.output}")
     stats = result["latency"]
+    reference = result.get("reference") or PI5_REFERENCE
     print("\nModel-only latency")
-    print(f"  model      {MODEL_NAME}")
+    print(f"  model      {result['model'].get('name', Path(args.model).name)}")
     print(f"  device     {result['environment'].get('machine')} · {result['environment'].get('platform')}")
     print(f"  runs       {result['runs']} (warmup {result['warmup']})")
     print(f"  mean       {stats['mean_ms']:.2f} ms")
@@ -153,7 +159,7 @@ def cmd_benchmark(args: argparse.Namespace) -> int:
     print(f"  throughput {stats['fps_from_mean']:.2f} FPS")
     print(f"  peak RSS   {result.get('peak_rss_mb')} MB (process-wide)")
     print("\nReference (Arm model card, Pi 5): "
-          f"{PI5_REFERENCE['p50_latency_ms']:.2f} ms p50 · {PI5_REFERENCE['fps']:.2f} FPS")
+          f"{reference['p50_latency_ms']:.2f} ms p50 · {reference['fps']:.2f} FPS")
     if args.json:
         print(payload)
     return 0
@@ -167,11 +173,11 @@ def cmd_info(args: argparse.Namespace) -> int:
         return 0
     model = info["model"]
     env = info.get("environment", info)
-    print(f"\n{MODEL_NAME}\n")
+    print(f"\n{model['name']}\n")
     print(f"  path        {model['path']}")
     print(f"  size        {model['size_mb']:.2f} MB")
     print(f"  sha256      {model['sha256']}")
-    print(f"  checksum    {'OK' if model['sha256_match'] else 'MISMATCH'}")
+    print(f"  checksum    {'OK' if model['sha256_match'] else 'unknown' if model['sha256_match'] is None else 'MISMATCH'}")
     print(f"  format      {model['format']}")
     print(f"  backend     {model['backend']}")
     print(f"  input       {model['input_shape']} · range {model['input_range']}")
@@ -179,7 +185,7 @@ def cmd_info(args: argparse.Namespace) -> int:
     print(f"  runtime     ExecuTorch {model['executorch']} · torch {model['torch']}")
     print(f"  device      {env.get('machine')} · {env.get('platform')}")
     print(f"  load        {model['load_ms']:.2f} ms")
-    print(f"  source      {MODEL_SOURCE_URL}")
+    print(f"  source      {model.get('source') or 'unknown (custom model)'}")
     print()
     return 0
 

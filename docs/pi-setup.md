@@ -1,10 +1,21 @@
 # Raspberry Pi runbook
 
-Target: Raspberry Pi 5 (8 GB recommended), 64-bit Raspberry Pi OS Trixie or
-Bookworm, active cooler, official 27 W USB-C supply, 32 GB+ A2 microSD.
+## Supported boards
 
-Pi 4 also runs the pipeline, but slower. Report its measured numbers; do not
-reuse the Pi 5 reference.
+| Board | CPU | ISA | Runtime |
+|---|---|---|---|
+| Pi 5 | Cortex-A76 | ARMv8.2 (dot-product) | prebuilt ExecuTorch 1.1.0 + torch 2.10 |
+| Pi 4 / CM4 / Pi 400 | Cortex-A72 | ARMv8.0 | source-built ExecuTorch + torch 2.9.0 |
+| Pi 3B / 3B+ | Cortex-A53 | ARMv8.0 | same as Pi 4, much slower |
+
+The upstream ExecuTorch and PyTorch 2.10 aarch64 wheels contain ARMv8.2
+`sdot` instructions. On a Pi 3 or Pi 4 they trap with `Illegal instruction`
+(SIGILL). `setup_pi.sh` reads `/proc/device-tree/model` and installs the right
+set automatically.
+
+Recommended: 64-bit Raspberry Pi OS Bookworm, 8 GB for Pi 4/5, 32 GB+ A2
+microSD, official power supply, active cooling. A Pi 3B+ has 1 GB RAM and is a
+compatibility target, not a performance target.
 
 ## 1. Flash and connect
 
@@ -37,8 +48,22 @@ source .venv/bin/activate
 runtime, installs the package, verifies the model checksum and runs a one-frame
 smoke test.
 
-Expected first-run time: several minutes on a Pi 5, longer on a Pi 4. The
-download is dominated by the PyTorch and ExecuTorch wheels.
+On a Pi 3 or Pi 4 it installs `requirements-pi-armv8.txt` (torch 2.9.0,
+NumPy 1.26, OpenCV 4.10) and the wheel in `vendor/executorch-armv8/`, which is
+built with `-march=armv8-a`, KleidiAI off and the XNNPACK dot-product/i8mm
+kernels disabled. On a Pi 5 it uses the upstream wheels.
+
+To rebuild that wheel from source on an arm64 Linux host:
+
+```bash
+bash scripts/build_executorch_armv8.sh
+mkdir -p vendor/executorch-armv8
+cp wheels/executorch-*.whl vendor/executorch-armv8/
+```
+
+Expected first-run time: several minutes on a Pi 5, longer on a Pi 4, and
+substantially longer on a Pi 3B+. The download is dominated by the PyTorch and
+ExecuTorch wheels.
 
 ## 3. Verify
 

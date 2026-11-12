@@ -15,3 +15,5 @@ results/tmp_*/
 results/smoke/
 results/organiser_*/
 *.log
+wheels/
+wheelhouse
