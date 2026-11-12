@@ -66,6 +66,14 @@ use 0.15 there. The INT8 confidence distribution is shifted low.
 
 ## 4. Commands
 
+One command (auto-selects YOLOv8s if `models/yolov8s_int8_xnnpack.pte` exists,
+otherwise YOLO11n at conf 0.15):
+
+```bash
+bash scripts/demo_hackathon.sh data/samples/bengaluru_traffic.jpg
+bash scripts/demo_hackathon.sh clip.mp4 results/demo_clip
+```
+
 Single image, highest accuracy:
 
 ```bash
