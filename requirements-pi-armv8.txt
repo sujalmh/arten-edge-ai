@@ -25,3 +25,4 @@ psutil>=5.9
 setuptools>=68
 wheel
 hatchling
+editables

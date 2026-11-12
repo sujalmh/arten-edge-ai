@@ -39,3 +39,4 @@ typing-extensions>=4.10.0
 setuptools>=68
 wheel
 hatchling
+editables
