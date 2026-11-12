@@ -99,9 +99,18 @@ available, so build a wheelhouse in advance on the same board:
 ```bash
 python -m pip download -r requirements-pi.txt -d ~/wheelhouse     # Pi 5
 python -m pip download -r requirements-pi-armv8.txt -d ~/wheelhouse  # Pi 3/4
+python -m pip download executorch==1.1.0 -d ~/wheelhouse          # Pi 5 runtime
 ```
 
-Copy the repo, `models/`, `vendor/executorch-armv8/*.whl` and `~/wheelhouse`
+Run the download on the same architecture and Python version as the target
+board; the wheels are platform-specific.
+
+Verified on the Pi 3B+: **22 wheels, 156 MB**, a clean `.venv` installed with
+**zero downloads**, and `arten doctor` plus the one-frame smoke test passed.
+`setup_pi.sh` detects a `wheelhouse/` directory next to the repo and adds
+`--no-index`, so the same one-command install works offline.
+
+Copy the repo, `models/`, `vendor/executorch-armv8/*.whl` and the wheelhouse
 to a USB stick. Offline install:
 
 ```bash

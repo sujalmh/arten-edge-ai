@@ -72,14 +72,14 @@ elif [[ "$(uname -m)" == "aarch64" || "$(uname -m)" == "arm64" ]]; then
     exit 1
   fi
   python -m pip install "${PIP_OFFLINE[@]}" -r requirements-pi-armv8.txt
-  python -m pip install --no-deps "$ET_WHEEL"
+  python -m pip install "${PIP_OFFLINE[@]}" --no-deps "$ET_WHEEL"
 else
   echo "ERROR: this setup script targets 64-bit Raspberry Pi OS (aarch64)."
   exit 1
 fi
 
 echo "\n[3/5] Installing the arten package"
-python -m pip install -e . --no-deps --no-build-isolation
+python -m pip install "${PIP_OFFLINE[@]}" -e . --no-deps --no-build-isolation
 
 echo "\n[4/5] Checking the model and runtime"
 if [[ ! -f models/yolo11n_int8_xnnpack.pte ]]; then
