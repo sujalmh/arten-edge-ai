@@ -90,6 +90,9 @@ Practical reading:
 - YOLO11n-pose costs almost nothing over YOLO11n and can add posture attributes.
 - DDRNet23-slim can supply road/sidewalk masks for zone audits at ~0.5 FPS.
 
+Full combination matrix, threshold sweep and the recommended layered pipeline:
+[`model-combinations.md`](model-combinations.md).
+
 Instruction check on the installed binding:
 
 ```text
