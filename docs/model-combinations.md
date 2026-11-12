@@ -127,7 +127,62 @@ it sees roughly one in five two-wheelers.
 - **Board cap.** All latencies are at 600 MHz. Fix the supply before quoting
   absolute numbers.
 
-## 7. Caveats
+## 7. Improvement: tiled inference
+
+The 640×640 full-frame input shrinks the 1040×780 image to 0.62×. Tiling runs
+the model on 640×640 native-resolution crops (2×2 overlapping grid: x = 0/400,
+y = 0/140), maps boxes back and merges them with class-wise NMS plus a
+containment pass. No retraining, no new model.
+
+| Method | person | motorcycle | car | bus | truck | wall / frame |
+|---|---:|---:|---:|---:|---:|---:|
+| Manual actual (approx.) | 30–40 | 25–30 | 45–55 | 1 | 3–4 | — |
+| YOLO11n @0.15, full frame | 16 | 5 | 26 | 2 | 2 | 1.3 s |
+| YOLO11n @0.15, 2×2 tiles | 26 | 13 | 39 | 4* | 3 | 5.9 s |
+| YOLOv8s @0.2, full frame | 18 | 13 | 25 | 1 | 3 | 3.2 s |
+| **YOLOv8s @0.2, 2×2 tiles** | **27** | **19** | **41** | 4* | 3 | 13.5 s |
+
+\* Bus is over-counted by tile merging: one pink bus spans several tiles and
+its partial boxes do not overlap enough to merge. Person, motorcycle and car
+counts are the meaningful ones here.
+
+Recall at range midpoints:
+
+| Method | person | motorcycle | car |
+|---|---:|---:|---:|
+| YOLO11n full | 46% | 18% | 52% |
+| YOLO11n tiled | 74% | 47% | 78% |
+| YOLOv8s full | 51% | 47% | 50% |
+| **YOLOv8s tiled** | **77%** | **69%** | **82%** |
+
+This is the single biggest accuracy lever available without retraining:
+roughly +26 points on people and +30 on cars, at 4× the latency.
+
+### Other options, ranked
+
+1. **960×960 export.** A single pass at 2.25× the cost gives most of the
+   tiling gain without merge artifacts. Needs a new INT8 `.pte` export; the
+   prebuilt models are fixed at 640.
+2. **Fine-tune on Indian street data.** Add auto-rickshaw as a class and
+   improve two-wheeler recall. Highest ceiling, needs labels, GPU training
+   and re-quantization.
+3. **Temporal recovery for video.** Track detections across frames and
+   interpolate short gaps. Cheap for clips, no help on a single image.
+4. **ROI crop.** Crop to the road region and upscale before inference. Modest
+   gain, almost free, but misses the sidewalk.
+5. **Class-specific thresholds.** Lower only the motorcycle threshold. Cheap,
+   but adds false positives.
+
+### Practical recommendation
+
+- **Stills / offline clips:** YOLOv8s @0.2, 2×2 tiles. Closest to the manual
+  count.
+- **Video on a Pi 4/5:** YOLO11n @0.15, 2×2 tiles. 26 people / 13 motorcycles
+  at 5.9 s on this throttled Pi 3B+, roughly 2 s on a Pi 4 and ~0.6 s on a
+  Pi 5 — still image-only on the Pi 3B+.
+- **Best long-term:** export at 960 and keep single-pass inference.
+
+## 8. Caveats
 
 - Pose and segmentation need new decoders; the current `arten` CLI decodes
   detection boxes only. The latency numbers above are runtime-only.
