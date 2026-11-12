@@ -6,19 +6,19 @@ Offline pedestrian and vehicle detection, counting and attribute analysis with E
 
 ## Run
 
-- **Input:** `/Users/sujal/.t3/projects/edge-ai-detection/data/samples/bengaluru_traffic.jpg`
+- **Input:** `/home/pi/arten/data/samples/bengaluru_traffic.jpg`
 - **Frames processed:** 1
 - **Categories:** person, bicycle, car, motorcycle, bus, truck
-- **Thresholds:** confidence 0.35, IoU 0.7
+- **Thresholds:** confidence 0.2, IoU 0.7
 - **Tracking:** off
-- **Device:** arm64 · macOS-27.0.1-arm64-arm-64bit
-- **Peak process RSS:** 449.4 MB
+- **Device:** aarch64 · Linux-6.12.25+rpt-rpi-v8-aarch64-with-glibc2.36
+- **Peak process RSS:** 373.5 MB
 
 ## Model
 
 - **Name:** YOLO11n (COCO) — Arm-optimized INT8
 - **Format:** ExecuTorch .pte, 4.73 MB
-- **Backend:** XNNPACK (prebuilt with Arm KleidiAI kernels)
+- **Backend:** XNNPACK (CPU)
 - **Quantization:** INT8 static post-training quantization; stem conv and detection head remain FP32 (per Arm model card)
 - **SHA-256:** `154c54b52389219ebd982e1003227c1abbc3f29a99bdad241147b684d3041b96`
 - **Source:** https://huggingface.co/Arm/yolo11n-int8-xnnpack-executorch-raspberrypi5
@@ -28,11 +28,11 @@ Offline pedestrian and vehicle detection, counting and attribute analysis with E
 
 | Category | Peak/frame | Mean/frame | p95 | Total detections | Unique (indicative) |
 |---|---:|---:|---:|---:|---:|
-| person | 2 | 2.00 | 2 | 2 | — |
+| person | 9 | 9.00 | 9 | 9 | — |
 | bicycle | 0 | 0.00 | 0 | 0 | — |
-| car | 17 | 17.00 | 17 | 17 | — |
-| motorcycle | 0 | 0.00 | 0 | 0 | — |
-| bus | 1 | 1.00 | 1 | 1 | — |
+| car | 25 | 25.00 | 25 | 25 | — |
+| motorcycle | 4 | 4.00 | 4 | 4 | — |
+| bus | 2 | 2.00 | 2 | 2 | — |
 | truck | 1 | 1.00 | 1 | 1 | — |
 
 > Counts are per processed frame. `Unique` comes from a lightweight IoU/velocity tracker and is indicative, not a production MOT count.
@@ -43,9 +43,10 @@ These attributes are derived on-device from the tracker and a classical-CV colou
 
 | Class | Unique tracks | Direction (image-plane) | Colour estimate | Mean dwell | Mean speed |
 |---|---:|---|---|---:|---:|
-| car | 17 | — | blue 2, gray/silver 4, orange/brown 1, red 1, white 9 | — | — |
-| bus | 1 | — | white 1 | — | — |
+| car | 25 | — | blue 2, gray/silver 7, green 1, orange/brown 1, red 3, white 11 | — | — |
+| bus | 2 | — | green 1, white 1 | — | — |
 | truck | 1 | — | orange/brown 1 | — | — |
+| motorcycle | 4 | — | blue 1, gray/silver 3 | — | — |
 
 > Direction and speed are measured in the image plane; speed is uncalibrated pixels/second, not km/h. Colour applies only to vehicle crops and is a heuristic, not a trained attribute model. Compare directions within one fixed-camera clip, not across camera angles.
 
@@ -54,16 +55,16 @@ These attributes are derived on-device from the tracker and a classical-CV colou
 
 | Stage | Mean (ms) | p50 (ms) | p95 (ms) | FPS from mean |
 |---|---:|---:|---:|---:|
-| Model inference | 22.93 | 22.93 | 22.93 | 43.62 |
-| Preprocess | 1.49 | 1.49 | 1.49 | 669.59 |
-| Decode + NMS | 5.54 | 5.54 | 5.54 | 180.41 |
-| Frame read | 8.64 | 8.64 | 8.64 | 115.74 |
-| Annotate/save | 8.51 | 8.51 | 8.51 | 117.51 |
-| Pipeline total | 47.11 | 47.11 | 47.11 | 21.23 |
+| Model inference | 1291.30 | 1291.30 | 1291.30 | 0.77 |
+| Preprocess | 47.32 | 47.32 | 47.32 | 21.13 |
+| Decode + NMS | 142.44 | 142.44 | 142.44 | 7.02 |
+| Frame read | 192.97 | 192.97 | 192.97 | 5.18 |
+| Annotate/save | 574.38 | 574.38 | 574.38 | 1.74 |
+| Pipeline total | 2248.42 | 2248.42 | 2248.42 | 0.44 |
 
-- **Model-only:** 43.62 FPS
-- **Pipeline:** 21.23 FPS
-- **Wall time:** 0.05 s
+- **Model-only:** 0.77 FPS
+- **Pipeline:** 0.44 FPS
+- **Wall time:** 2.25 s
 
 ## Exposure signals
 
@@ -95,6 +96,7 @@ Arm's model card reports **134.10 ms p50 / 7.46 FPS** on a Raspberry Pi 5 (Execu
 
 ## Notes and limitations
 
+- Inference ran as a single 640x640 pass per frame.
 - Counts are per processed frame, not unique objects, unless the 'unique_tracked' field is used.
 - unique_tracked is indicative: a lightweight IoU/velocity tracker, not a production multi-object tracking system.
 - Latency is measured on the device that produced this run. Compare only with runs on the same hardware and thread count.

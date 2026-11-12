@@ -3,22 +3,24 @@
     "note": "Image-plane motion and coarse colour are derived attributes, not trained model outputs. Speed is uncalibrated pixels/second.",
     "by_class": {
       "car": {
-        "tracks": 17,
+        "tracks": 25,
         "directions": {},
         "colors": {
           "blue": 2,
-          "gray/silver": 4,
+          "gray/silver": 7,
+          "green": 1,
           "orange/brown": 1,
-          "red": 1,
-          "white": 9
+          "red": 3,
+          "white": 11
         },
         "mean_dwell_s": null,
         "mean_speed_px_s": null
       },
       "bus": {
-        "tracks": 1,
+        "tracks": 2,
         "directions": {},
         "colors": {
+          "green": 1,
           "white": 1
         },
         "mean_dwell_s": null,
@@ -32,9 +34,19 @@
         },
         "mean_dwell_s": null,
         "mean_speed_px_s": null
+      },
+      "motorcycle": {
+        "tracks": 4,
+        "directions": {},
+        "colors": {
+          "blue": 1,
+          "gray/silver": 3
+        },
+        "mean_dwell_s": null,
+        "mean_speed_px_s": null
       }
     },
-    "total_tracks": 19
+    "total_tracks": 32
   },
   "tracks": [
     {
@@ -45,7 +57,17 @@
       "speed_px_s": null,
       "dwell_s": null,
       "hits": 0,
-      "score": 0.7669495344161987
+      "score": 0.7803328037261963
+    },
+    {
+      "class": "bus",
+      "track_id": null,
+      "color": "green",
+      "direction": null,
+      "speed_px_s": null,
+      "dwell_s": null,
+      "hits": 0,
+      "score": 0.2528328001499176
     },
     {
       "class": "car",
@@ -55,7 +77,17 @@
       "speed_px_s": null,
       "dwell_s": null,
       "hits": 0,
-      "score": 0.8031907081604004
+      "score": 0.8168094754219055
+    },
+    {
+      "class": "car",
+      "track_id": null,
+      "color": "white",
+      "direction": null,
+      "speed_px_s": null,
+      "dwell_s": null,
+      "hits": 0,
+      "score": 0.7621742486953735
     },
     {
       "class": "car",
@@ -65,7 +97,7 @@
       "speed_px_s": null,
       "dwell_s": null,
       "hits": 0,
-      "score": 0.759756326675415
+      "score": 0.7620417475700378
     },
     {
       "class": "car",
@@ -75,7 +107,7 @@
       "speed_px_s": null,
       "dwell_s": null,
       "hits": 0,
-      "score": 0.7594600915908813
+      "score": 0.7517458200454712
     },
     {
       "class": "car",
@@ -85,37 +117,7 @@
       "speed_px_s": null,
       "dwell_s": null,
       "hits": 0,
-      "score": 0.7492309212684631
-    },
-    {
-      "class": "car",
-      "track_id": null,
-      "color": "white",
-      "direction": null,
-      "speed_px_s": null,
-      "dwell_s": null,
-      "hits": 0,
-      "score": 0.7217671871185303
-    },
-    {
-      "class": "car",
-      "track_id": null,
-      "color": "white",
-      "direction": null,
-      "speed_px_s": null,
-      "dwell_s": null,
-      "hits": 0,
-      "score": 0.6282817125320435
-    },
-    {
-      "class": "car",
-      "track_id": null,
-      "color": "white",
-      "direction": null,
-      "speed_px_s": null,
-      "dwell_s": null,
-      "hits": 0,
-      "score": 0.6112287640571594
+      "score": 0.717404842376709
     },
     {
       "class": "car",
@@ -125,7 +127,7 @@
       "speed_px_s": null,
       "dwell_s": null,
       "hits": 0,
-      "score": 0.5979995727539062
+      "score": 0.6095016002655029
     },
     {
       "class": "car",
@@ -135,27 +137,7 @@
       "speed_px_s": null,
       "dwell_s": null,
       "hits": 0,
-      "score": 0.5892460942268372
-    },
-    {
-      "class": "car",
-      "track_id": null,
-      "color": "gray/silver",
-      "direction": null,
-      "speed_px_s": null,
-      "dwell_s": null,
-      "hits": 0,
-      "score": 0.5811965465545654
-    },
-    {
-      "class": "car",
-      "track_id": null,
-      "color": "gray/silver",
-      "direction": null,
-      "speed_px_s": null,
-      "dwell_s": null,
-      "hits": 0,
-      "score": 0.5652493834495544
+      "score": 0.6062755584716797
     },
     {
       "class": "car",
@@ -165,7 +147,17 @@
       "speed_px_s": null,
       "dwell_s": null,
       "hits": 0,
-      "score": 0.5398390293121338
+      "score": 0.5937961339950562
+    },
+    {
+      "class": "car",
+      "track_id": null,
+      "color": "white",
+      "direction": null,
+      "speed_px_s": null,
+      "dwell_s": null,
+      "hits": 0,
+      "score": 0.5867637395858765
     },
     {
       "class": "car",
@@ -175,7 +167,47 @@
       "speed_px_s": null,
       "dwell_s": null,
       "hits": 0,
-      "score": 0.5229483842849731
+      "score": 0.5671391487121582
+    },
+    {
+      "class": "car",
+      "track_id": null,
+      "color": "gray/silver",
+      "direction": null,
+      "speed_px_s": null,
+      "dwell_s": null,
+      "hits": 0,
+      "score": 0.5574652552604675
+    },
+    {
+      "class": "car",
+      "track_id": null,
+      "color": "gray/silver",
+      "direction": null,
+      "speed_px_s": null,
+      "dwell_s": null,
+      "hits": 0,
+      "score": 0.5572556257247925
+    },
+    {
+      "class": "car",
+      "track_id": null,
+      "color": "white",
+      "direction": null,
+      "speed_px_s": null,
+      "dwell_s": null,
+      "hits": 0,
+      "score": 0.5369390249252319
+    },
+    {
+      "class": "car",
+      "track_id": null,
+      "color": "white",
+      "direction": null,
+      "speed_px_s": null,
+      "dwell_s": null,
+      "hits": 0,
+      "score": 0.4906235635280609
     },
     {
       "class": "car",
@@ -185,7 +217,7 @@
       "speed_px_s": null,
       "dwell_s": null,
       "hits": 0,
-      "score": 0.5144295692443848
+      "score": 0.43598058819770813
     },
     {
       "class": "car",
@@ -195,17 +227,27 @@
       "speed_px_s": null,
       "dwell_s": null,
       "hits": 0,
-      "score": 0.4968419075012207
+      "score": 0.41285616159439087
     },
     {
       "class": "car",
       "track_id": null,
-      "color": "white",
+      "color": "red",
       "direction": null,
       "speed_px_s": null,
       "dwell_s": null,
       "hits": 0,
-      "score": 0.4312913715839386
+      "score": 0.40241846442222595
+    },
+    {
+      "class": "car",
+      "track_id": null,
+      "color": "gray/silver",
+      "direction": null,
+      "speed_px_s": null,
+      "dwell_s": null,
+      "hits": 0,
+      "score": 0.4006871283054352
     },
     {
       "class": "car",
@@ -215,7 +257,107 @@
       "speed_px_s": null,
       "dwell_s": null,
       "hits": 0,
-      "score": 0.38427749276161194
+      "score": 0.3856189548969269
+    },
+    {
+      "class": "car",
+      "track_id": null,
+      "color": "white",
+      "direction": null,
+      "speed_px_s": null,
+      "dwell_s": null,
+      "hits": 0,
+      "score": 0.34679722785949707
+    },
+    {
+      "class": "car",
+      "track_id": null,
+      "color": "green",
+      "direction": null,
+      "speed_px_s": null,
+      "dwell_s": null,
+      "hits": 0,
+      "score": 0.32132232189178467
+    },
+    {
+      "class": "car",
+      "track_id": null,
+      "color": "gray/silver",
+      "direction": null,
+      "speed_px_s": null,
+      "dwell_s": null,
+      "hits": 0,
+      "score": 0.31311511993408203
+    },
+    {
+      "class": "car",
+      "track_id": null,
+      "color": "gray/silver",
+      "direction": null,
+      "speed_px_s": null,
+      "dwell_s": null,
+      "hits": 0,
+      "score": 0.27156999707221985
+    },
+    {
+      "class": "car",
+      "track_id": null,
+      "color": "red",
+      "direction": null,
+      "speed_px_s": null,
+      "dwell_s": null,
+      "hits": 0,
+      "score": 0.24285370111465454
+    },
+    {
+      "class": "car",
+      "track_id": null,
+      "color": "white",
+      "direction": null,
+      "speed_px_s": null,
+      "dwell_s": null,
+      "hits": 0,
+      "score": 0.2162504941225052
+    },
+    {
+      "class": "motorcycle",
+      "track_id": null,
+      "color": "blue",
+      "direction": null,
+      "speed_px_s": null,
+      "dwell_s": null,
+      "hits": 0,
+      "score": 0.33146992325782776
+    },
+    {
+      "class": "motorcycle",
+      "track_id": null,
+      "color": "gray/silver",
+      "direction": null,
+      "speed_px_s": null,
+      "dwell_s": null,
+      "hits": 0,
+      "score": 0.2586463987827301
+    },
+    {
+      "class": "motorcycle",
+      "track_id": null,
+      "color": "gray/silver",
+      "direction": null,
+      "speed_px_s": null,
+      "dwell_s": null,
+      "hits": 0,
+      "score": 0.2576825022697449
+    },
+    {
+      "class": "motorcycle",
+      "track_id": null,
+      "color": "gray/silver",
+      "direction": null,
+      "speed_px_s": null,
+      "dwell_s": null,
+      "hits": 0,
+      "score": 0.239178866147995
     },
     {
       "class": "truck",
@@ -225,7 +367,7 @@
       "speed_px_s": null,
       "dwell_s": null,
       "hits": 0,
-      "score": 0.4715694189071655
+      "score": 0.43955281376838684
     }
   ]
 }

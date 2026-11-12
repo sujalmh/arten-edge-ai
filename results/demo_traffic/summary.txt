@@ -4,41 +4,42 @@
 ==============================================================================
   Input        bengaluru_traffic.jpg
   Frames       1 / 1
-  Device       arm64 · macOS-27.0.1-arm64-arm-64bit
-  Runtime      ExecuTorch 1.5.1 · torch 2.15.0
+  Device       aarch64 · Linux-6.12.25+rpt-rpi-v8-aarch64-with-glibc2.36
+  Runtime      ExecuTorch 1.1.0a0+17adba1 · torch 2.9.0+cpu
   Model        YOLO11n (COCO) — Arm-optimized INT8 · 4.73 MB · checksum OK
 
   COUNTS (per processed frame)
 +----------------+------------+------------+-------+----------+
 | category       | peak/frame | mean/frame | p95   | unique*  |
 +================+============+============+=======+==========+
-| person         | 2          | 2.00       | 2     | —        |
+| person         | 9          | 9.00       | 9     | —        |
 | bicycle        | 0          | 0.00       | 0     | —        |
-| car            | 17         | 17.00      | 17    | —        |
-| motorcycle     | 0          | 0.00       | 0     | —        |
-| bus            | 1          | 1.00       | 1     | —        |
+| car            | 25         | 25.00      | 25    | —        |
+| motorcycle     | 4          | 4.00       | 4     | —        |
+| bus            | 2          | 2.00       | 2     | —        |
 | truck          | 1          | 1.00       | 1     | —        |
 +----------------+------------+------------+-------+----------+
   * unique is indicative, from a lightweight IoU/velocity tracker.
 
   ATTRIBUTES (unique tracks, on-device)
-  car           17 tracks  colours: blue 2, gray/silver 4, orange/brown 1, red 1, white 9
-  bus            1 tracks  colours: white 1
+  car           25 tracks  colours: blue 2, gray/silver 7, green 1, orange/brown 1, red 3, white 11
+  bus            2 tracks  colours: green 1, white 1
   truck          1 tracks  colours: orange/brown 1
+  motorcycle     4 tracks  colours: blue 1, gray/silver 3
   Motion is image-plane; speed is uncalibrated. Colour is optional HSV.
 
   LATENCY / THROUGHPUT
 +----------------+-----------+----------+----------+---------+
 | stage          | mean ms   | p50 ms   | p95 ms   | FPS     |
 +================+===========+==========+==========+=========+
-| model infer    | 22.93     | 22.93    | 22.93    | 43.62   |
-| preprocess     | 1.49      | 1.49     | 1.49     | 669.59  |
-| decode + NMS   | 5.54      | 5.54     | 5.54     | 180.41  |
-| frame read     | 8.64      | 8.64     | 8.64     | 115.74  |
-| annotate/save  | 8.51      | 8.51     | 8.51     | 117.51  |
-| pipeline total | 47.11     | 47.11    | 47.11    | 21.23   |
+| model infer    | 1291.30   | 1291.30  | 1291.30  | 0.77    |
+| preprocess     | 47.32     | 47.32    | 47.32    | 21.13   |
+| decode + NMS   | 142.44    | 142.44   | 142.44   | 7.02    |
+| frame read     | 192.97    | 192.97   | 192.97   | 5.18    |
+| annotate/save  | 574.38    | 574.38   | 574.38   | 1.74    |
+| pipeline total | 2248.42   | 2248.42  | 2248.42  | 0.44    |
 +----------------+-----------+----------+----------+---------+
-  Model-only 43.62 FPS · pipeline 21.23 FPS · wall 0.05 s
+  Model-only 0.77 FPS · pipeline 0.44 FPS · wall 2.25 s
 
   EXPOSURE (clip-level, descriptive)
   person-seconds 0.00 · vehicle-seconds 0.00 · frames with both 1 (100.0%)

@@ -20,7 +20,7 @@ Alternative if a shorter title is needed: **Arten — count movement, not people
 
 Arten turns a 15-second street clip into offline, privacy-preserving
 counts and movement attributes of pedestrians and vehicles on a Raspberry Pi.
-Using an Arm-optimized YOLO11n INT8 model in ExecuTorch, it runs at 7.46 FPS with no cloud, GPU or
+Using an Arm-optimized YOLO11n INT8 model in ExecuTorch, it runs at a 7.46 FPS Pi 5 reference with no cloud, GPU or
 identities — evidence for safer crossings, not surveillance.
 
 ## 150-word summary
@@ -29,8 +29,8 @@ Road traffic injuries are the leading cause of death for young people aged 5–2
 India recorded 1,68,491 road deaths in 2022; pedestrians were 19.5% and
 two-wheeler riders 44.5%. The missing ingredient for safer streets is not more
 cameras — it is an affordable way to count movement. Arten is an offline
-edge-AI PoC that processes a 10–20 second clip or images on a Raspberry Pi 5.
-A 4.73 MB YOLO11n INT8 model runs through ExecuTorch with XNNPACK at 7.46 FPS,
+edge-AI PoC that processes a 10–20 second clip or images on a Raspberry Pi 4 or 5.
+A 4.73 MB YOLO11n INT8 model runs through ExecuTorch with XNNPACK (7.46 FPS Pi 5 reference),
 detecting people, cars, motorcycles, buses, trucks and bicycles. It outputs
 per-frame counts, on-device motion attributes and optional vehicle colour,
 annotated frames, a CSV/JSON evidence bundle and honest latency percentiles. No footage leaves the device and no identities are
@@ -39,22 +39,23 @@ dismissal-time clips and make a case for a crossing guard or zebra crossing.
 
 ## 300-word solution description
 
-Arten is a lightweight, offline object-detection and counting PoC built
-for the Namma AI Hackathon's safer-communities problem statement. It takes one
+Arten is a lightweight, offline object-detection and counting PoC for safer
+communities. It takes one
 10–20 second clip or a folder of 10–20 images and produces per-frame counts for
 six categories: person, bicycle, car, motorcycle, bus and truck.
 
 The core is an Arm-optimized YOLO11n INT8 ExecuTorch model (4.73 MB, 80 COCO
 classes). On a Raspberry Pi 5 it runs at 134.10 ms p50 / 7.46 FPS with 59.17 MB
-peak memory, using the CPU and XNNPACK — no GPU and no cloud. The pipeline
+peak memory, CPU-only XNNPACK, no GPU or cloud. A source-built
+ARMv8.0 runtime brings the same pipeline to Pi 4/3, and a tiled mode runs native
+crops for dense scenes at about four times the cost. The pipeline
 letterboxes each frame to 640×640, runs the `.pte` through the ExecuTorch
 runtime, decodes the 4 xywh + 80 class outputs, applies per-class NMS, and maps
 boxes back to the original image. Counts are written per frame to CSV and JSONL;
 annotated frames, a contact sheet and an optional annotated video make the result
 auditable. An optional IoU/velocity tracker adds indicative unique counts plus image-plane
 direction, dwell time and relative speed; an optional HSV pass adds a coarse
-vehicle colour. All of these are labelled as derived attributes, not learned
-predictions.
+vehicle colour. All are derived attributes, not learned predictions.
 
 The societal application is a school-zone safety audit. A school records three
 15-second clips — morning drop-off, afternoon dismissal and a quiet hour — and
@@ -63,10 +64,9 @@ observed person-seconds gives a ward officer or school committee concrete
 evidence for a crossing guard, a zebra crossing or a no-parking zone. The footage
 never leaves the school, and the output is aggregate counts, not identities.
 
-The repository already contains a working pipeline, 29 tests, a one-command Pi
-setup, a checksum-verified model, evidence bundles and a 21-second demo. At the finals I will
-run the organiser clip on the Pi and replace the reference numbers with on-device
-measurements.
+The repository contains a working pipeline, 37 tests, a one-command Pi setup, a
+checksum-verified model, evidence and a 21-second demo. The organiser clip can
+replace the reference numbers with on-device measurements.
 
 
 ## Approach and overall plan (application answer)
@@ -95,7 +95,10 @@ the attribute layer. Next, package the pipeline so the same command handles
 video or images, writes counts and annotated evidence, and reports latency.
 Then validate it on the supplied material, document the limits and prepare the
 short demonstration. A fallback model path and pre-generated evidence keep the
-demonstration reproducible if the hardware or the clip changes.
+demonstration reproducible if the hardware or the clip changes. The detector now
+defaults to a calibrated 0.2 threshold, runs on Pi 4/5 through a source-built
+ARMv8.0 runtime, supports tiled native-resolution inference for dense scenes,
+and installs offline from a local wheelhouse.
 
 ## 500-word technical approach
 
@@ -140,11 +143,11 @@ at the event.
 
 **Reproducibility.** The model is committed and checksum-verified. `setup_pi.sh`
 pins ExecuTorch 1.1.0 and CPU PyTorch, creates a venv, installs the package and
-runs `doctor`. Twenty-nine unit tests cover letterboxing, NMS, decode, tracker
-identity, attributes, zone metrics and latency statistics. A fallback export script reproduces the model through
+runs `doctor`. Thirty-seven unit tests cover letterboxing, NMS, decode, tiled merge,
+tracker identity, attributes, zone metrics and latency statistics. A fallback export script reproduces the model through
 Ultralytics if the prebuilt artifact is unavailable.
 
-**Why edge, why now.** A Raspberry Pi 5 plus a phone clip is within reach of a
+**Why edge, why now.** A Raspberry Pi 4 or 5 plus a phone clip is within reach of a
 school or ward office. The model is small enough to load in under 10 ms, the
 pipeline runs offline, and the output is a count table rather than a video feed.
 That changes the deployment conversation from "install a surveillance system" to
@@ -152,38 +155,37 @@ That changes the deployment conversation from "install a surveillance system" to
 
 ## Innovation / differentiation (150 words)
 
-Most hackathon object-detection demos stop at a laptop and a bounding box. Namma
-Drishti is built around the constraints of the target: a 4.73 MB INT8 ExecuTorch
+Most hackathon object-detection demos stop at a laptop and a bounding box. Arten
+is built around the constraints of the target: a 4.73 MB INT8 ExecuTorch
 model, CPU-only XNNPACK inference, a one-command Pi setup and a checksum-verified
 artifact. It adds derived movement attributes — image-plane direction, dwell and
 relative speed — plus optional coarse vehicle colour, all on the same tracker.
 It measures the full pipeline, not just the model, and separates p50 from p95.
 It is privacy-preserving by design: no faces, plates or identities, and no
-network calls. It is honest about failure: the dense Bengaluru stress test
-misses small motorcycles, and auto-rickshaws are not a COCO class. Finally, it
+network calls. It is honest about failure: the full-frame dense-traffic pass
+under-counts people and two-wheelers, auto-rickshaws are not a COCO class, and
+tiling improves recall at four times the latency. Finally, it
 ships evidence, not screenshots — per-frame CSV, detections JSONL, annotated
 frames, a generated report and a reproducible benchmark.
 
 ## Feasibility / execution plan (150 words)
 
-The PoC is already working on a development host, with the model, pipeline,
-tests, sample evidence and demo video committed. The final is therefore a
-deployment and validation exercise. First 45 minutes: verify the Pi, run
-`setup_pi.sh` and `doctor`, load the model. Next 45 minutes: run the organiser
-clip and inspect counts. Next hour: tune the confidence threshold on two or three
-frames and freeze it. Next hour: run the full clip and a 50-run benchmark, save
-the evidence bundle. Next hour: fill the report and build the contact sheet.
-Final hour: rehearse the two-minute pitch and keep a USB backup of all outputs.
-Fallbacks include a prebuilt model, an FP32 export path and pre-generated
-evidence if the Pi fails.
+The PoC is already working, with the model, pipeline, tests, sample evidence and
+demo video committed. Remaining work is validation on the event board: verify
+`setup_pi.sh` and `doctor`, run the organiser clip, confirm the calibrated 0.2
+threshold and, for dense frames, compare the full-frame and 2×2 tiled counts.
+Then capture the benchmark and evidence bundle and rehearse the two-minute
+pitch. Fallbacks include the prebuilt model, a 960 export path and the committed
+evidence if the board fails.
 
 ## Impact / measurable outcomes (150 words)
 
 The immediate output is measurable: per-frame counts for six categories, peak
 and mean counts, observed person-seconds and vehicle-seconds, model latency
 (p50/p95), throughput and memory. On the committed 15-second clip, the pipeline
-processes 150 frames, finds up to 9 people in a frame and tracks 18 people
-(indicative) plus 2 vehicles. The practical impact is a repeatable school-zone
+processes 150 frames, finds up to 10 people in a frame and produces 33
+indicative person tracks plus 2 vehicles. A 2×2 tiled YOLOv8s pass on the dense
+image finds 27 people, 41 cars and 19 motorcycles. The practical impact is a repeatable school-zone
 audit: three clips at different times, compared offline, produce evidence for a
 crossing guard, zebra crossing or parking restriction. The cost is one
 Raspberry Pi and no cloud subscription. The longer-term impact is a template for

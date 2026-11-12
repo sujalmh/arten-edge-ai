@@ -2,14 +2,15 @@
   "project": "Arten",
   "tagline": "Offline edge AI for safer streets",
   "run": {
-    "input": "/Users/sujal/.t3/projects/edge-ai-detection/data/samples/pedestrians_15s.mp4",
+    "input": "/home/pi/arten/data/samples/pedestrians_15s.mp4",
     "input_type": "video",
-    "output_dir": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_pedestrians",
+    "output_dir": "/home/pi/new_demo_pedestrians",
     "frames_processed": 150,
     "source_frames": 150,
     "stride": 1,
+    "tile_grid": 0,
     "duration_s": 15.0,
-    "wall_time_s": 4.232,
+    "wall_time_s": 239.829,
     "source_fps": 10.0,
     "source_size": [
       640,
@@ -23,7 +24,7 @@
       "bus",
       "truck"
     ],
-    "confidence_threshold": 0.35,
+    "confidence_threshold": 0.2,
     "iou_threshold": 0.7,
     "tracking": true,
     "attributes": true,
@@ -35,13 +36,13 @@
   "model": {
     "name": "YOLO11n (COCO) — Arm-optimized INT8",
     "description": "Ultralytics YOLO11n, 80-class COCO detector, statically quantized to INT8 by Arm and exported to ExecuTorch .pte with the XNNPACK delegate.",
-    "path": "/Users/sujal/.t3/projects/edge-ai-detection/models/yolo11n_int8_xnnpack.pte",
+    "path": "/home/pi/arten/models/yolo11n_int8_xnnpack.pte",
     "size_mb": 4.73,
     "sha256": "154c54b52389219ebd982e1003227c1abbc3f29a99bdad241147b684d3041b96",
     "expected_sha256": "154c54b52389219ebd982e1003227c1abbc3f29a99bdad241147b684d3041b96",
     "sha256_match": true,
     "format": "ExecuTorch .pte",
-    "backend": "XNNPACK (prebuilt with Arm KleidiAI kernels)",
+    "backend": "XNNPACK (CPU)",
     "quantization": "INT8 static post-training quantization; stem conv and detection head remain FP32 (per Arm model card)",
     "input_shape": [
       1,
@@ -56,29 +57,29 @@
     "classes": 80,
     "dataset": "COCO 2017",
     "source": "https://huggingface.co/Arm/yolo11n-int8-xnnpack-executorch-raspberrypi5",
-    "load_ms": 20.55,
-    "torch": "2.15.0",
-    "executorch": "1.5.1"
+    "load_ms": 126.52,
+    "torch": "2.9.0+cpu",
+    "executorch": "1.1.0a0+17adba1"
   },
   "environment": {
-    "platform": "macOS-27.0.1-arm64-arm-64bit",
-    "machine": "arm64",
-    "processor": "arm",
-    "python": "3.12.12",
-    "timestamp_utc": "2026-11-05T23:28:15+00:00",
-    "peak_rss_mb": 699.8,
+    "platform": "Linux-6.12.25+rpt-rpi-v8-aarch64-with-glibc2.36",
+    "machine": "aarch64",
+    "processor": "unknown",
+    "python": "3.11.2",
+    "timestamp_utc": "2026-11-12T22:52:18+00:00",
+    "peak_rss_mb": 442.3,
     "threads": null,
-    "torch": "2.15.0",
-    "executorch": "1.5.1",
-    "opencv": "5.0.0"
+    "torch": "2.9.0+cpu",
+    "executorch": "1.1.0a0+17adba1",
+    "opencv": "4.10.0"
   },
   "counts": {
     "person": {
-      "peak": 9,
-      "mean": 5.5,
+      "peak": 10,
+      "mean": 5.95,
       "p95": 8,
-      "total_detections": 825,
-      "unique_tracked": 18
+      "total_detections": 892,
+      "unique_tracked": 33
     },
     "bicycle": {
       "peak": 0,
@@ -119,78 +120,78 @@
   "latency": {
     "model_inference": {
       "count": 150.0,
-      "mean_ms": 21.79,
-      "p50_ms": 21.7,
-      "p95_ms": 22.85,
-      "p99_ms": 23.43,
-      "min_ms": 20.78,
-      "max_ms": 23.6,
-      "std_ms": 0.54,
-      "fps_from_mean": 45.9
+      "mean_ms": 1298.61,
+      "p50_ms": 1295.06,
+      "p95_ms": 1299.49,
+      "p99_ms": 1394.64,
+      "min_ms": 1291.84,
+      "max_ms": 1571.77,
+      "std_ms": 26.67,
+      "fps_from_mean": 0.77
     },
     "preprocess": {
       "count": 150.0,
-      "mean_ms": 0.7,
-      "p50_ms": 0.66,
-      "p95_ms": 0.9,
-      "p99_ms": 1.16,
-      "min_ms": 0.54,
-      "max_ms": 1.79,
-      "std_ms": 0.15,
-      "fps_from_mean": 1431.88
+      "mean_ms": 31.96,
+      "p50_ms": 31.79,
+      "p95_ms": 32.26,
+      "p99_ms": 32.82,
+      "min_ms": 30.87,
+      "max_ms": 56.03,
+      "std_ms": 1.99,
+      "fps_from_mean": 31.29
     },
     "postprocess": {
       "count": 150.0,
-      "mean_ms": 0.94,
-      "p50_ms": 0.88,
-      "p95_ms": 1.02,
-      "p99_ms": 1.05,
-      "min_ms": 0.77,
-      "max_ms": 8.9,
-      "std_ms": 0.65,
-      "fps_from_mean": 1061.1
+      "mean_ms": 38.48,
+      "p50_ms": 38.17,
+      "p95_ms": 40.53,
+      "p99_ms": 47.9,
+      "min_ms": 36.4,
+      "max_ms": 52.98,
+      "std_ms": 2.01,
+      "fps_from_mean": 25.99
     },
     "read": {
       "count": 150.0,
-      "mean_ms": 0.21,
-      "p50_ms": 0.17,
-      "p95_ms": 0.24,
-      "p99_ms": 0.33,
-      "min_ms": 0.11,
-      "max_ms": 5.16,
-      "std_ms": 0.41,
-      "fps_from_mean": 4818.64
+      "mean_ms": 10.39,
+      "p50_ms": 9.85,
+      "p95_ms": 10.14,
+      "p99_ms": 12.11,
+      "min_ms": 9.16,
+      "max_ms": 87.9,
+      "std_ms": 6.36,
+      "fps_from_mean": 96.28
     },
     "annotate": {
       "count": 150.0,
-      "mean_ms": 3.43,
-      "p50_ms": 3.25,
-      "p95_ms": 4.2,
-      "p99_ms": 4.58,
-      "min_ms": 2.76,
-      "max_ms": 21.22,
-      "std_ms": 1.5,
-      "fps_from_mean": 291.6
+      "mean_ms": 177.81,
+      "p50_ms": 176.68,
+      "p95_ms": 205.62,
+      "p99_ms": 211.16,
+      "min_ms": 148.92,
+      "max_ms": 212.6,
+      "std_ms": 14.79,
+      "fps_from_mean": 5.62
     },
     "pipeline_total": {
       "count": 150.0,
-      "mean_ms": 27.4,
-      "p50_ms": 27.14,
-      "p95_ms": 28.48,
-      "p99_ms": 29.07,
-      "min_ms": 25.61,
-      "max_ms": 58.36,
-      "std_ms": 2.64,
-      "fps_from_mean": 36.49
+      "mean_ms": 1586.69,
+      "p50_ms": 1582.98,
+      "p95_ms": 1636.89,
+      "p99_ms": 1709.39,
+      "min_ms": 1531.13,
+      "max_ms": 1846.06,
+      "std_ms": 36.9,
+      "fps_from_mean": 0.63
     }
   },
   "throughput": {
-    "model_fps_from_mean": 45.9,
-    "pipeline_fps_from_mean": 36.49,
-    "processed_frames_per_wall_second": 35.45
+    "model_fps_from_mean": 0.77,
+    "pipeline_fps_from_mean": 0.63,
+    "processed_frames_per_wall_second": 0.63
   },
   "exposure": {
-    "person_seconds": 82.5,
+    "person_seconds": 89.2,
     "vehicle_seconds": 30.0,
     "frames_with_person_and_vehicle": 150,
     "share_frames_with_person_and_vehicle": 1.0
@@ -222,22 +223,22 @@
         "mean_speed_px_s": 0.4
       },
       "person": {
-        "tracks": 18,
+        "tracks": 33,
         "directions": {
           "down": 2,
-          "left": 9,
-          "right": 4,
-          "stationary": 2,
-          "up": 1
+          "left": 13,
+          "right": 10,
+          "stationary": 6,
+          "up": 2
         },
         "colors": {},
-        "mean_dwell_s": 4.52,
-        "mean_speed_px_s": 35.63
+        "mean_dwell_s": 2.68,
+        "mean_speed_px_s": 43.65
       }
     },
-    "total_tracks": 20
+    "total_tracks": 35
   },
-  "peak_rss_mb": 699.8,
+  "peak_rss_mb": 442.3,
   "reference": {
     "device": "Raspberry Pi 5 (Cortex-A76, 4 cores @ 2.4 GHz)",
     "runtime": "ExecuTorch 1.1.0, XNNPACK + KleidiAI, 1 thread",
@@ -250,18 +251,19 @@
     "source": "https://huggingface.co/Arm/yolo11n-int8-xnnpack-executorch-raspberrypi5"
   },
   "outputs": {
-    "counts_csv": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_pedestrians/counts.csv",
+    "counts_csv": "/home/pi/new_demo_pedestrians/counts.csv",
     "zone_counts_csv": null,
-    "attribute_tracks_csv": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_pedestrians/attribute_tracks.csv",
-    "attribute_summary_json": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_pedestrians/attribute_summary.json",
-    "detections_jsonl": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_pedestrians/detections.jsonl",
-    "summary_json": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_pedestrians/summary.json",
-    "summary_txt": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_pedestrians/summary.txt",
-    "annotated_dir": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_pedestrians/annotated",
-    "annotated_video": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_pedestrians/annotated.mp4",
-    "contact_sheet": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_pedestrians/contact_sheet.jpg"
+    "attribute_tracks_csv": "/home/pi/new_demo_pedestrians/attribute_tracks.csv",
+    "attribute_summary_json": "/home/pi/new_demo_pedestrians/attribute_summary.json",
+    "detections_jsonl": "/home/pi/new_demo_pedestrians/detections.jsonl",
+    "summary_json": "/home/pi/new_demo_pedestrians/summary.json",
+    "summary_txt": "/home/pi/new_demo_pedestrians/summary.txt",
+    "annotated_dir": "/home/pi/new_demo_pedestrians/annotated",
+    "annotated_video": "/home/pi/new_demo_pedestrians/annotated.mp4",
+    "contact_sheet": "/home/pi/new_demo_pedestrians/contact_sheet.jpg"
   },
   "notes": [
+    "Inference ran as a single 640x640 pass per frame.",
     "Counts are per processed frame, not unique objects, unless the 'unique_tracked' field is used.",
     "unique_tracked is indicative: a lightweight IoU/velocity tracker, not a production multi-object tracking system.",
     "Latency is measured on the device that produced this run. Compare only with runs on the same hardware and thread count.",

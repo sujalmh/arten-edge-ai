@@ -2,14 +2,15 @@
   "project": "Arten",
   "tagline": "Offline edge AI for safer streets",
   "run": {
-    "input": "/Users/sujal/.t3/projects/edge-ai-detection/data/samples/bengaluru_traffic.jpg",
+    "input": "/home/pi/arten/data/samples/bengaluru_traffic.jpg",
     "input_type": "images",
-    "output_dir": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_traffic",
+    "output_dir": "/home/pi/new_demo_traffic",
     "frames_processed": 1,
     "source_frames": 1,
     "stride": 1,
+    "tile_grid": 0,
     "duration_s": 1.0,
-    "wall_time_s": 0.047,
+    "wall_time_s": 2.252,
     "source_fps": null,
     "source_size": null,
     "classes": [
@@ -20,7 +21,7 @@
       "bus",
       "truck"
     ],
-    "confidence_threshold": 0.35,
+    "confidence_threshold": 0.2,
     "iou_threshold": 0.7,
     "tracking": false,
     "attributes": true,
@@ -32,13 +33,13 @@
   "model": {
     "name": "YOLO11n (COCO) — Arm-optimized INT8",
     "description": "Ultralytics YOLO11n, 80-class COCO detector, statically quantized to INT8 by Arm and exported to ExecuTorch .pte with the XNNPACK delegate.",
-    "path": "/Users/sujal/.t3/projects/edge-ai-detection/models/yolo11n_int8_xnnpack.pte",
+    "path": "/home/pi/arten/models/yolo11n_int8_xnnpack.pte",
     "size_mb": 4.73,
     "sha256": "154c54b52389219ebd982e1003227c1abbc3f29a99bdad241147b684d3041b96",
     "expected_sha256": "154c54b52389219ebd982e1003227c1abbc3f29a99bdad241147b684d3041b96",
     "sha256_match": true,
     "format": "ExecuTorch .pte",
-    "backend": "XNNPACK (prebuilt with Arm KleidiAI kernels)",
+    "backend": "XNNPACK (CPU)",
     "quantization": "INT8 static post-training quantization; stem conv and detection head remain FP32 (per Arm model card)",
     "input_shape": [
       1,
@@ -53,28 +54,28 @@
     "classes": 80,
     "dataset": "COCO 2017",
     "source": "https://huggingface.co/Arm/yolo11n-int8-xnnpack-executorch-raspberrypi5",
-    "load_ms": 6.46,
-    "torch": "2.15.0",
-    "executorch": "1.5.1"
+    "load_ms": 141.43,
+    "torch": "2.9.0+cpu",
+    "executorch": "1.1.0a0+17adba1"
   },
   "environment": {
-    "platform": "macOS-27.0.1-arm64-arm-64bit",
-    "machine": "arm64",
-    "processor": "arm",
-    "python": "3.12.12",
-    "timestamp_utc": "2026-11-05T23:28:18+00:00",
-    "peak_rss_mb": 449.4,
+    "platform": "Linux-6.12.25+rpt-rpi-v8-aarch64-with-glibc2.36",
+    "machine": "aarch64",
+    "processor": "unknown",
+    "python": "3.11.2",
+    "timestamp_utc": "2026-11-12T22:52:43+00:00",
+    "peak_rss_mb": 373.5,
     "threads": null,
-    "torch": "2.15.0",
-    "executorch": "1.5.1",
-    "opencv": "5.0.0"
+    "torch": "2.9.0+cpu",
+    "executorch": "1.1.0a0+17adba1",
+    "opencv": "4.10.0"
   },
   "counts": {
     "person": {
-      "peak": 2,
-      "mean": 2.0,
-      "p95": 2,
-      "total_detections": 2,
+      "peak": 9,
+      "mean": 9.0,
+      "p95": 9,
+      "total_detections": 9,
       "unique_tracked": null
     },
     "bicycle": {
@@ -85,24 +86,24 @@
       "unique_tracked": null
     },
     "car": {
-      "peak": 17,
-      "mean": 17.0,
-      "p95": 17,
-      "total_detections": 17,
+      "peak": 25,
+      "mean": 25.0,
+      "p95": 25,
+      "total_detections": 25,
       "unique_tracked": null
     },
     "motorcycle": {
-      "peak": 0,
-      "mean": 0.0,
-      "p95": 0,
-      "total_detections": 0,
+      "peak": 4,
+      "mean": 4.0,
+      "p95": 4,
+      "total_detections": 4,
       "unique_tracked": null
     },
     "bus": {
-      "peak": 1,
-      "mean": 1.0,
-      "p95": 1,
-      "total_detections": 1,
+      "peak": 2,
+      "mean": 2.0,
+      "p95": 2,
+      "total_detections": 2,
       "unique_tracked": null
     },
     "truck": {
@@ -116,75 +117,75 @@
   "latency": {
     "model_inference": {
       "count": 1.0,
-      "mean_ms": 22.93,
-      "p50_ms": 22.93,
-      "p95_ms": 22.93,
-      "p99_ms": 22.93,
-      "min_ms": 22.93,
-      "max_ms": 22.93,
+      "mean_ms": 1291.3,
+      "p50_ms": 1291.3,
+      "p95_ms": 1291.3,
+      "p99_ms": 1291.3,
+      "min_ms": 1291.3,
+      "max_ms": 1291.3,
       "std_ms": 0.0,
-      "fps_from_mean": 43.62
+      "fps_from_mean": 0.77
     },
     "preprocess": {
       "count": 1.0,
-      "mean_ms": 1.49,
-      "p50_ms": 1.49,
-      "p95_ms": 1.49,
-      "p99_ms": 1.49,
-      "min_ms": 1.49,
-      "max_ms": 1.49,
+      "mean_ms": 47.32,
+      "p50_ms": 47.32,
+      "p95_ms": 47.32,
+      "p99_ms": 47.32,
+      "min_ms": 47.32,
+      "max_ms": 47.32,
       "std_ms": 0.0,
-      "fps_from_mean": 669.59
+      "fps_from_mean": 21.13
     },
     "postprocess": {
       "count": 1.0,
-      "mean_ms": 5.54,
-      "p50_ms": 5.54,
-      "p95_ms": 5.54,
-      "p99_ms": 5.54,
-      "min_ms": 5.54,
-      "max_ms": 5.54,
+      "mean_ms": 142.44,
+      "p50_ms": 142.44,
+      "p95_ms": 142.44,
+      "p99_ms": 142.44,
+      "min_ms": 142.44,
+      "max_ms": 142.44,
       "std_ms": 0.0,
-      "fps_from_mean": 180.41
+      "fps_from_mean": 7.02
     },
     "read": {
       "count": 1.0,
-      "mean_ms": 8.64,
-      "p50_ms": 8.64,
-      "p95_ms": 8.64,
-      "p99_ms": 8.64,
-      "min_ms": 8.64,
-      "max_ms": 8.64,
+      "mean_ms": 192.97,
+      "p50_ms": 192.97,
+      "p95_ms": 192.97,
+      "p99_ms": 192.97,
+      "min_ms": 192.97,
+      "max_ms": 192.97,
       "std_ms": 0.0,
-      "fps_from_mean": 115.74
+      "fps_from_mean": 5.18
     },
     "annotate": {
       "count": 1.0,
-      "mean_ms": 8.51,
-      "p50_ms": 8.51,
-      "p95_ms": 8.51,
-      "p99_ms": 8.51,
-      "min_ms": 8.51,
-      "max_ms": 8.51,
+      "mean_ms": 574.38,
+      "p50_ms": 574.38,
+      "p95_ms": 574.38,
+      "p99_ms": 574.38,
+      "min_ms": 574.38,
+      "max_ms": 574.38,
       "std_ms": 0.0,
-      "fps_from_mean": 117.51
+      "fps_from_mean": 1.74
     },
     "pipeline_total": {
       "count": 1.0,
-      "mean_ms": 47.11,
-      "p50_ms": 47.11,
-      "p95_ms": 47.11,
-      "p99_ms": 47.11,
-      "min_ms": 47.11,
-      "max_ms": 47.11,
+      "mean_ms": 2248.42,
+      "p50_ms": 2248.42,
+      "p95_ms": 2248.42,
+      "p99_ms": 2248.42,
+      "min_ms": 2248.42,
+      "max_ms": 2248.42,
       "std_ms": 0.0,
-      "fps_from_mean": 21.23
+      "fps_from_mean": 0.44
     }
   },
   "throughput": {
-    "model_fps_from_mean": 43.62,
-    "pipeline_fps_from_mean": 21.23,
-    "processed_frames_per_wall_second": 21.16
+    "model_fps_from_mean": 0.77,
+    "pipeline_fps_from_mean": 0.44,
+    "processed_frames_per_wall_second": 0.44
   },
   "exposure": {
     "person_seconds": 0.0,
@@ -197,22 +198,24 @@
     "note": "Image-plane motion and coarse colour are derived attributes, not trained model outputs. Speed is uncalibrated pixels/second.",
     "by_class": {
       "car": {
-        "tracks": 17,
+        "tracks": 25,
         "directions": {},
         "colors": {
           "blue": 2,
-          "gray/silver": 4,
+          "gray/silver": 7,
+          "green": 1,
           "orange/brown": 1,
-          "red": 1,
-          "white": 9
+          "red": 3,
+          "white": 11
         },
         "mean_dwell_s": null,
         "mean_speed_px_s": null
       },
       "bus": {
-        "tracks": 1,
+        "tracks": 2,
         "directions": {},
         "colors": {
+          "green": 1,
           "white": 1
         },
         "mean_dwell_s": null,
@@ -226,11 +229,21 @@
         },
         "mean_dwell_s": null,
         "mean_speed_px_s": null
+      },
+      "motorcycle": {
+        "tracks": 4,
+        "directions": {},
+        "colors": {
+          "blue": 1,
+          "gray/silver": 3
+        },
+        "mean_dwell_s": null,
+        "mean_speed_px_s": null
       }
     },
-    "total_tracks": 19
+    "total_tracks": 32
   },
-  "peak_rss_mb": 449.4,
+  "peak_rss_mb": 373.5,
   "reference": {
     "device": "Raspberry Pi 5 (Cortex-A76, 4 cores @ 2.4 GHz)",
     "runtime": "ExecuTorch 1.1.0, XNNPACK + KleidiAI, 1 thread",
@@ -243,18 +256,19 @@
     "source": "https://huggingface.co/Arm/yolo11n-int8-xnnpack-executorch-raspberrypi5"
   },
   "outputs": {
-    "counts_csv": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_traffic/counts.csv",
+    "counts_csv": "/home/pi/new_demo_traffic/counts.csv",
     "zone_counts_csv": null,
-    "attribute_tracks_csv": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_traffic/attribute_tracks.csv",
-    "attribute_summary_json": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_traffic/attribute_summary.json",
-    "detections_jsonl": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_traffic/detections.jsonl",
-    "summary_json": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_traffic/summary.json",
-    "summary_txt": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_traffic/summary.txt",
-    "annotated_dir": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_traffic/annotated",
+    "attribute_tracks_csv": "/home/pi/new_demo_traffic/attribute_tracks.csv",
+    "attribute_summary_json": "/home/pi/new_demo_traffic/attribute_summary.json",
+    "detections_jsonl": "/home/pi/new_demo_traffic/detections.jsonl",
+    "summary_json": "/home/pi/new_demo_traffic/summary.json",
+    "summary_txt": "/home/pi/new_demo_traffic/summary.txt",
+    "annotated_dir": "/home/pi/new_demo_traffic/annotated",
     "annotated_video": null,
-    "contact_sheet": "/Users/sujal/.t3/projects/edge-ai-detection/results/demo_traffic/contact_sheet.jpg"
+    "contact_sheet": "/home/pi/new_demo_traffic/contact_sheet.jpg"
   },
   "notes": [
+    "Inference ran as a single 640x640 pass per frame.",
     "Counts are per processed frame, not unique objects, unless the 'unique_tracked' field is used.",
     "unique_tracked is indicative: a lightweight IoU/velocity tracker, not a production multi-object tracking system.",
     "Latency is measured on the device that produced this run. Compare only with runs on the same hardware and thread count.",
