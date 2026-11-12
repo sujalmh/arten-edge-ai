@@ -138,20 +138,34 @@ containment pass. No retraining, no new model.
 |---|---:|---:|---:|---:|---:|---:|
 | Manual actual (approx.) | 30–40 | 25–30 | 45–55 | 1 | 3–4 | — |
 | YOLO11n @0.15, full frame | 16 | 5 | 26 | 2 | 2 | 1.3 s |
-| YOLO11n @0.15, 2×2 tiles | 26 | 13 | 39 | 4* | 3 | 5.9 s |
+| YOLO11n @0.15, 2×2 tiles | 26 | 13 | 40 | 4 | 3 | 5.2 s |
 | YOLOv8s @0.2, full frame | 18 | 13 | 25 | 1 | 3 | 3.2 s |
-| **YOLOv8s @0.2, 2×2 tiles** | **27** | **19** | **41** | 4* | 3 | 13.5 s |
+| **YOLOv8s @0.2, 2×2 tiles** | **27** | **19** | **41** | 4 | 3 | 12.8 s |
 
-\* Bus is over-counted by tile merging: one pink bus spans several tiles and
-its partial boxes do not overlap enough to merge. Person, motorcycle and car
-counts are the meaningful ones here.
+Manual inspection of the annotated tiled frame shows the four bus boxes on
+distinct vehicles — one near pink bus plus distant buses — so the bus count is
+plausible, not a merge artifact. The prototype used a stricter merge (IoU 0.3)
+and reported 39 cars for YOLO11n; the shipped CLI uses IoU 0.5 plus a
+containment pass and reports 40.
+
+The feature is in the CLI:
+
+```bash
+arten run -i photo.jpg --tile 2 --conf 0.2 -o results/tiled
+arten run -i clip.mp4  --tile 2 --stride 2 --save-video
+```
+
+`summary.json` records `run.tile_grid`, the notes state that latency includes
+every tile, and the annotation footer names the active model. Tiling only
+engages when the source is larger than 640; the bundled 640x480 clip runs as a
+single tile, while a 1080p clip gets four crops.
 
 Recall at range midpoints:
 
 | Method | person | motorcycle | car |
 |---|---:|---:|---:|
 | YOLO11n full | 46% | 18% | 52% |
-| YOLO11n tiled | 74% | 47% | 78% |
+| YOLO11n tiled | 74% | 47% | 80% |
 | YOLOv8s full | 51% | 47% | 50% |
 | **YOLOv8s tiled** | **77%** | **69%** | **82%** |
 
@@ -178,7 +192,7 @@ roughly +26 points on people and +30 on cars, at 4× the latency.
 - **Stills / offline clips:** YOLOv8s @0.2, 2×2 tiles. Closest to the manual
   count.
 - **Video on a Pi 4/5:** YOLO11n @0.15, 2×2 tiles. 26 people / 13 motorcycles
-  at 5.9 s on this throttled Pi 3B+, roughly 2 s on a Pi 4 and ~0.6 s on a
+  at 5.2 s on this throttled Pi 3B+, roughly 2 s on a Pi 4 and ~0.55 s on a
   Pi 5 — still image-only on the Pi 3B+.
 - **Best long-term:** export at 960 and keep single-pass inference.
 

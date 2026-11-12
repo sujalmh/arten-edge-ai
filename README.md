@@ -111,6 +111,10 @@ arten doctor
 arten run -i data/samples/pedestrians_15s.mp4 \
   -o results/pi_run --save-video
 arten benchmark --input data/samples/bengaluru_traffic.jpg --runs 50
+
+# Dense or high-resolution frames: 2x2 tiled inference (about 4x the cost)
+arten run -i data/samples/bengaluru_traffic.jpg --tile 2 --conf 0.2 \
+  -o results/tiled
 ```
 
 `setup_pi.sh` detects the board and creates a venv. On Pi 5 it installs the
