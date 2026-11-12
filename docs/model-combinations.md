@@ -126,6 +126,9 @@ it sees roughly one in five two-wheelers.
   understated relative to a foreground-only count.
 - **Board cap.** All latencies are at 600 MHz. Fix the supply before quoting
   absolute numbers.
+- **Threads do not help here.** `--threads 1`, `2` and `4` all measured
+  1295–1304 ms on the Pi 3B+; the runtime is not using torch's thread pool for
+  this model.
 
 ## 7. Improvement: tiled inference
 

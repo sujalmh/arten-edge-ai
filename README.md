@@ -126,6 +126,9 @@ test. The model is committed, so the demo works without downloading it.
 Full hardware runbook: [`docs/pi-setup.md`](docs/pi-setup.md). For a scripted
 proof, run `bash scripts/run_pi5_hardware_proof.sh`.
 
+Hackathon setup, best operating points and the offline checklist:
+[`docs/hackathon-runbook.md`](docs/hackathon-runbook.md).
+
 ### On a development host (macOS Apple Silicon / Linux x86_64)
 
 ```bash
