@@ -79,7 +79,7 @@ else
 fi
 
 echo "\n[3/5] Installing the arten package"
-python -m pip install -e . --no-deps
+python -m pip install -e . --no-deps --no-build-isolation
 
 echo "\n[4/5] Checking the model and runtime"
 if [[ ! -f models/yolo11n_int8_xnnpack.pte ]]; then

@@ -20,3 +20,7 @@ numpy==1.26.4
 opencv-python-headless==4.10.0.84
 pillow==10.4.0
 psutil>=5.9
+
+# Build tooling for the editable install (kept in the offline wheelhouse).
+setuptools>=68
+wheel
