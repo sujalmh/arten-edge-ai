@@ -152,6 +152,61 @@ PI5_REFERENCE = {
     "source": MODEL_SOURCE_URL,
 }
 
+# Known Arm model cards, keyed by the .pte checksum. A model loaded with
+# --model keeps its own name, source and reference row instead of being
+# mislabelled as the default YOLO11n.
+KNOWN_MODELS: dict[str, dict] = {
+    MODEL_SHA256: {
+        "name": MODEL_NAME,
+        "description": MODEL_DESCRIPTION,
+        "size_mb": MODEL_SIZE_MB,
+        "source": MODEL_SOURCE_URL,
+        "reference": PI5_REFERENCE,
+    },
+    "7a8a56b82280a4032f3a9da69fe2599c1eb140bcd143413076120b2c1047a578": {
+        "name": "YOLOv8s (COCO) — Arm-optimized INT8",
+        "description": (
+            "Ultralytics YOLOv8s, 80-class COCO detector, statically quantized "
+            "to INT8 by Arm and exported to ExecuTorch .pte with the XNNPACK "
+            "delegate."
+        ),
+        "size_mb": 13.24,
+        "source": "https://huggingface.co/Arm/yolov8s-int8-xnnpack-executorch",
+        "reference": {
+            "device": "Raspberry Pi 5 (Cortex-A76, 4 cores @ 2.4 GHz)",
+            "runtime": "ExecuTorch 1.1.0, XNNPACK + KleidiAI",
+            "p50_latency_ms": 457.03,
+            "fps": 2.19,
+            "peak_memory_mb": 90.28,
+            "map_50_95": 43.86,
+            "map_50": 60.39,
+            "model_size_mb": 13.24,
+            "source": "https://huggingface.co/Arm/yolov8s-int8-xnnpack-executorch",
+        },
+    },
+    "3e67e465c7a59b8b5b3ee731e732b07dfe0ff0f90cc01a235beab86dd263e6c3": {
+        "name": "YOLOv9s (COCO) — Arm-optimized INT8",
+        "description": (
+            "Ultralytics YOLOv9s, 80-class COCO detector, statically quantized "
+            "to INT8 by Arm and exported to ExecuTorch .pte with the XNNPACK "
+            "delegate."
+        ),
+        "size_mb": 11.87,
+        "source": "https://huggingface.co/Arm/yolov9s-int8-xnnpack-executorch",
+        "reference": {
+            "device": "Raspberry Pi 5 (Cortex-A76, 4 cores @ 2.4 GHz)",
+            "runtime": "ExecuTorch 1.1.0, XNNPACK + KleidiAI",
+            "p50_latency_ms": 463.89,
+            "fps": 2.16,
+            "peak_memory_mb": 108.97,
+            "map_50_95": 44.00,
+            "map_50": None,
+            "model_size_mb": 11.87,
+            "source": "https://huggingface.co/Arm/yolov9s-int8-xnnpack-executorch",
+        },
+    },
+}
+
 # Image-plane motion labels. These are derived from the tracker's velocity,
 # not from a compass or a calibrated camera. The arrows are for annotations.
 DIRECTION_ARROWS: dict[str, str] = {

@@ -15,10 +15,8 @@ from .constants import (
     DEFAULT_CLASSES,
     DEFAULT_MODEL_PATH,
     INPUT_SIZE,
-    MODEL_NAME,
     PROJECT_NAME,
     PROJECT_TAGLINE,
-    PI5_REFERENCE,
     VEHICLE_CLASSES,
 )
 from .metrics import (
@@ -33,6 +31,7 @@ from .attributes import AttributeAccumulator, estimate_vehicle_color
 from .model import ExecuTorchDetector
 from .postprocess import count_by_class, decode
 from .preprocess import letterbox, read_image
+from .tiling import merge_detections, tile_origins
 from .tracker import IoUTracker
 from .visualize import annotate_frame, make_contact_sheet
 from .zone import ZoneProfile, count_detections_in_zone, load_zone_profile, summarise_zone
@@ -231,6 +230,60 @@ def _aggregate_counts(
     return per_class
 
 
+def _detect_frame(
+    detector: ExecuTorchDetector,
+    frame: np.ndarray,
+    classes: tuple[str, ...],
+    conf_threshold: float,
+    iou_threshold: float,
+    tile_grid: int,
+) -> tuple[list, float, float, float]:
+    """Detect on a frame, optionally over an NxN grid of 640 crops.
+
+    Returns ``(detections, preprocess_ms, inference_ms, postprocess_ms)``.
+    Detections are in original frame coordinates; per-tile duplicates are
+    merged by class.
+    """
+
+    origins = tile_origins(frame.shape[1], frame.shape[0], tile_grid)
+    detections: list = []
+    preprocess_ms = 0.0
+    inference_ms = 0.0
+    postprocess_ms = 0.0
+
+    for x, y in origins:
+        crop = frame if tile_grid <= 1 else frame[y : y + INPUT_SIZE[0], x : x + INPUT_SIZE[1]]
+        t_pre = time.perf_counter()
+        chw, meta = letterbox(crop, INPUT_SIZE)
+        preprocess_ms += (time.perf_counter() - t_pre) * 1000.0
+
+        raw, tile_ms = detector.infer(chw)
+        inference_ms += tile_ms
+
+        t_post = time.perf_counter()
+        found, _ = decode(
+            raw,
+            meta,
+            classes=classes,
+            conf_threshold=conf_threshold,
+            iou_threshold=iou_threshold,
+        )
+        postprocess_ms += (time.perf_counter() - t_post) * 1000.0
+
+        if tile_grid > 1:
+            for detection in found:
+                x1, y1, x2, y2 = detection.box
+                detection.box = (x1 + x, y1 + y, x2 + x, y2 + y)
+        detections.extend(found)
+
+    if tile_grid > 1:
+        t_merge = time.perf_counter()
+        detections = merge_detections(detections)
+        postprocess_ms += (time.perf_counter() - t_merge) * 1000.0
+
+    return detections, preprocess_ms, inference_ms, postprocess_ms
+
+
 def run_input(
     input_path: str | Path,
     output_dir: str | Path,
@@ -248,6 +301,7 @@ def run_input(
     quiet: bool = False,
     zone_config: str | Path | None = None,
     estimate_vehicle_colors: bool = False,
+    tile_grid: int = 0,
 ) -> dict:
     """Process a video, one image, or a directory of images.
 
@@ -264,6 +318,8 @@ def run_input(
         raise ValueError("stride must be >= 1")
     if annotate_every < 0:
         raise ValueError("annotate_every must be >= 0")
+    if tile_grid < 0 or tile_grid > 6:
+        raise ValueError("tile grid must be between 0 and 6")
     zone_profile = load_zone_profile(zone_config) if zone_config else None
 
     is_video = _is_video(input_path)
@@ -279,7 +335,7 @@ def run_input(
     tracker = IoUTracker() if (track and is_video) else None
     attribute_acc = AttributeAccumulator() if (attributes or estimate_vehicle_colors) else None
     if not quiet:
-        print(f"\nArten · {MODEL_NAME}")
+        print(f"\nArten · {detector.model_name}")
         print(f"  model     {Path(model_path).name} ({detector.model_size_mb:.2f} MB)")
         print(f"  runtime   ExecuTorch {detector.executorch_version} · torch {detector.torch_version}")
         print(f"  input     {input_path}")
@@ -289,6 +345,8 @@ def run_input(
             print("  attrs     on-device motion (direction, relative speed, dwell)" + (" + vehicle colour" if estimate_vehicle_colors else ""))
         if zone_profile:
             print(f"  zone      {zone_profile.name} (manual polygon; co-presence only)")
+        if tile_grid > 1:
+            print(f"  tiling    {tile_grid}x{tile_grid} ({tile_grid * tile_grid} crops per frame)")
         print(f"  output    {output_dir}\n")
 
     records: list[FrameRecord] = []
@@ -335,19 +393,10 @@ def run_input(
                 continue
 
             t_frame = time.perf_counter()
-            chw, meta = letterbox(frame, INPUT_SIZE)
-            preprocess_ms = (time.perf_counter() - t_frame) * 1000.0
-
-            raw, inference_ms = detector.infer(chw)
-
-            t_post = time.perf_counter()
-            detections, _ = decode(
-                raw,
-                meta,
-                classes=classes,
-                conf_threshold=conf_threshold,
-                iou_threshold=iou_threshold,
+            detections, preprocess_ms, inference_ms, detect_post_ms = _detect_frame(
+                detector, frame, classes, conf_threshold, iou_threshold, tile_grid
             )
+            t_post = time.perf_counter()
             if estimate_vehicle_colors:
                 for detection in detections:
                     if detection.class_name in VEHICLE_CLASSES:
@@ -360,7 +409,7 @@ def run_input(
                 if zone_profile
                 else None
             )
-            postprocess_ms = (time.perf_counter() - t_post) * 1000.0
+            postprocess_ms = detect_post_ms + (time.perf_counter() - t_post) * 1000.0
 
             track_ms = 0.0
             tracked_counts = None
@@ -471,19 +520,10 @@ def run_input(
             t_frame = time.perf_counter()
             frame = read_image(path)
             read_ms = (time.perf_counter() - t_frame) * 1000.0
-            t_pre = time.perf_counter()
-            chw, meta = letterbox(frame, INPUT_SIZE)
-            preprocess_ms = (time.perf_counter() - t_pre) * 1000.0
-
-            raw, inference_ms = detector.infer(chw)
-            t_post = time.perf_counter()
-            detections, _ = decode(
-                raw,
-                meta,
-                classes=classes,
-                conf_threshold=conf_threshold,
-                iou_threshold=iou_threshold,
+            detections, preprocess_ms, inference_ms, detect_post_ms = _detect_frame(
+                detector, frame, classes, conf_threshold, iou_threshold, tile_grid
             )
+            t_post = time.perf_counter()
             if estimate_vehicle_colors:
                 for detection in detections:
                     if detection.class_name in VEHICLE_CLASSES:
@@ -498,7 +538,7 @@ def run_input(
             )
             if attribute_acc is not None:
                 attribute_acc.update(detections, idx)
-            postprocess_ms = (time.perf_counter() - t_post) * 1000.0
+            postprocess_ms = detect_post_ms + (time.perf_counter() - t_post) * 1000.0
 
             annotate_ms = 0.0
             if annotate_every:
@@ -603,6 +643,7 @@ def run_input(
             "frames_processed": len(records),
             "source_frames": source_frame_count if is_video else len(image_paths),
             "stride": stride,
+            "tile_grid": tile_grid,
             "duration_s": round(duration_s, 3),
             "wall_time_s": round(wall_s, 3),
             "source_fps": round(source_fps, 3) if is_video else None,
@@ -639,7 +680,7 @@ def run_input(
         "zone": zone_result,
         "attributes": attribute_acc.summary() if attribute_acc else None,
         "peak_rss_mb": peak_rss_mb(),
-        "reference": PI5_REFERENCE,
+        "reference": detector.model_reference,
         "outputs": {
             "counts_csv": str(output_dir / "counts.csv"),
             "zone_counts_csv": str(output_dir / "zone_counts.csv") if zone_profile else None,
@@ -659,6 +700,12 @@ def run_input(
             else None,
         },
         "notes": [
+            (
+                f"Inference ran over a {tile_grid}x{tile_grid} grid of 640 crops per "
+                "frame; per-tile boxes were merged by class. Latency includes every tile."
+                if tile_grid > 1
+                else "Inference ran as a single 640x640 pass per frame."
+            ),
             "Counts are per processed frame, not unique objects, unless the "
             "'unique_tracked' field is used.",
             "unique_tracked is indicative: a lightweight IoU/velocity tracker, "
@@ -770,7 +817,7 @@ def benchmark_model(
         "runs": runs,
         "latency": stats,
         "peak_rss_mb": peak_rss_mb(),
-        "reference_pi5": PI5_REFERENCE,
+        "reference": detector.model_reference,
         "note": (
             "Model-only latency; excludes preprocessing, decode, NMS and "
             "annotation. Do not compare across different devices."
