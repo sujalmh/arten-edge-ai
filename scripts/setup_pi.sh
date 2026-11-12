@@ -43,15 +43,22 @@ fi
 source "$VENV/bin/activate"
 
 echo "\n[2/5] Installing Python dependencies (this can take a few minutes)"
-python -m pip install --upgrade pip wheel
+PIP_OFFLINE=()
+if [[ -d "$ROOT/wheelhouse" ]]; then
+  PIP_OFFLINE=(--no-index --find-links "$ROOT/wheelhouse")
+  echo "  offline wheelhouse: $ROOT/wheelhouse"
+fi
+if [[ ${#PIP_OFFLINE[@]} -eq 0 ]]; then
+  python -m pip install --upgrade pip wheel
+fi
 
 if [[ "$BOARD" == *"Raspberry Pi 5"* ]]; then
   # Pi 5 (Cortex-A76, ARMv8.2): use the prebuilt Arm runtime.
-  python -m pip install -r requirements-pi.txt
+  python -m pip install "${PIP_OFFLINE[@]}" -r requirements-pi.txt
   # coremltools has no Linux aarch64 wheel, so install ExecuTorch without its
   # declared dependency set. The runtime packages above mirror Arm's working
   # runtime project, which also excludes coremltools.
-  python -m pip install --no-deps executorch==1.1.0
+  python -m pip install "${PIP_OFFLINE[@]}" --no-deps executorch==1.1.0
 elif [[ "$(uname -m)" == "aarch64" || "$(uname -m)" == "arm64" ]]; then
   # Pi 3 / Pi 4 / CM4 (Cortex-A53/A72, ARMv8.0): the prebuilt wheels use
   # ARMv8.2 dot-product instructions and crash with SIGILL here. Use torch
@@ -64,7 +71,7 @@ elif [[ "$(uname -m)" == "aarch64" || "$(uname -m)" == "arm64" ]]; then
     echo "Then copy wheels/executorch-*.whl into vendor/executorch-armv8/."
     exit 1
   fi
-  python -m pip install -r requirements-pi-armv8.txt
+  python -m pip install "${PIP_OFFLINE[@]}" -r requirements-pi-armv8.txt
   python -m pip install --no-deps "$ET_WHEEL"
 else
   echo "ERROR: this setup script targets 64-bit Raspberry Pi OS (aarch64)."
