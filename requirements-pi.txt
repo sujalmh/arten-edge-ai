@@ -38,3 +38,4 @@ typing-extensions>=4.10.0
 # Build tooling for the editable install (kept in the offline wheelhouse).
 setuptools>=68
 wheel
+hatchling

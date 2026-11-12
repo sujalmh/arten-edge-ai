@@ -24,3 +24,4 @@ psutil>=5.9
 # Build tooling for the editable install (kept in the offline wheelhouse).
 setuptools>=68
 wheel
+hatchling
