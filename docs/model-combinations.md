@@ -142,8 +142,16 @@ containment pass. No retraining, no new model.
 | Manual actual (approx.) | 30–40 | 25–30 | 45–55 | 1 | 3–4 | — |
 | YOLO11n @0.15, full frame | 16 | 5 | 26 | 2 | 2 | 1.3 s |
 | YOLO11n @0.15, 2×2 tiles | 26 | 13 | 40 | 4 | 3 | 5.2 s |
+| YOLO11n @0.15, 3×3 tiles | 30 | 14 | 43 | 5 | 5 | 11.6 s |
 | YOLOv8s @0.2, full frame | 18 | 13 | 25 | 1 | 3 | 3.2 s |
 | **YOLOv8s @0.2, 2×2 tiles** | **27** | **19** | **41** | 4 | 3 | 12.8 s |
+| YOLOv8s @0.2, 3×3 tiles | 30 | 21 | 44 | 5 | 4 | 28.8 s |
+
+A 3×3 grid adds about +4 people and +2 motorcycles over 2×2 for 2.25× the
+cost. Person and car counts saturate at the lower bound of the manual count.
+Bus and truck counts become less reliable with more tiles because large
+vehicles produce partial boxes across crops; treat those two classes as
+indicative in tiled mode.
 
 Manual inspection of the annotated tiled frame shows the four bus boxes on
 distinct vehicles — one near pink bus plus distant buses — so the bus count is
@@ -169,11 +177,14 @@ Recall at range midpoints:
 |---|---:|---:|---:|
 | YOLO11n full | 46% | 18% | 52% |
 | YOLO11n tiled | 74% | 47% | 80% |
+| YOLO11n tiled 3×3 | 86% | 51% | 86% |
 | YOLOv8s full | 51% | 47% | 50% |
 | **YOLOv8s tiled** | **77%** | **69%** | **82%** |
+| YOLOv8s tiled 3×3 | 86% | 76% | 88% |
 
 This is the single biggest accuracy lever available without retraining:
-roughly +26 points on people and +30 on cars, at 4× the latency.
+roughly +26 points on people and +30 on cars at 4× the latency; a 3×3 grid
+reaches ~86% on people at 9× the latency.
 
 ### Other options, ranked
 
