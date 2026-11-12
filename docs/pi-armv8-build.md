@@ -58,6 +58,38 @@ Five-run benchmark (`results/benchmark_pi3b_armv8.json`, warmup 1):
 | throughput | 0.77 FPS |
 | peak RSS | 443.8 MB |
 
+**Measurement caveat.** These timings were taken while the board was
+firmware-capped at **600 MHz** (`vcgencmd get_throttled` = `0x50005`,
+under-voltage; nominal clock 1.4 GHz). A proper 5 V / 2.5 A supply should
+reduce the absolute latencies. Model-to-model ratios remain indicative.
+
+## Model comparison on the Pi 3B+
+
+All runs on the same board, runtime and image, at the default confidence 0.35
+unless noted. Same 600 MHz cap applies.
+
+| Model | p50 | FPS | Peak RSS | person | car | motorcycle | bus | truck |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| YOLO11n | 1300 ms | 0.77 | 444 MB | 2 | 19 | 0 | 1 | 1 |
+| YOLO11n, `--conf 0.2` | ~1300 ms | 0.77 | 444 MB | **9** | 25 | 4 | 2 | 1 |
+| YOLOv8s | 3196 ms | 0.31 | 470 MB | 10 | 21 | 4 | 1 | 2 |
+| YOLOv9s | 5777 ms | 0.17 | 484 MB | 12 | 19 | 8 | 1 | 3 |
+| YOLO11n-pose | 1357 ms | 0.74 | 436 MB | (pose) | — | — | — | — |
+| DDRNet23-slim, 720×960 | 1879 ms | 0.53 | — | (segmentation) | — | — | — | — |
+
+The YOLO11n INT8 confidence distribution is shifted low: the default 0.35
+misses most two-wheeler riders in this dense scene, while 0.2 recovers them
+at no latency cost. YOLOv8s at 0.35 reaches a similar count with 2.5× the
+latency, and YOLOv9s finds the most at 4.4× the latency.
+
+Practical reading:
+
+- Tune the threshold before changing models. `--conf 0.2` is the cheaper win.
+- YOLOv8s is the accuracy upgrade when stills or offline clips are acceptable.
+- YOLOv9s is still-image only on ARMv8.0.
+- YOLO11n-pose costs almost nothing over YOLO11n and can add posture attributes.
+- DDRNet23-slim can supply road/sidewalk masks for zone audits at ~0.5 FPS.
+
 Instruction check on the installed binding:
 
 ```text
