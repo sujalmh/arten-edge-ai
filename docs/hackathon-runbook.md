@@ -61,8 +61,8 @@ Recommended:
   when the source is 1080p and the demo is offline.
 - **Pi 3B+:** still images or very short clips; do not promise live video.
 
-YOLO11n at the default `--conf 0.35` under-counts badly on dense scenes. Use
-0.15–0.2. The INT8 confidence distribution is shifted low.
+The CLI default is 0.2. YOLO11n at 0.35 under-counts badly on dense scenes;
+use 0.15 there. The INT8 confidence distribution is shifted low.
 
 ## 4. Commands
 
