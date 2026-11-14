@@ -78,3 +78,34 @@ terms. This repository is AGPL-3.0 so the code and model can be shared together.
 If you need a permissive licence, replace the detector with a permissively
 licensed model and re-export; the CLI accepts any YOLO-style `.pte` with an
 `[N, 84]` or `[N, 85]` output.
+
+## Support models (optional)
+
+Two small models add detail around the detector. Both are committed, run on a
+cadence, and are off unless their CLI flags are given.
+
+| File | Task | Size | Input | Output | Licence | SHA-256 |
+|---|---|---|---:|---|---|---|---|
+| `lite_hrnet18_int8_xnnpack.pte` | 17-keypoint pose | 2.82 MB | `[1,3,384,288]`, ImageNet norm | `[1,17,96,72]` heatmaps | Apache-2.0 | `95b9d1de60a0bb22a84bacc01f658b2f26479bd3aec4f423b594f74ec7cd9017` |
+| `ddrnet23_slim_int8_xnnpack.pte` | 11-class road segmentation | 5.64 MB | `[1,3,720,960]`, RGB − 128 | `[1,11,90,120]` logits | MIT | `d59ba585166a31b852aa695297f34f70998ad3366a261e84a071cdf6f6dc452b` |
+
+Sources:
+[Arm/lite-hrnet18-int8-xnnpack-executorch-raspberrypi5](https://huggingface.co/Arm/lite-hrnet18-int8-xnnpack-executorch-raspberrypi5),
+[Arm/ddrnet23-slim-int8-xnnpack-executorch-raspberrypi5](https://huggingface.co/Arm/ddrnet23-slim-int8-xnnpack-executorch-raspberrypi5).
+
+Usage:
+
+```bash
+arten run -i clip.mp4 \
+  --pose-model models/lite_hrnet18_int8_xnnpack.pte --pose-every 10 \
+  --seg-model models/ddrnet23_slim_int8_xnnpack.pte --seg-every 10
+```
+
+- Pose runs on the largest person boxes, up to `--pose-max-persons` (default 5),
+  and adds `posture` (`standing`, `walking`, `fallen`, `riding`, `unknown`) and
+  keypoints to the annotation.
+- Segmentation samples the surface at each detection's foot and adds `surface`
+  (`road`, `sidewalk`, `other`).
+- A person box that overlaps a motorcycle box is tagged `rider`.
+- Surface and posture are sampled, indicative attributes, not trained risk
+  classifiers.

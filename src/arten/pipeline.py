@@ -32,6 +32,7 @@ from .model import ExecuTorchDetector
 from .postprocess import count_by_class, decode
 from .preprocess import letterbox, read_image
 from .tiling import merge_detections, tile_origins
+from .support import PoseEstimator, Segmenter, classify_posture, is_rider
 from .tracker import IoUTracker
 from .visualize import annotate_frame, make_contact_sheet
 from .zone import ZoneProfile, count_detections_in_zone, load_zone_profile, summarise_zone
@@ -52,6 +53,7 @@ class FrameRecord:
     preprocess_ms: float = 0.0
     postprocess_ms: float = 0.0
     track_ms: float = 0.0
+    support_ms: float = 0.0
     annotate_ms: float = 0.0
     total_ms: float = 0.0
     detections: list[dict] = field(default_factory=list)
@@ -203,7 +205,7 @@ def _write_zone_csv(path: Path, records: list[FrameRecord]) -> None:
 
 def _write_attribute_csv(path: Path, rows: list[dict]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    fields = ["class", "track_id", "color", "direction", "speed_px_s", "dwell_s", "hits", "score"]
+    fields = ["class", "track_id", "color", "direction", "speed_px_s", "dwell_s", "hits", "score", "surface", "posture", "rider"]
     with open(path, "w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields, extrasaction="ignore", lineterminator="\n")
         writer.writeheader()
@@ -286,6 +288,69 @@ def _detect_frame(
     return detections, preprocess_ms, inference_ms, postprocess_ms
 
 
+def _apply_support(
+    frame: np.ndarray,
+    detections: list,
+    frame_idx: int,
+    pose_estimator,
+    segmenter,
+    pose_every: int,
+    seg_every: int,
+    pose_max_persons: int,
+    last_mask: np.ndarray | None,
+) -> tuple[float, np.ndarray | None]:
+    """Attach surface, rider and posture attributes. Returns (ms, mask)."""
+
+    support_ms = 0.0
+    mask = last_mask
+
+    if segmenter is not None and frame_idx % seg_every == 0:
+        mask, seg_ms = segmenter.infer(frame)
+        support_ms += seg_ms
+    if segmenter is not None and mask is not None:
+        for detection in detections:
+            detection.attributes["surface"] = segmenter.surface_at(mask, detection.box)
+
+    motorcycles = [d.box for d in detections if d.class_name == "motorcycle"]
+    if motorcycles:
+        for detection in detections:
+            if detection.class_name == "person" and "rider" not in detection.attributes:
+                if is_rider(detection.box, motorcycles):
+                    detection.attributes["rider"] = "motorcycle"
+
+    if pose_estimator is not None and frame_idx % pose_every == 0:
+        people = sorted(
+            (d for d in detections if d.class_name == "person"),
+            key=lambda d: (d.box[2] - d.box[0]) * (d.box[3] - d.box[1]),
+            reverse=True,
+        )[:pose_max_persons]
+        for detection in people:
+            keypoints, pose_ms = pose_estimator.infer(frame, detection.box)
+            support_ms += pose_ms
+            detection.attributes["keypoints"] = keypoints
+            detection.attributes["posture"] = classify_posture(
+                keypoints, detection.box, rider=bool(detection.attributes.get("rider"))
+            )
+
+    return support_ms, mask
+
+
+def _accumulate_support(
+    detections: list,
+    surfaces: dict[str, dict[str, int]],
+    postures: dict[str, dict[str, int]],
+) -> None:
+    for detection in detections:
+        surface = detection.attributes.get("surface")
+        if surface:
+            surfaces.setdefault(detection.class_name, {})
+            surfaces[detection.class_name][surface] = surfaces[detection.class_name].get(surface, 0) + 1
+        posture = detection.attributes.get("posture")
+        if posture:
+            postures.setdefault(detection.class_name, {})
+            postures[detection.class_name][posture] = postures[detection.class_name].get(posture, 0) + 1
+
+
 def run_input(
     input_path: str | Path,
     output_dir: str | Path,
@@ -304,6 +369,11 @@ def run_input(
     zone_config: str | Path | None = None,
     estimate_vehicle_colors: bool = False,
     tile_grid: int = 0,
+    pose_model: str | Path | None = None,
+    pose_every: int = 10,
+    pose_max_persons: int = 5,
+    seg_model: str | Path | None = None,
+    seg_every: int = 10,
 ) -> dict:
     """Process a video, one image, or a directory of images.
 
@@ -322,6 +392,12 @@ def run_input(
         raise ValueError("annotate_every must be >= 0")
     if tile_grid < 0 or tile_grid > 6:
         raise ValueError("tile grid must be between 0 and 6")
+    if pose_every < 1:
+        raise ValueError("pose_every must be >= 1")
+    if seg_every < 1:
+        raise ValueError("seg_every must be >= 1")
+    if pose_max_persons < 1:
+        raise ValueError("pose_max_persons must be >= 1")
     zone_profile = load_zone_profile(zone_config) if zone_config else None
 
     is_video = _is_video(input_path)
@@ -334,6 +410,8 @@ def run_input(
         )
 
     detector = ExecuTorchDetector(model_path, threads=threads, warmup=3)
+    pose_estimator = PoseEstimator(pose_model) if pose_model else None
+    segmenter = Segmenter(seg_model) if seg_model else None
     tracker = IoUTracker() if (track and is_video) else None
     attribute_acc = AttributeAccumulator() if (attributes or estimate_vehicle_colors) else None
     if not quiet:
@@ -349,6 +427,10 @@ def run_input(
             print(f"  zone      {zone_profile.name} (manual polygon; co-presence only)")
         if tile_grid > 1:
             print(f"  tiling    {tile_grid}x{tile_grid} ({tile_grid * tile_grid} crops per frame)")
+        if pose_estimator:
+            print(f"  pose      {Path(pose_model).name} · every {pose_every} frames · up to {pose_max_persons} people")
+        if segmenter:
+            print(f"  surface   {Path(seg_model).name} · every {seg_every} frames")
         print(f"  output    {output_dir}\n")
 
     records: list[FrameRecord] = []
@@ -362,6 +444,9 @@ def run_input(
     source_frame_count = 0
 
     frame_iter_started = time.perf_counter()
+    surface_totals: dict[str, dict[str, int]] = {}
+    posture_totals: dict[str, dict[str, int]] = {}
+    last_seg_mask = None
 
     if is_video:
         cap = cv2.VideoCapture(str(input_path))
@@ -394,10 +479,14 @@ def run_input(
                 raw_idx += 1
                 continue
 
-            t_frame = time.perf_counter()
             detections, preprocess_ms, inference_ms, detect_post_ms = _detect_frame(
                 detector, frame, classes, conf_threshold, iou_threshold, tile_grid
             )
+            support_ms, last_seg_mask = _apply_support(
+                frame, detections, processed, pose_estimator, segmenter,
+                pose_every, seg_every, pose_max_persons, last_seg_mask,
+            )
+            _accumulate_support(detections, surface_totals, posture_totals)
             t_post = time.perf_counter()
             if estimate_vehicle_colors:
                 for detection in detections:
@@ -411,7 +500,7 @@ def run_input(
                 if zone_profile
                 else None
             )
-            postprocess_ms = detect_post_ms + (time.perf_counter() - t_post) * 1000.0
+            postprocess_ms = detect_post_ms + support_ms + (time.perf_counter() - t_post) * 1000.0
 
             track_ms = 0.0
             tracked_counts = None
@@ -491,6 +580,7 @@ def run_input(
                     read_ms=read_ms,
                     preprocess_ms=preprocess_ms,
                     postprocess_ms=postprocess_ms,
+                    support_ms=support_ms,
                     track_ms=track_ms,
                     annotate_ms=annotate_ms,
                     total_ms=total_ms,
@@ -527,6 +617,11 @@ def run_input(
             detections, preprocess_ms, inference_ms, detect_post_ms = _detect_frame(
                 detector, frame, classes, conf_threshold, iou_threshold, tile_grid
             )
+            support_ms, _ = _apply_support(
+                frame, detections, 0, pose_estimator, segmenter,
+                pose_every, seg_every, pose_max_persons, None,
+            )
+            _accumulate_support(detections, surface_totals, posture_totals)
             t_post = time.perf_counter()
             if estimate_vehicle_colors:
                 for detection in detections:
@@ -542,7 +637,7 @@ def run_input(
             )
             if attribute_acc is not None:
                 attribute_acc.update(detections, idx)
-            postprocess_ms = detect_post_ms + (time.perf_counter() - t_post) * 1000.0
+            postprocess_ms = detect_post_ms + support_ms + (time.perf_counter() - t_post) * 1000.0
 
             annotate_ms = 0.0
             if annotate_every:
@@ -605,6 +700,7 @@ def run_input(
     postprocess_latency = summarise_latencies([r.postprocess_ms for r in records])
     read_latency = summarise_latencies([r.read_ms for r in records])
     annotate_latency = summarise_latencies([r.annotate_ms for r in records])
+    support_latency = summarise_latencies([r.support_ms for r in records])
 
     person_series = [r.counts.get("person", 0) for r in records]
     vehicle_series = [
@@ -672,6 +768,7 @@ def run_input(
             "postprocess": postprocess_latency,
             "read": read_latency,
             "annotate": annotate_latency,
+            "support": support_latency,
             "pipeline_total": pipeline_latency,
         },
         "throughput": {
@@ -684,6 +781,14 @@ def run_input(
         "exposure": exposure,
         "zone": zone_result,
         "attributes": attribute_acc.summary() if attribute_acc else None,
+        "surfaces": surface_totals,
+        "postures": posture_totals,
+        "support_models": {
+            "pose": Path(pose_model).name if pose_model else None,
+            "segmentation": Path(seg_model).name if seg_model else None,
+            "pose_every": pose_every if pose_estimator else None,
+            "seg_every": seg_every if segmenter else None,
+        },
         "peak_rss_mb": peak_rss_mb(),
         "reference": detector.model_reference,
         "outputs": {
@@ -705,6 +810,14 @@ def run_input(
             else None,
         },
         "notes": [
+            *(
+                [
+                    "Surface (road/sidewalk) and posture come from optional support "
+                    "models on a cadence; they are indicative, not risk classifiers."
+                ]
+                if (pose_estimator or segmenter)
+                else []
+            ),
             (
                 f"Inference ran over a {tile_grid}x{tile_grid} grid of 640 crops per "
                 "frame; per-tile boxes were merged by class. Latency includes every tile."

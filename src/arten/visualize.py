@@ -101,6 +101,12 @@ def annotate_frame(
         color_estimate = det.attributes.get("color_estimate")
         if color_estimate:
             parts.append(f"~{color_estimate}")
+        surface = det.attributes.get("surface")
+        if surface and surface != "unknown":
+            parts.append(surface)
+        posture = det.attributes.get("posture")
+        if posture and posture != "unknown":
+            parts.append(posture)
         label = " ".join(part for part in parts if part)
         bbox = draw.textbbox((0, 0), label, font=font)
         text_w, text_h = bbox[2] - bbox[0], bbox[3] - bbox[1]
@@ -110,6 +116,27 @@ def annotate_frame(
             fill=(*rgba[:3], 210),
         )
         draw.text((x1 + 4, label_y + 2), label, font=font, fill=(255, 255, 255, 255))
+
+    # Pose skeletons, when the optional pose model ran on this frame.
+    skeleton = (
+        (0, 1), (0, 2), (1, 3), (2, 4), (5, 6), (5, 7), (7, 9), (6, 8), (8, 10),
+        (5, 11), (6, 12), (11, 12), (11, 13), (13, 15), (12, 14), (14, 16),
+    )
+    for det in detections:
+        keypoints = det.attributes.get("keypoints")
+        if not keypoints:
+            continue
+        for a, b in skeleton:
+            if keypoints[a][2] > 0.2 and keypoints[b][2] > 0.2:
+                draw.line(
+                    [keypoints[a][0], keypoints[a][1], keypoints[b][0], keypoints[b][1]],
+                    fill=(0, 255, 0, 230),
+                    width=line_width,
+                )
+        for x, y, confidence in keypoints:
+            if confidence > 0.2:
+                radius = max(2, int(2.5 * scale))
+                draw.ellipse([x - radius, y - radius, x + radius, y + radius], fill=(0, 255, 0, 255))
 
     # Counts panel, top-left.
     panel_w = max(250, int(310 * scale))

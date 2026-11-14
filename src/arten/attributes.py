@@ -98,12 +98,18 @@ class AttributeAccumulator:
                     "dwell_s": None,
                     "hits": 0,
                     "score": 0.0,
+                    "surface": None,
+                    "posture": None,
+                    "rider": None,
                 },
             )
             row["class"] = detection.class_name
             row["track_id"] = detection.track_id
             row["score"] = max(float(row["score"]), float(detection.score))
-            for attr in ("color_estimate", "direction", "speed_px_s", "dwell_s", "hits"):
+            for attr in (
+                "color_estimate", "direction", "speed_px_s", "dwell_s", "hits",
+                "surface", "posture", "rider",
+            ):
                 if attr in detection.attributes:
                     row["color" if attr == "color_estimate" else attr] = detection.attributes[attr]
 
@@ -118,6 +124,9 @@ class AttributeAccumulator:
                     "tracks": 0,
                     "directions": {},
                     "colors": {},
+                    "surfaces": {},
+                    "postures": {},
+                    "riders": {},
                     "dwell_s": [],
                     "speed_px_s": [],
                 },
@@ -129,6 +138,15 @@ class AttributeAccumulator:
             color = row.get("color")
             if color and color != "unknown":
                 entry["colors"][color] = entry["colors"].get(color, 0) + 1
+            surface = row.get("surface")
+            if surface and surface != "unknown":
+                entry["surfaces"][surface] = entry["surfaces"].get(surface, 0) + 1
+            posture = row.get("posture")
+            if posture and posture != "unknown":
+                entry["postures"][posture] = entry["postures"].get(posture, 0) + 1
+            rider = row.get("rider")
+            if rider:
+                entry["riders"][rider] = entry["riders"].get(rider, 0) + 1
             if row.get("dwell_s") is not None:
                 entry["dwell_s"].append(float(row["dwell_s"]))
             if row.get("speed_px_s") is not None:
@@ -142,13 +160,17 @@ class AttributeAccumulator:
                 "tracks": entry["tracks"],
                 "directions": dict(sorted(entry["directions"].items())),
                 "colors": dict(sorted(entry["colors"].items())),
+                "surfaces": dict(sorted(entry["surfaces"].items())),
+                "postures": dict(sorted(entry["postures"].items())),
+                "riders": dict(sorted(entry["riders"].items())),
                 "mean_dwell_s": round(sum(dwell) / len(dwell), 2) if dwell else None,
                 "mean_speed_px_s": round(sum(speed) / len(speed), 2) if speed else None,
             }
         return {
             "note": (
-                "Image-plane motion and coarse colour are derived attributes, not "
-                "trained model outputs. Speed is uncalibrated pixels/second."
+                "Image-plane motion, coarse colour, surface and posture are derived "
+                "attributes, not trained model outputs. Speed is uncalibrated "
+                "pixels/second; surface and posture are sampled on a cadence."
             ),
             "by_class": by_class,
             "total_tracks": len(self.tracks),

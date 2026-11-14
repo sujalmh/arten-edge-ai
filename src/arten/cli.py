@@ -68,6 +68,11 @@ def build_parser() -> argparse.ArgumentParser:
         default=0,
         help="split each frame into an NxN grid of 640 crops (0/1 off; 2 = 2x2, about 4x cost)",
     )
+    run.add_argument("--pose-model", default=None, help="optional Lite-HRNet18 .pte for posture")
+    run.add_argument("--pose-every", type=int, default=10, help="run pose every N frames")
+    run.add_argument("--pose-max-persons", type=int, default=5, help="max person crops per pose frame")
+    run.add_argument("--seg-model", default=None, help="optional DDRNet23 .pte for road/sidewalk surface")
+    run.add_argument("--seg-every", type=int, default=10, help="run segmentation every N frames")
     run.add_argument("--no-track", action="store_true", help="disable the indicative tracker")
     run.add_argument("--no-attributes", action="store_true", help="disable motion attributes (direction, relative speed, dwell)")
     run.add_argument("--save-video", action="store_true", help="write annotated.mp4")
@@ -131,6 +136,11 @@ def cmd_run(args: argparse.Namespace) -> int:
         zone_config=args.zone,
         estimate_vehicle_colors=args.estimate_vehicle_colors,
         tile_grid=args.tile,
+        pose_model=args.pose_model,
+        pose_every=args.pose_every,
+        pose_max_persons=args.pose_max_persons,
+        seg_model=args.seg_model,
+        seg_every=args.seg_every,
     )
     return 0
 
