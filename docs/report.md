@@ -143,6 +143,12 @@ retraining is involved: the model runs on native-resolution crops and the boxes
 are merged. The trade-off is latency, and bus/truck counts become less reliable
 because large vehicles produce partial boxes across crops.
 
+With every-frame support on this image, the 17 people, 27 cars and 14
+motorcycles are annotated with skeletons and rider tags; two sampled riders are
+labelled `riding`. Surface attribution is weaker here: many boxes sample `other`
+because the coarse mask sees vehicle bodies rather than the road under them. The
+open crossing in the clip separates road and sidewalk cleanly.
+
 ### 3.3 Latency
 
 Measured on the Raspberry Pi 5 with the prebuilt ExecuTorch 1.1.0 + torch 2.10
