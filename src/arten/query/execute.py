@@ -39,9 +39,12 @@ class AskResult:
 def load_meta(db_path: str | Path) -> dict[str, Any]:
     """Load index metadata from the sidecar file, falling back to the table."""
     db_path = Path(db_path).expanduser().resolve()
-    sidecar = db_path.with_name("index_meta.json")
-    if sidecar.exists():
-        return json.loads(sidecar.read_text(encoding="utf-8"))
+    for sidecar in (
+        db_path.with_name(db_path.name + ".meta.json"),
+        db_path.with_name("index_meta.json"),  # legacy name
+    ):
+        if sidecar.exists():
+            return json.loads(sidecar.read_text(encoding="utf-8"))
 
     conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
     try:

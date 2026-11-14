@@ -26,6 +26,7 @@ models/llm/install.json
 # Generated query indexes and pages
 results/**/evidence.db
 results/**/evidence.db-*
+results/**/*.meta.json
 results/**/index_meta.json
 results/**/ask_*.html
 

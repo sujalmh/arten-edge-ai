@@ -86,7 +86,10 @@ def build_index(
 
     conn = sqlite3.connect(out)
     try:
-        conn.execute("PRAGMA journal_mode=WAL")
+        # DELETE mode (the SQLite default) keeps the index a single file so
+        # LAN transfer is `evidence.db + evidence.db.meta.json` with no WAL
+        # sidecars. WAL would leave -shm/-wal files that are easy to forget.
+        conn.execute("PRAGMA journal_mode=DELETE")
         _create_schema(conn)
 
         frames = 0
@@ -258,7 +261,9 @@ def build_index(
     finally:
         conn.close()
 
-    meta_path = out.with_name("index_meta.json")
+    # Sidecar name is derived from the database name so two indexes in the
+    # same directory cannot overwrite each other's metadata.
+    meta_path = out.with_name(out.name + ".meta.json")
     meta_path.write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
     return out
 

@@ -1,7 +1,9 @@
 # Full plan: YOLO + small-LM investigation layer ("ask the crossing")
 
 **Prepared:** 14 November 2026
-**Status:** plan only. Nothing here has been installed or run on the Pi.
+**Status:** built and verified on the Mac host (llama.cpp 1.0.0, Qwen2.5-0.5B Q4_K_M,
+25 query tests green, rules + LLM parsers live). Pi install pending — transfer
+over LAN with `scripts/sync_to_pi.sh`, then `scripts/setup_llm.sh` on the Pi.
 **Constraint:** the Pi is currently busy with another process; every install/build step below is
 gated by a preflight check and is designed to run **after** it finishes, not alongside it.
 
@@ -101,7 +103,7 @@ say "6.17 FPS mean on this run; p95 X".
 ┌──────────────┐     ┌────────────────────┐     ┌─────────────────────┐
 │ arten run    │────▶│ results/<run>/     │────▶│ arten index         │
 │ (ExecuTorch) │     │ detections.jsonl   │     │ → evidence.db       │
-└──────────────┘     │ attribute_tracks   │     │ → index_meta.json   │
+└──────────────┘     │ attribute_tracks   │     │ → evidence.db.meta.json │
                      │ summary.json       │     └──────────┬──────────┘
                      │ annotated/*.jpg    │                │
                      └────────────────────┘                ▼
@@ -210,7 +212,7 @@ CREATE INDEX idx_det_time ON detections(timestamp_s);
 CREATE INDEX idx_tracks_class ON tracks(class);
 ```
 
-### 4.2 `index_meta.json`
+### 4.2 `evidence.db.meta.json`
 
 ```json
 {
@@ -699,7 +701,7 @@ Built and tested locally on the development host; not yet installed on the Pi.
 |---|---|
 | llama.cpp | 1.0.0 via Homebrew (macOS arm64) |
 | Model | Qwen2.5-0.5B-Instruct Q4_K_M, 469 MB, SHA-256 `74a4da8c…a9db` |
-| Evidence index | `arten index` builds SQLite + `index_meta.json`; 150 frames / 1,188 detections / 42 tracks on the Pi 5 run |
+| Evidence index | `arten index` builds SQLite + `evidence.db.meta.json`; 150 frames / 1,188 detections / 42 tracks on the Pi 5 run |
 | Query compiler | Closed `QueryPlan`, parameterised SQL, whitelisted identifiers |
 | Rule parser | counts, unique tracks, peak, frames, direction, dwell, colour, co-presence, crossings, refusals |
 | LLM parser | local classifier + GBNF label grammar, rule-based slot extraction |

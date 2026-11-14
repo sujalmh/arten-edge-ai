@@ -206,8 +206,11 @@ A run is also a queryable evidence bundle. `arten index` turns it into SQLite;
 it, and returns rows plus the matching annotated frames. Everything stays local.
 
 ```bash
-# Build the evidence index once per run
+# Build the evidence index once per run.
+# Add --start-time if you want to ask "morning"/"afternoon" questions.
 arten index --run results/demo_pi5_pedestrians
+arten index --run results/demo_pi5_pedestrians --force \
+  --start-time 2026-11-14T08:00:00+05:30
 
 # Ask questions
 arten ask "how many people crossed?" \

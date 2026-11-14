@@ -244,7 +244,7 @@ def cmd_index(args: argparse.Namespace) -> int:
         force=args.force,
     )
     print(f"Wrote {path}")
-    meta_path = path.with_name("index_meta.json")
+    meta_path = path.with_name(path.name + ".meta.json")
     if meta_path.exists():
         meta = json.loads(meta_path.read_text(encoding="utf-8"))
         rows = meta.get("rows", {})
