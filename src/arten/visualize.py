@@ -79,66 +79,15 @@ def annotate_frame(
     font = _load_font(font_size)
     small = _load_font(small_size)
     line_width = max(2, int(3 * scale))
+    attributes_present = any(det.attributes for det in detections)
 
     if zone_name and zone_points:
         polygon = [(round(x * (width - 1)), round(y * (height - 1))) for x, y in zone_points]
         draw.polygon(polygon, fill=(255, 178, 44, 32), outline=(255, 178, 44, 230), width=line_width)
 
-    # Boxes and labels.
-    attributes_present = False
-    for det in detections:
-        attributes_present = attributes_present or bool(det.attributes)
-        x1, y1, x2, y2 = det.box
-        color = _class_color(det.class_name)
-        rgba = (*reversed(color), 255)  # BGR -> RGB
-        draw.rectangle([x1, y1, x2, y2], outline=rgba, width=line_width)
-        parts = [det.class_name, f"{det.score:.2f}"]
-        if show_track_ids and det.track_id is not None:
-            parts.insert(0, f"#{det.track_id}")
-        direction = det.attributes.get("direction")
-        if direction:
-            parts.append(DIRECTION_ARROWS.get(direction, ""))
-        color_estimate = det.attributes.get("color_estimate")
-        if color_estimate:
-            parts.append(f"~{color_estimate}")
-        surface = det.attributes.get("surface")
-        if surface and surface != "unknown":
-            parts.append(surface)
-        posture = det.attributes.get("posture")
-        if posture and posture != "unknown":
-            parts.append(posture)
-        label = " ".join(part for part in parts if part)
-        bbox = draw.textbbox((0, 0), label, font=font)
-        text_w, text_h = bbox[2] - bbox[0], bbox[3] - bbox[1]
-        label_y = max(0, y1 - text_h - 6)
-        draw.rectangle(
-            [x1, label_y, x1 + text_w + 8, label_y + text_h + 6],
-            fill=(*rgba[:3], 210),
-        )
-        draw.text((x1 + 4, label_y + 2), label, font=font, fill=(255, 255, 255, 255))
-
-    # Pose skeletons, when the optional pose model ran on this frame.
-    skeleton = (
-        (0, 1), (0, 2), (1, 3), (2, 4), (5, 6), (5, 7), (7, 9), (6, 8), (8, 10),
-        (5, 11), (6, 12), (11, 12), (11, 13), (13, 15), (12, 14), (14, 16),
-    )
-    for det in detections:
-        keypoints = det.attributes.get("keypoints")
-        if not keypoints:
-            continue
-        for a, b in skeleton:
-            if keypoints[a][2] > 0.2 and keypoints[b][2] > 0.2:
-                draw.line(
-                    [keypoints[a][0], keypoints[a][1], keypoints[b][0], keypoints[b][1]],
-                    fill=(0, 255, 0, 230),
-                    width=line_width,
-                )
-        for x, y, confidence in keypoints:
-            if confidence > 0.2:
-                radius = max(2, int(2.5 * scale))
-                draw.ellipse([x - radius, y - radius, x + radius, y + radius], fill=(0, 255, 0, 255))
-
-    # Counts panel, top-left.
+    # Background chrome is drawn first. Detections are painted afterwards so a
+    # box or label that falls under the counts panel, zone badge or footer is
+    # still visible instead of being hidden by the HUD.
     panel_w = max(250, int(310 * scale))
     row_h = font_size + 6
     panel_h = int(30 * scale) + row_h * (len(classes) + 1) + 24
@@ -206,7 +155,6 @@ def annotate_frame(
         )
         draw.text((left + 11, 20), badge, font=small, fill=(255, 226, 170, 255))
 
-    # Footer.
     footer_text = f"{model_tag}  ·  {footer}"
     if attributes_present:
         footer_text += "  ·  attributes on-device"
@@ -222,6 +170,58 @@ def annotate_frame(
         font=small,
         fill=(200, 210, 218, 255),
     )
+
+    # Boxes and labels, drawn over the HUD.
+    for det in detections:
+        x1, y1, x2, y2 = det.box
+        color = _class_color(det.class_name)
+        rgba = (*reversed(color), 255)  # BGR -> RGB
+        draw.rectangle([x1, y1, x2, y2], outline=rgba, width=line_width)
+        parts = [det.class_name, f"{det.score:.2f}"]
+        if show_track_ids and det.track_id is not None:
+            parts.insert(0, f"#{det.track_id}")
+        direction = det.attributes.get("direction")
+        if direction:
+            parts.append(DIRECTION_ARROWS.get(direction, ""))
+        color_estimate = det.attributes.get("color_estimate")
+        if color_estimate:
+            parts.append(f"~{color_estimate}")
+        surface = det.attributes.get("surface")
+        if surface and surface != "unknown":
+            parts.append(surface)
+        posture = det.attributes.get("posture")
+        if posture and posture != "unknown":
+            parts.append(posture)
+        label = " ".join(part for part in parts if part)
+        bbox = draw.textbbox((0, 0), label, font=font)
+        text_w, text_h = bbox[2] - bbox[0], bbox[3] - bbox[1]
+        label_y = max(0, y1 - text_h - 6)
+        draw.rectangle(
+            [x1, label_y, x1 + text_w + 8, label_y + text_h + 6],
+            fill=(*rgba[:3], 210),
+        )
+        draw.text((x1 + 4, label_y + 2), label, font=font, fill=(255, 255, 255, 255))
+
+    # Pose skeletons, when the optional pose model ran on this frame.
+    skeleton = (
+        (0, 1), (0, 2), (1, 3), (2, 4), (5, 6), (5, 7), (7, 9), (6, 8), (8, 10),
+        (5, 11), (6, 12), (11, 12), (11, 13), (13, 15), (12, 14), (14, 16),
+    )
+    for det in detections:
+        keypoints = det.attributes.get("keypoints")
+        if not keypoints:
+            continue
+        for a, b in skeleton:
+            if keypoints[a][2] > 0.2 and keypoints[b][2] > 0.2:
+                draw.line(
+                    [keypoints[a][0], keypoints[a][1], keypoints[b][0], keypoints[b][1]],
+                    fill=(0, 255, 0, 230),
+                    width=line_width,
+                )
+        for x, y, confidence in keypoints:
+            if confidence > 0.2:
+                radius = max(2, int(2.5 * scale))
+                draw.ellipse([x - radius, y - radius, x + radius, y + radius], fill=(0, 255, 0, 255))
 
     return _pil_to_bgr(Image.alpha_composite(image, overlay))
 
