@@ -188,6 +188,29 @@ KNOWN_MODELS: dict[str, dict] = {
             "source": "https://huggingface.co/Arm/yolov8s-int8-xnnpack-executorch",
         },
     },
+    "40763869f4cd0dfb41b7d13e2d1f5c1b5f446dda34719e75d09bb87a352306c9": {
+        "name": "YOLOv5s (COCO) — Arm-optimized INT8",
+        "description": (
+            "Ultralytics YOLOv5s, 80-class COCO detector, statically quantized "
+            "to INT8 by Arm and exported to ExecuTorch .pte with the XNNPACK "
+            "delegate."
+        ),
+        "size_mb": 7.13,
+        "source": "https://huggingface.co/Arm/yolov5s-int8-xnnpack-executorch",
+        "classes": 80,
+        "task": "detection",
+        "reference": {
+            "device": "Raspberry Pi 5 (Cortex-A76, 4 cores @ 2.4 GHz)",
+            "runtime": "ExecuTorch 1.1.0, XNNPACK + KleidiAI",
+            "p50_latency_ms": 258.07,
+            "fps": 3.88,
+            "peak_memory_mb": 109.44,
+            "map_50_95": 36.09,
+            "map_50": 54.97,
+            "model_size_mb": 7.13,
+            "source": "https://huggingface.co/Arm/yolov5s-int8-xnnpack-executorch",
+        },
+    },
     "3e67e465c7a59b8b5b3ee731e732b07dfe0ff0f90cc01a235beab86dd263e6c3": {
         "name": "YOLOv9s (COCO) — Arm-optimized INT8",
         "description": (

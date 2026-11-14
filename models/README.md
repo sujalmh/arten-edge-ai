@@ -79,6 +79,19 @@ If you need a permissive licence, replace the detector with a permissively
 licensed model and re-export; the CLI accepts any YOLO-style `.pte` with an
 `[N, 84]` or `[N, 85]` output.
 
+## Optional accuracy detector
+
+| File | Task | Size | Licence | SHA-256 |
+|---|---|---|---:|---|
+| `yolov5s_int8_xnnpack.pte` | YOLOv5s, 80-class COCO | 7.13 MB | AGPL-3.0 | `40763869f4cd0dfb41b7d13e2d1f5c1b5f446dda34719e75d09bb87a352306c9` |
+
+On the dense Bengaluru image this model measured **29 people, 26 cars, 15
+motorcycles** at **149.74 ms** full-frame on the Pi 5, and **29/41/25** with
+2×2 tiling at **601.73 ms**. It is faster and has higher person/two-wheeler
+recall than YOLOv8s on this scene, despite a lower COCO mAP (36.09). Use it with
+`--model models/yolov5s_int8_xnnpack.pte`. Bus/truck counts are unreliable in
+tiled mode because large vehicles produce partial boxes across crops.
+
 ## Support models (optional)
 
 Two small models add detail around the detector. Both are committed, run on a
