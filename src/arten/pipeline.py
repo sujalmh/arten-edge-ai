@@ -311,12 +311,20 @@ def _apply_support(
         for detection in detections:
             detection.attributes["surface"] = segmenter.surface_at(mask, detection.box)
 
-    motorcycles = [d.box for d in detections if d.class_name == "motorcycle"]
-    if motorcycles:
+    motorcycle_detections = [d for d in detections if d.class_name == "motorcycle"]
+    motorcycle_boxes = [d.box for d in motorcycle_detections]
+    if motorcycle_boxes:
         for detection in detections:
             if detection.class_name == "person" and "rider" not in detection.attributes:
-                if is_rider(detection.box, motorcycles):
+                if is_rider(detection.box, motorcycle_boxes):
                     detection.attributes["rider"] = "motorcycle"
+                    if segmenter is not None and mask is not None:
+                        for motorcycle in motorcycle_detections:
+                            if is_rider(detection.box, [motorcycle.box]):
+                                detection.attributes["surface"] = segmenter.surface_at(
+                                    mask, motorcycle.box
+                                )
+                                break
 
     if pose_estimator is not None and frame_idx % pose_every == 0:
         people = sorted(
