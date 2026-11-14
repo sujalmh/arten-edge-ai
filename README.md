@@ -115,6 +115,12 @@ arten benchmark --input data/samples/bengaluru_traffic.jpg --runs 50
 # Dense or high-resolution frames: 2x2 tiled inference (about 4x the cost)
 arten run -i data/samples/bengaluru_traffic.jpg --tile 2 --conf 0.2 \
   -o results/tiled
+
+# Add pose and road-surface detail (sampled, optional)
+arten run -i data/samples/pedestrians_15s.mp4 \
+  --pose-model models/lite_hrnet18_int8_xnnpack.pte \
+  --seg-model models/ddrnet23_slim_int8_xnnpack.pte \
+  -o results/detail
 ```
 
 `setup_pi.sh` detects the board and creates a venv. On Pi 5 it installs the
@@ -125,6 +131,8 @@ test. The model is committed, so the demo works without downloading it.
 
 Full hardware runbook: [`docs/pi-setup.md`](docs/pi-setup.md). For a scripted
 proof, run `bash scripts/run_pi5_hardware_proof.sh`.
+
+Support-model details and cadence: [`docs/support-models.md`](docs/support-models.md).
 
 Hackathon setup, best operating points and the offline checklist:
 [`docs/hackathon-runbook.md`](docs/hackathon-runbook.md).

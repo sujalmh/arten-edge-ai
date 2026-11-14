@@ -64,6 +64,18 @@ Recommended:
 The CLI default is 0.2. YOLO11n at 0.35 under-counts badly on dense scenes;
 use 0.15 there. The INT8 confidence distribution is shifted low.
 
+Optional detail models:
+
+```bash
+arten run -i clip.mp4 \
+  --pose-model models/lite_hrnet18_int8_xnnpack.pte --pose-every 10 --pose-max-persons 3 \
+  --seg-model models/ddrnet23_slim_int8_xnnpack.pte --seg-every 30
+```
+
+On the Pi 5 this measures **5.25 FPS** with YOLO11n and **3.43 FPS** with
+YOLOv8s. Pose adds posture and a skeleton; segmentation adds road/sidewalk
+surface and rider tagging. For stills, use `--pose-every 1 --seg-every 1`.
+
 ## 4. Commands
 
 One command (auto-selects YOLOv8s if `models/yolov8s_int8_xnnpack.pte` exists,
