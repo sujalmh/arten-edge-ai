@@ -166,8 +166,14 @@ class Segmenter:
         x1, y1, x2, y2 = box
         x = int(np.clip((x1 + x2) / 2.0, 0, mask.shape[1] - 1))
         y = int(np.clip(y2 - 0.02 * max(1.0, y2 - y1), 0, mask.shape[0] - 1))
-        patch = mask[max(0, y - 3) : y + 4, max(0, x - 3) : x + 4]
+        patch = mask[max(0, y - 8) : y + 9, max(0, x - 8) : x + 9]
         values, counts = np.unique(patch, return_counts=True)
+        shares = {int(value): int(count) / patch.size for value, count in zip(values, counts)}
+        # Prefer road/sidewalk when either occupies a meaningful share of the
+        # patch; a vehicle body or a rider can occlude the exact foot pixel.
+        for class_id, name in ((SEG_ROAD, "road"), (SEG_SIDEWALK, "sidewalk")):
+            if shares.get(class_id, 0.0) >= 0.15:
+                return name
         class_id = int(values[int(np.argmax(counts))])
         if class_id == SEG_ROAD:
             return "road"
