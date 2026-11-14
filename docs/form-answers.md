@@ -96,7 +96,8 @@ clip changes. The detector now
 defaults to a calibrated 0.2 threshold, runs on Pi 4 through a source-built
 ARMv8.0 runtime and on Pi 5 with the prebuilt one, supports tiled
 native-resolution inference for dense scenes, and installs offline from a local
-wheelhouse.
+wheelhouse. Measured on the Pi 5, the detector runs at 7.31 FPS and the balanced
+support path at 3.4–5.3 FPS.
 
 ## 500-word technical approach
 
