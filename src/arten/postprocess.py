@@ -105,7 +105,7 @@ def decode(
     meta: LetterboxMeta,
     classes: list[str] | tuple[str, ...] | None = None,
     conf_threshold: float = 0.35,
-    iou_threshold: float = 0.7,
+    iou_threshold: float = 0.5,
     max_detections: int = 300,
     max_candidates: int = 30_000,
     min_box_px: float = 2.0,

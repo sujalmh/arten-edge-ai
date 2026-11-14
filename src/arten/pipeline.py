@@ -367,7 +367,7 @@ def run_input(
     model_path: str | Path = DEFAULT_MODEL_PATH,
     classes: tuple[str, ...] | list[str] = DEFAULT_CLASSES,
     conf_threshold: float = 0.35,
-    iou_threshold: float = 0.7,
+    iou_threshold: float = 0.5,
     track: bool = True,
     attributes: bool = True,
     save_video: bool = False,

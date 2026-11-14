@@ -61,7 +61,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="comma-separated COCO categories (default: person,bicycle,car,motorcycle,bus,truck)",
     )
     run.add_argument("--conf", type=float, default=0.2, help="confidence threshold (0.15 for very dense scenes)")
-    run.add_argument("--iou", type=float, default=0.7, help="NMS IoU threshold")
+    run.add_argument("--iou", type=float, default=0.5, help="NMS IoU threshold")
     run.add_argument(
         "--tile",
         type=int,
