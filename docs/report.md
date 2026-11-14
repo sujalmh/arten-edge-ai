@@ -118,6 +118,15 @@ with **mean dwell 2.83 s** and **mean relative speed 38.69 px/s**. The car
 count is indicative: tracker IDs switch when people cross or leave frame. The
 per-frame counts are the stable output.
 
+With the support models at the balanced cadence, the 31 tracks split
+**14 walking / 2 standing** (after tracker-speed fusion), and detection
+instances split **728 road, 149 other, 87 sidewalk**. Skeletons are drawn on the
+annotated frames. These are sampled, indicative attributes.
+
+![Support detail](../results/demo_pi5_support/annotated/frame_00060.jpg)
+
+*Pose skeletons, posture and surface labels on the Pi 5.*
+
 ![Pedestrian contact sheet](../results/demo_pi5_pedestrians/contact_sheet.jpg)
 
 ### 3.2 Dense Bengaluru traffic — stress test
