@@ -17,7 +17,9 @@ runtime covers Pi 3/4 when the prebuilt wheel cannot run. The pipeline writes
 per-frame counts, on-device direction, dwell and relative-speed attributes,
 optional coarse vehicle colour, and annotated frames. A tiled mode runs
 native-resolution crops and merges the boxes, trading latency for recall on
-dense scenes. On the committed clip it processes 150 frames, peaks at 11 people
+dense scenes. Optional pose and segmentation models add posture, rider tags and
+a road/sidewalk surface per detection. On the committed clip it processes 150
+frames, peaks at 11 people
 in one frame and produces 31 indicative person tracks plus two background
 vehicles. A 50-run benchmark on the Pi 5 measures **136.73 ms p50 / 7.31 FPS**
 with **435.6 MB** process RSS; Arm's card reports **134.10 ms / 7.46 FPS** and
@@ -45,7 +47,7 @@ crash risk.
 
 ## 2. Approach
 
-The design makes five choices:
+The design makes six choices:
 
 1. **Use an edge artifact.** Arm's pre-optimized YOLO11n INT8 `.pte` is small
    enough for a Pi and verified on the target. A larger YOLOv8s `.pte` is an
@@ -60,6 +62,9 @@ The design makes five choices:
    frames at 4× or 9× the cost.
 5. **Ship evidence.** Every run writes counts, detections, attribute rows,
    latency percentiles and annotated frames.
+6. **Add detail with small support models.** A 2.82 MB top-down pose model and
+   a 5.64 MB road segmenter run on a cadence, adding posture, rider tags and
+   surface without replacing the detector.
 
 | Property | Value |
 |---|---|
@@ -68,6 +73,7 @@ The design makes five choices:
 | Runtime (Pi 4/5) | ExecuTorch 1.1.0, XNNPACK + KleidiAI |
 | Runtime (Pi 3/4 fallback) | source-built ExecuTorch 1.1.0, torch 2.9.0, XNNPACK |
 | Tiled mode | 2×2 or 3×3 native crops, ~4× / ~9× latency |
+| Support models | Lite-HRNet18 pose (Apache-2.0) · DDRNet23-slim surface (MIT) |
 | Pi 5 reference | **134.10 ms p50 · 7.46 FPS · 59.17 MB peak** |
 | COCO accuracy | **38.90% mAP@0.5:0.95 · 54.66% mAP@0.5** |
 | Model size | **4.73 MB** |
@@ -162,13 +168,19 @@ card number is not directly comparable. On the ARMv8.0 Pi 3B+ build, YOLO11n
 measured 1295 ms at a 600 MHz under-voltage cap; that is compatibility
 evidence, not the target performance.
 
+Support models add detail on a cadence. Lite-HRNet18 costs **142 ms per person
+crop** and DDRNet **86 ms per frame**. With pose every 10 frames (three people)
+and segmentation every 30, the 150-frame clip measures **190.6 ms mean /
+5.25 FPS** with YOLO11n and **291.1 ms / 3.43 FPS** with YOLOv8s. Support frames
+cost about 454 ms; the other nine frames are detector-only.
+
 ### 3.4 Mandatory deliverables
 
 | Requirement | Artifact |
 |---|---|
 | Process a short clip or image set on ExecuTorch + Pi | Committed sample clip; `arten run`; Pi setup script |
 | Detect a category and show per-frame counts | `counts.csv`; `summary.txt`; annotated HUD |
-| Category + counts + two sample outputs | Pedestrian contact sheet; annotated traffic and tiled images |
+| Category + counts + two sample outputs | Pedestrian contact sheet; annotated traffic/tiled images; surface and posture attributes |
 | Report inference time, model and throughput | `summary.json`; `results/benchmark_pi5.json`; §3.3 |
 | Explain the issue and one application in the short pitch | `docs/pitch-2min.md`; §1 |
 
@@ -181,6 +193,10 @@ evidence, not the target performance.
 - **Tiling is a latency trade.** A 2×2 pass costs about 4× and a 3×3 pass about
   9×. Bus and truck counts become less reliable because large vehicles produce
   partial boxes across crops.
+- **Support details are sampled and indicative.** Surface and posture are not
+  trained risk classifiers. Pose runs on the largest people only, and
+  segmentation is a coarse 90×120 mask with no grass class; grass is often
+  labelled road. Use them for context, not enforcement.
 - **No ground-truth mAP on organiser data.** The report cites COCO reference
   accuracy and manual counts, not a fabricated accuracy on the clip.
 - **Attributes are derived, not learned.** Direction is image-plane, speed is
@@ -210,6 +226,10 @@ arten run -i data/samples/pedestrians_15s.mp4 --conf 0.2 \
   -o results/pi_run --save-video --estimate-vehicle-colors
 arten run -i data/samples/bengaluru_traffic.jpg --conf 0.2 --tile 2 \
   -o results/pi_tiled
+arten run -i data/samples/pedestrians_15s.mp4 \
+  --pose-model models/lite_hrnet18_int8_xnnpack.pte --pose-every 10 \
+  --seg-model models/ddrnet23_slim_int8_xnnpack.pte --seg-every 30 \
+  -o results/pi_detail
 arten benchmark --input data/samples/bengaluru_traffic.jpg --runs 50
 ```
 
