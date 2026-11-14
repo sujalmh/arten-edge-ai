@@ -321,8 +321,10 @@ def _apply_support(
                     if segmenter is not None and mask is not None:
                         for motorcycle in motorcycle_detections:
                             if is_rider(detection.box, [motorcycle.box]):
+                                bx1, by1, bx2, by2 = motorcycle.box
+                                # Sample below the tyre, on the road, not on the bike.
                                 detection.attributes["surface"] = segmenter.surface_at(
-                                    mask, motorcycle.box
+                                    mask, (bx1, by1, bx2, by2 + 0.1 * (by2 - by1))
                                 )
                                 break
 
@@ -686,6 +688,7 @@ def run_input(
                     read_ms=read_ms,
                     preprocess_ms=preprocess_ms,
                     postprocess_ms=postprocess_ms,
+                    support_ms=support_ms,
                     annotate_ms=annotate_ms,
                     total_ms=total_ms,
                     detections=[d.to_dict() for d in detections],
