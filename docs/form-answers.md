@@ -64,7 +64,7 @@ observed person-seconds gives a ward officer or school committee concrete
 evidence for a crossing guard, a zebra crossing or a no-parking zone. The footage
 never leaves the school, and the output is aggregate counts, not identities.
 
-The repository contains the pipeline, 37 tests, a one-command Pi setup,
+The repository contains the pipeline, 43 tests, a one-command Pi setup,
 checksum-verified models, evidence and a demo.
 
 
@@ -96,8 +96,9 @@ clip changes. The detector now
 defaults to a calibrated 0.2 threshold, runs on Pi 4 through a source-built
 ARMv8.0 runtime and on Pi 5 with the prebuilt one, supports tiled
 native-resolution inference for dense scenes, and installs offline from a local
-wheelhouse. Measured on the Pi 5, the detector runs at 7.31 FPS and the balanced
-support path at 3.4–5.3 FPS.
+wheelhouse. On the Pi 5 the default detector runs at 7.31 FPS and the balanced
+support path at 3.4–5.3 FPS. A sweep found YOLOv5s faster with higher person and
+two-wheeler recall than YOLOv8s on the dense frame, so it is the domain option.
 
 ## 500-word technical approach
 

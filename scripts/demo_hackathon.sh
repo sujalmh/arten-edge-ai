@@ -20,7 +20,9 @@ else
 fi
 
 if [[ -z "${MODEL:-}" ]]; then
-  if [[ -f "$ROOT/models/yolov8s_int8_xnnpack.pte" ]]; then
+  if [[ -f "$ROOT/models/yolov5s_int8_xnnpack.pte" ]]; then
+    MODEL="$ROOT/models/yolov5s_int8_xnnpack.pte"
+  elif [[ -f "$ROOT/models/yolov8s_int8_xnnpack.pte" ]]; then
     MODEL="$ROOT/models/yolov8s_int8_xnnpack.pte"
   else
     MODEL="$ROOT/models/yolo11n_int8_xnnpack.pte"
@@ -28,11 +30,19 @@ if [[ -z "${MODEL:-}" ]]; then
 fi
 
 if [[ -z "${CONF:-}" ]]; then
-  if [[ "$MODEL" == *yolov8s* ]]; then
-    CONF=0.2
-  else
+  if [[ "$MODEL" == *yolo11n* ]]; then
     CONF=0.15
+  else
+    CONF=0.2
   fi
+fi
+
+SUPPORT_ARGS=()
+if [[ "${SUPPORT:-0}" == "1" ]]; then
+  SUPPORT_ARGS=(
+    --pose-model "$ROOT/models/lite_hrnet18_int8_xnnpack.pte" --pose-every 10 --pose-max-persons 3
+    --seg-model "$ROOT/models/ddrnet23_slim_int8_xnnpack.pte" --seg-every 30
+  )
 fi
 
 echo "model: $MODEL"
@@ -44,11 +54,13 @@ echo
 case "$INPUT" in
   *.mp4|*.avi|*.mov|*.mkv|*.webm|*.m4v)
     "$ARTEN" run -i "$INPUT" -o "$OUT" --model "$MODEL" \
-      --conf "$CONF" --tile "$TILE" --save-video --annotate-every 10
+      --conf "$CONF" --tile "$TILE" --save-video --annotate-every 10 \
+      "${SUPPORT_ARGS[@]}"
     ;;
   *)
     "$ARTEN" run -i "$INPUT" -o "$OUT" --model "$MODEL" \
-      --conf "$CONF" --tile "$TILE" --annotate-every 1
+      --conf "$CONF" --tile "$TILE" --annotate-every 1 \
+      "${SUPPORT_ARGS[@]}"
     ;;
 esac
 
