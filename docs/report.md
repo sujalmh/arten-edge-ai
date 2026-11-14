@@ -17,10 +17,11 @@ runtime covers Pi 3/4 when the prebuilt wheel cannot run. The pipeline writes
 per-frame counts, on-device direction, dwell and relative-speed attributes,
 optional coarse vehicle colour, and annotated frames. A tiled mode runs
 native-resolution crops and merges the boxes, trading latency for recall on
-dense scenes. On the committed clip it processes 150 frames, peaks at 10 people
-in one frame and produces 33 indicative person tracks plus two background
-vehicles. Arm's model card reports the Pi 5 reference: **134.10 ms p50 /
-7.46 FPS**, **59.17 MB** peak memory and **38.90% mAP@0.5:0.95**.
+dense scenes. On the committed clip it processes 150 frames, peaks at 11 people
+in one frame and produces 31 indicative person tracks plus two background
+vehicles. A 50-run benchmark on the Pi 5 measures **136.73 ms p50 / 7.31 FPS**
+with **435.6 MB** process RSS; Arm's card reports **134.10 ms / 7.46 FPS** and
+**38.90% mAP@0.5:0.95**.
 
 ## 1. Problem and application
 
@@ -94,23 +95,22 @@ without face, plate, age, gender or identity attributes.
 
 ### 3.1 Pedestrian clip
 
-Measured on the Pi 3B+ over 150 frames at the default confidence 0.2.
+Measured on the Raspberry Pi 5 over 150 frames at the default confidence 0.2.
 
 | Category | Peak/frame | Mean/frame | p95 | Unique (indicative) |
 |---|---:|---:|---:|---:|
-| person | 10 | 5.95 | 8 | 33 |
+| person | 11 | 5.92 | 8 | 31 |
 | bicycle | 0 | 0.00 | 0 | 0 |
 | car | 1 | 1.00 | 1 | 1 |
 | motorcycle | 0 | 0.00 | 0 | 0 |
 | bus | 0 | 0.00 | 0 | 0 |
 | truck | 1 | 1.00 | 1 | 1 |
 
-The 33 person tracks split **13 left, 10 right, 6 stationary, 2 down, 2 up**,
-with **mean dwell 2.68 s** and **mean relative speed 43.65 px/s**. The car
+The 31 person tracks split **13 left, 6 right, 6 stationary, 3 down, 3 up**,
+with **mean dwell 2.83 s** and **mean relative speed 38.69 px/s**. The car
 (blue) and truck (white) are background vehicles and stationary. The unique
-count is indicative: at the calibrated 0.2 threshold more partially occluded
-people are detected, and tracker IDs switch when people cross or leave frame.
-The per-frame counts are the stable output.
+count is indicative: tracker IDs switch when people cross or leave frame. The
+per-frame counts are the stable output.
 
 ![Pedestrian contact sheet](../results/demo_pedestrians/contact_sheet.jpg)
 
@@ -118,10 +118,10 @@ The per-frame counts are the stable output.
 
 ![Dense traffic](../results/demo_traffic/annotated/bengaluru_traffic.jpg)
 
-At the calibrated 0.2 threshold the frame yields **9 people, 25 cars,
-4 motorcycles, 2 buses and 1 truck**. The colour heuristic labels the 25 cars
+At the calibrated 0.2 threshold the Pi 5 frame yields **8 people, 25 cars,
+3 motorcycles, 2 buses and 2 trucks**. The colour heuristic labels the 25 cars
 as **11 white, 7 gray/silver, 3 red, 2 blue, 1 green, 1 orange/brown**; the
-buses are green/white and the truck orange/brown. The labels are visibly
+buses are green/white and the trucks green/orange. The labels are visibly
 imperfect, so they are a demo of derived attributes, not a reliable colour
 measurement.
 
@@ -129,34 +129,38 @@ A manual count of the same frame finds roughly **30–40 people, 45–55 cars an
 25–30 motorcycles**, so the full-frame pass recovers about half. The scene also
 has three auto-rickshaws, which COCO cannot label.
 
-Tiled inference changes the picture. A 2×2 pass with YOLOv8s at 0.2 finds
-**27 people, 41 cars and 19 motorcycles** at 12.8 s/frame on the capped Pi 3B+;
-a 3×3 pass reaches **30 people, 44 cars and 21 motorcycles** at 28.8 s/frame.
-No retraining is involved: the model runs on native-resolution crops and the
-boxes are merged. The trade-off is latency, and bus/truck counts become less
-reliable because large vehicles produce partial boxes across crops.
+Tiled inference changes the picture. On the Pi 5, a 2×2 pass with YOLO11n finds
+**26 people, 40 cars and 13 motorcycles** at **547.65 ms/frame**; YOLOv8s finds
+**27 people, 41 cars and 19 motorcycles** at **935.22 ms/frame**. A 3×3 pass
+reaches **30/43/14** (YOLO11n, 1.23 s) and **30/44/21** (YOLOv8s, 2.12 s). No
+retraining is involved: the model runs on native-resolution crops and the boxes
+are merged. The trade-off is latency, and bus/truck counts become less reliable
+because large vehicles produce partial boxes across crops.
 
 ### 3.3 Latency
 
-Measured on the Raspberry Pi 3B+ verification board. The board was
-firmware-capped at **600 MHz** by under-voltage (`vcgencmd get_throttled` =
-`0x50005`; nominal clock 1.4 GHz), so these absolute numbers are pessimistic.
-The Pi 5 reference for the prebuilt model is **134.10 ms p50 / 7.46 FPS**.
+Measured on the Raspberry Pi 5 with the prebuilt ExecuTorch 1.1.0 + torch 2.10
+stack. The runtime starts 10 threads; Arm's model-card numbers use one thread.
 
 | Stage | Mean ms | p50 ms | p95 ms | FPS from mean |
 |---|---:|---:|---:|---:|
-| Model inference | 1298.61 | 1295.06 | 1299.49 | 0.77 |
-| Preprocess | 31.96 | 31.79 | 32.26 | 31.29 |
-| Decode + NMS | 38.48 | 38.17 | 40.53 | 25.99 |
-| Frame read | 10.39 | 9.85 | 10.14 | 96.28 |
-| Annotate/save | 177.81 | 176.68 | 205.62 | 5.62 |
-| **Pipeline total** | **1586.69** | **1582.98** | **1636.89** | **0.63** |
+| Model inference | 138.85 | 138.84 | 139.24 | 7.20 |
+| Preprocess | 3.01 | 3.04 | 3.12 | 332.55 |
+| Decode + NMS | 3.42 | 3.41 | 3.48 | 292.38 |
+| Frame read | 0.84 | 0.66 | 1.54 | 1188.83 |
+| Annotate/save | 14.64 | 14.43 | 16.86 | 68.31 |
+| **Pipeline total** | **162.20** | **162.05** | **165.17** | **6.17** |
 
-Tiled inference costs about 4× per 2×2 grid: YOLO11n measured 5.2 s/frame and
-YOLOv8s 12.8 s/frame at 2×2; a 3×3 YOLOv8s pass measured 28.8 s/frame. A proper
-5 V / 2.5 A supply should lift the 600 MHz cap and reduce every number; the
-relative comparisons remain valid. Annotated-video encoding is an output step
-and is excluded from the pipeline timer.
+A standalone 50-run benchmark measures **136.73 ms p50 / 7.31 FPS** with
+**435.6 MB** process RSS, within 2% of Arm's **134.10 ms / 7.46 FPS** card.
+Tiled inference costs about 4× per 2×2 grid: 547.65 ms (YOLO11n) and 935.22 ms
+(YOLOv8s); 3×3 costs 1.23 s and 2.12 s.
+
+Arm's YOLOv8s card reports 457.03 ms with **one thread**. The same model here
+measures **233.81 ms / 4.28 FPS** with the default runtime threading, so the
+card number is not directly comparable. On the ARMv8.0 Pi 3B+ build, YOLO11n
+measured 1295 ms at a 600 MHz under-voltage cap; that is compatibility
+evidence, not the target performance.
 
 ### 3.4 Mandatory deliverables
 
@@ -165,13 +169,13 @@ and is excluded from the pipeline timer.
 | Process a short clip or image set on ExecuTorch + Pi | Committed sample clip; `arten run`; Pi setup script |
 | Detect a category and show per-frame counts | `counts.csv`; `summary.txt`; annotated HUD |
 | Category + counts + two sample outputs | Pedestrian contact sheet; annotated traffic and tiled images |
-| Report inference time, model and throughput | `summary.json`; `results/benchmark_pi3b_armv8.json`; §3.3 |
+| Report inference time, model and throughput | `summary.json`; `results/benchmark_pi5.json`; §3.3 |
 | Explain the issue and one application in the short pitch | `docs/pitch-2min.md`; §1 |
 
 ## 4. Limitations and responsible AI
 
 - **COCO is not India.** Auto-rickshaws, hand carts and many local vehicle types
-  are not COCO classes. At 0.2 the dense frame finds 25 cars and 4 motorcycles,
+  are not COCO classes. At 0.2 the dense frame finds 25 cars and 3 motorcycles,
   against a manual count of roughly 45–55 and 25–30; tiling raises that to
   41/19 (2×2) or 44/21 (3×3). The three auto-rickshaws remain unlabelled.
 - **Tiling is a latency trade.** A 2×2 pass costs about 4× and a 3×3 pass about
@@ -181,15 +185,19 @@ and is excluded from the pipeline timer.
   accuracy and manual counts, not a fabricated accuracy on the clip.
 - **Attributes are derived, not learned.** Direction is image-plane, speed is
   uncalibrated pixels/second, colour is a coarse HSV heuristic, and tracker IDs
-  can switch. The 33 person tracks at 0.2 include switches; per-frame counts are
+  can switch. The 31 person tracks at 0.2 include switches; per-frame counts are
   the stable output. These attributes support within-clip comparison, not
   enforcement.
-- **The verification board is power-limited.** It was capped at 600 MHz by
-  under-voltage. Re-measure on the event board before quoting numbers.
+- **Threading changes the comparison.** Arm's model cards use one thread; the
+  Pi 5 runtime here starts ten, so YOLOv8s measures 233.81 ms against a 457.03 ms
+  single-thread card. Compare like-for-like before quoting either.
+- **Board coverage.** The Pi 5 numbers are measured. Pi 4 is estimated from the
+  Pi 5 and Pi 3B+ scaling. The Pi 3B+ compatibility run was capped at 600 MHz by
+  under-voltage, so its absolute numbers are not the target performance.
 - **Aggregate, not identity.** The system extracts no faces, plates, age, gender
   or identity fields. Annotated frames still contain the original pixels, so
   treat them as sensitive evidence and blur them before publication.
-- **Licence.** YOLO11n and the Arm `.pte` are AGPL-3.0; this repository is
+- **Licence.** YOLO11n, YOLOv8s and the Arm `.pte` files are AGPL-3.0; this repository is
   AGPL-3.0 and includes the model notice.
 
 ## 5. Reproduce

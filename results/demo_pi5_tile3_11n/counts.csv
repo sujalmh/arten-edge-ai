@@ -1,0 +1,2 @@
+frame_idx,source_frame_idx,timestamp_s,count_person,count_bicycle,count_car,count_motorcycle,count_bus,count_truck,count_total,read_ms,preprocess_ms,inference_ms,postprocess_ms,track_ms,annotate_ms,total_ms
+0,0,0.000,30,0,43,14,5,5,97,17.60,27.77,1225.71,47.87,0.00,0.00,1318.95

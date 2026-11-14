@@ -1,0 +1,281 @@
+{
+  "project": "Arten",
+  "tagline": "Offline edge AI for safer streets",
+  "run": {
+    "input": "/home/pi/arten/data/samples/bengaluru_traffic.jpg",
+    "input_type": "images",
+    "output_dir": "/home/pi/pi5_demo_traffic",
+    "frames_processed": 1,
+    "source_frames": 1,
+    "stride": 1,
+    "tile_grid": 0,
+    "duration_s": 1.0,
+    "wall_time_s": 0.215,
+    "source_fps": null,
+    "source_size": null,
+    "classes": [
+      "person",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "bus",
+      "truck"
+    ],
+    "confidence_threshold": 0.2,
+    "iou_threshold": 0.7,
+    "tracking": false,
+    "attributes": true,
+    "threads": null,
+    "annotate_every": 1,
+    "save_video": false,
+    "vehicle_color_estimate": true
+  },
+  "model": {
+    "name": "YOLO11n (COCO) — Arm-optimized INT8",
+    "description": "Ultralytics YOLO11n, 80-class COCO detector, statically quantized to INT8 by Arm and exported to ExecuTorch .pte with the XNNPACK delegate.",
+    "path": "/home/pi/arten/models/yolo11n_int8_xnnpack.pte",
+    "size_mb": 4.73,
+    "sha256": "154c54b52389219ebd982e1003227c1abbc3f29a99bdad241147b684d3041b96",
+    "expected_sha256": "154c54b52389219ebd982e1003227c1abbc3f29a99bdad241147b684d3041b96",
+    "sha256_match": true,
+    "format": "ExecuTorch .pte",
+    "backend": "XNNPACK (CPU)",
+    "quantization": "INT8 static post-training quantization; stem conv and detection head remain FP32 (per Arm model card)",
+    "input_shape": [
+      1,
+      3,
+      640,
+      640
+    ],
+    "input_range": [
+      0.0,
+      1.0
+    ],
+    "classes": 80,
+    "dataset": "COCO 2017",
+    "source": "https://huggingface.co/Arm/yolo11n-int8-xnnpack-executorch-raspberrypi5",
+    "load_ms": 11.92,
+    "torch": "2.10.0+cpu",
+    "executorch": "1.1.0"
+  },
+  "environment": {
+    "platform": "Linux-6.12.25+rpt-rpi-2712-aarch64-with-glibc2.36",
+    "machine": "aarch64",
+    "processor": "unknown",
+    "python": "3.11.2",
+    "timestamp_utc": "2026-11-14T05:51:07+00:00",
+    "peak_rss_mb": 444.1,
+    "threads": null,
+    "torch": "2.10.0+cpu",
+    "executorch": "1.1.0",
+    "opencv": "5.0.0"
+  },
+  "counts": {
+    "person": {
+      "peak": 8,
+      "mean": 8.0,
+      "p95": 8,
+      "total_detections": 8,
+      "unique_tracked": null
+    },
+    "bicycle": {
+      "peak": 0,
+      "mean": 0.0,
+      "p95": 0,
+      "total_detections": 0,
+      "unique_tracked": null
+    },
+    "car": {
+      "peak": 25,
+      "mean": 25.0,
+      "p95": 25,
+      "total_detections": 25,
+      "unique_tracked": null
+    },
+    "motorcycle": {
+      "peak": 3,
+      "mean": 3.0,
+      "p95": 3,
+      "total_detections": 3,
+      "unique_tracked": null
+    },
+    "bus": {
+      "peak": 2,
+      "mean": 2.0,
+      "p95": 2,
+      "total_detections": 2,
+      "unique_tracked": null
+    },
+    "truck": {
+      "peak": 2,
+      "mean": 2.0,
+      "p95": 2,
+      "total_detections": 2,
+      "unique_tracked": null
+    }
+  },
+  "latency": {
+    "model_inference": {
+      "count": 1.0,
+      "mean_ms": 135.72,
+      "p50_ms": 135.72,
+      "p95_ms": 135.72,
+      "p99_ms": 135.72,
+      "min_ms": 135.72,
+      "max_ms": 135.72,
+      "std_ms": 0.0,
+      "fps_from_mean": 7.37
+    },
+    "preprocess": {
+      "count": 1.0,
+      "mean_ms": 3.54,
+      "p50_ms": 3.54,
+      "p95_ms": 3.54,
+      "p99_ms": 3.54,
+      "min_ms": 3.54,
+      "max_ms": 3.54,
+      "std_ms": 0.0,
+      "fps_from_mean": 282.17
+    },
+    "postprocess": {
+      "count": 1.0,
+      "mean_ms": 10.91,
+      "p50_ms": 10.91,
+      "p95_ms": 10.91,
+      "p99_ms": 10.91,
+      "min_ms": 10.91,
+      "max_ms": 10.91,
+      "std_ms": 0.0,
+      "fps_from_mean": 91.68
+    },
+    "read": {
+      "count": 1.0,
+      "mean_ms": 17.61,
+      "p50_ms": 17.61,
+      "p95_ms": 17.61,
+      "p99_ms": 17.61,
+      "min_ms": 17.61,
+      "max_ms": 17.61,
+      "std_ms": 0.0,
+      "fps_from_mean": 56.78
+    },
+    "annotate": {
+      "count": 1.0,
+      "mean_ms": 46.61,
+      "p50_ms": 46.61,
+      "p95_ms": 46.61,
+      "p99_ms": 46.61,
+      "min_ms": 46.61,
+      "max_ms": 46.61,
+      "std_ms": 0.0,
+      "fps_from_mean": 21.46
+    },
+    "pipeline_total": {
+      "count": 1.0,
+      "mean_ms": 214.39,
+      "p50_ms": 214.39,
+      "p95_ms": 214.39,
+      "p99_ms": 214.39,
+      "min_ms": 214.39,
+      "max_ms": 214.39,
+      "std_ms": 0.0,
+      "fps_from_mean": 4.66
+    }
+  },
+  "throughput": {
+    "model_fps_from_mean": 7.37,
+    "pipeline_fps_from_mean": 4.66,
+    "processed_frames_per_wall_second": 4.66
+  },
+  "exposure": {
+    "person_seconds": 0.0,
+    "vehicle_seconds": 0.0,
+    "frames_with_person_and_vehicle": 1,
+    "share_frames_with_person_and_vehicle": 1.0
+  },
+  "zone": null,
+  "attributes": {
+    "note": "Image-plane motion and coarse colour are derived attributes, not trained model outputs. Speed is uncalibrated pixels/second.",
+    "by_class": {
+      "car": {
+        "tracks": 25,
+        "directions": {},
+        "colors": {
+          "blue": 2,
+          "gray/silver": 7,
+          "green": 1,
+          "orange/brown": 1,
+          "red": 3,
+          "white": 11
+        },
+        "mean_dwell_s": null,
+        "mean_speed_px_s": null
+      },
+      "bus": {
+        "tracks": 2,
+        "directions": {},
+        "colors": {
+          "green": 1,
+          "white": 1
+        },
+        "mean_dwell_s": null,
+        "mean_speed_px_s": null
+      },
+      "truck": {
+        "tracks": 2,
+        "directions": {},
+        "colors": {
+          "green": 1,
+          "orange/brown": 1
+        },
+        "mean_dwell_s": null,
+        "mean_speed_px_s": null
+      },
+      "motorcycle": {
+        "tracks": 3,
+        "directions": {},
+        "colors": {
+          "blue": 1,
+          "gray/silver": 2
+        },
+        "mean_dwell_s": null,
+        "mean_speed_px_s": null
+      }
+    },
+    "total_tracks": 32
+  },
+  "peak_rss_mb": 444.1,
+  "reference": {
+    "device": "Raspberry Pi 5 (Cortex-A76, 4 cores @ 2.4 GHz)",
+    "runtime": "ExecuTorch 1.1.0, XNNPACK + KleidiAI, 1 thread",
+    "p50_latency_ms": 134.1,
+    "fps": 7.46,
+    "peak_memory_mb": 59.17,
+    "map_50_95": 38.9,
+    "map_50": 54.66,
+    "model_size_mb": 4.73,
+    "source": "https://huggingface.co/Arm/yolo11n-int8-xnnpack-executorch-raspberrypi5"
+  },
+  "outputs": {
+    "counts_csv": "/home/pi/pi5_demo_traffic/counts.csv",
+    "zone_counts_csv": null,
+    "attribute_tracks_csv": "/home/pi/pi5_demo_traffic/attribute_tracks.csv",
+    "attribute_summary_json": "/home/pi/pi5_demo_traffic/attribute_summary.json",
+    "detections_jsonl": "/home/pi/pi5_demo_traffic/detections.jsonl",
+    "summary_json": "/home/pi/pi5_demo_traffic/summary.json",
+    "summary_txt": "/home/pi/pi5_demo_traffic/summary.txt",
+    "annotated_dir": "/home/pi/pi5_demo_traffic/annotated",
+    "annotated_video": null,
+    "contact_sheet": "/home/pi/pi5_demo_traffic/contact_sheet.jpg"
+  },
+  "notes": [
+    "Inference ran as a single 640x640 pass per frame.",
+    "Counts are per processed frame, not unique objects, unless the 'unique_tracked' field is used.",
+    "unique_tracked is indicative: a lightweight IoU/velocity tracker, not a production multi-object tracking system.",
+    "Latency is measured on the device that produced this run. Compare only with runs on the same hardware and thread count.",
+    "The model detects 80 COCO classes. Auto-rickshaws, carts and other India-specific categories are not guaranteed to be recognised.",
+    "No faces, licence plates or identities are extracted. Frames are processed locally and only the requested evidence is written.",
+    "Annotated-video encoding is an output convenience and is not included in the pipeline latency; model-only and per-stage timings are unaffected.",
+    "Direction and speed are image-plane attributes from the tracker. Speed is uncalibrated pixels/second, not km/h. Colour is an optional HSV heuristic on vehicle crops, not a trained attribute model."
+  ]
+}

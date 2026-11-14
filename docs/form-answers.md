@@ -20,7 +20,7 @@ Alternative if a shorter title is needed: **Arten — count movement, not people
 
 Arten turns a 15-second street clip into offline, privacy-preserving
 counts and movement attributes of pedestrians and vehicles on a Raspberry Pi.
-Using an Arm-optimized YOLO11n INT8 model in ExecuTorch, it runs at a 7.46 FPS Pi 5 reference with no cloud, GPU or
+Using an Arm-optimized YOLO11n INT8 model in ExecuTorch, it measures 7.31 FPS on the Pi 5 with no cloud, GPU or
 identities — evidence for safer crossings, not surveillance.
 
 ## 150-word summary
@@ -30,7 +30,7 @@ India recorded 1,68,491 road deaths in 2022; pedestrians were 19.5% and
 two-wheeler riders 44.5%. The missing ingredient for safer streets is not more
 cameras — it is an affordable way to count movement. Arten is an offline
 edge-AI PoC that processes a 10–20 second clip or images on a Raspberry Pi 4 or 5.
-A 4.73 MB YOLO11n INT8 model runs through ExecuTorch with XNNPACK (7.46 FPS Pi 5 reference),
+A 4.73 MB YOLO11n INT8 model runs through ExecuTorch with XNNPACK (7.31 FPS measured on the Pi 5),
 detecting people, cars, motorcycles, buses, trucks and bicycles. It outputs
 per-frame counts, on-device motion attributes and optional vehicle colour,
 annotated frames, a CSV/JSON evidence bundle and honest latency percentiles. No footage leaves the device and no identities are
@@ -184,9 +184,9 @@ evidence if the board fails.
 The immediate output is measurable: per-frame counts for six categories, peak
 and mean counts, observed person-seconds and vehicle-seconds, model latency
 (p50/p95), throughput and memory. On the committed 15-second clip, the pipeline
-processes 150 frames, finds up to 10 people in a frame and produces 33
+processes 150 frames, finds up to 11 people in a frame and produces 31
 indicative person tracks plus 2 vehicles. A 2×2 tiled YOLOv8s pass on the dense
-image finds 27 people, 41 cars and 19 motorcycles. The practical impact is a repeatable school-zone
+image finds 27 people, 41 cars and 19 motorcycles at 935 ms/frame on the Pi 5. The practical impact is a repeatable school-zone
 audit: three clips at different times, compared offline, produce evidence for a
 crossing guard, zebra crossing or parking restriction. The cost is one
 Raspberry Pi and no cloud subscription. The longer-term impact is a template for

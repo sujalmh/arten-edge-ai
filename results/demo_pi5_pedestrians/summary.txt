@@ -1,0 +1,50 @@
+
+==============================================================================
+  ARTEN  ·  edge object detection, counting & attributes
+==============================================================================
+  Input        pedestrians_15s.mp4
+  Frames       150 / 150
+  Source       10.00 FPS · 640×480
+  Device       aarch64 · Linux-6.12.25+rpt-rpi-2712-aarch64-with-glibc2.36
+  Runtime      ExecuTorch 1.1.0 · torch 2.10.0+cpu
+  Model        YOLO11n (COCO) — Arm-optimized INT8 · 4.73 MB · checksum OK
+
+  COUNTS (per processed frame)
++----------------+------------+------------+-------+----------+
+| category       | peak/frame | mean/frame | p95   | unique*  |
++================+============+============+=======+==========+
+| person         | 11         | 5.92       | 8     | 31       |
+| bicycle        | 0          | 0.00       | 0     | 0        |
+| car            | 1          | 1.00       | 1     | 1        |
+| motorcycle     | 0          | 0.00       | 0     | 0        |
+| bus            | 0          | 0.00       | 0     | 0        |
+| truck          | 1          | 1.00       | 1     | 1        |
++----------------+------------+------------+-------+----------+
+  * unique is indicative, from a lightweight IoU/velocity tracker.
+
+  ATTRIBUTES (unique tracks, on-device)
+  truck          1 tracks  stationary 1 · white 1 · dwell 14.9s · 0.4px/s
+  car            1 tracks  stationary 1 · blue 1 · dwell 14.9s · 0.6px/s
+  person        31 tracks  down 3, left 13, right 6, stationary 6, up 3 · — · dwell 2.8s · 38.7px/s
+  Motion is image-plane; speed is uncalibrated. Colour is optional HSV.
+
+  LATENCY / THROUGHPUT
++----------------+-----------+----------+----------+---------+
+| stage          | mean ms   | p50 ms   | p95 ms   | FPS     |
++================+===========+==========+==========+=========+
+| model infer    | 138.85    | 138.84   | 139.24   | 7.20    |
+| preprocess     | 3.01      | 3.04     | 3.12     | 332.55  |
+| decode + NMS   | 3.42      | 3.41     | 3.48     | 292.38  |
+| frame read     | 0.84      | 0.66     | 1.54     | 1188.83 |
+| annotate/save  | 14.64     | 14.43    | 16.86    | 68.31   |
+| pipeline total | 162.20    | 162.05   | 165.17   | 6.17    |
++----------------+-----------+----------+----------+---------+
+  Model-only 7.20 FPS · pipeline 6.17 FPS · wall 24.83 s
+
+  EXPOSURE (clip-level, descriptive)
+  person-seconds 88.80 · vehicle-seconds 30.00 · frames with both 150 (100.0%)
+
+  REFERENCE (not measured here)
+  Arm model card, Raspberry Pi 5 (Cortex-A76, 4 cores @ 2.4 GHz): 134.10 ms p50 · 7.46 FPS · 59.17 MB peak
+  Cite this only as a reference; replace it with your own Pi run at the event.
+==============================================================================

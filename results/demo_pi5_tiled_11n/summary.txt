@@ -1,0 +1,43 @@
+
+==============================================================================
+  ARTEN  ·  edge object detection, counting & attributes
+==============================================================================
+  Input        bengaluru_traffic.jpg
+  Frames       1 / 1
+  Device       aarch64 · Linux-6.12.25+rpt-rpi-2712-aarch64-with-glibc2.36
+  Runtime      ExecuTorch 1.1.0 · torch 2.10.0+cpu
+  Model        YOLO11n (COCO) — Arm-optimized INT8 · 4.73 MB · checksum OK
+
+  COUNTS (per processed frame)
++----------------+------------+------------+-------+----------+
+| category       | peak/frame | mean/frame | p95   | unique*  |
++================+============+============+=======+==========+
+| person         | 26         | 26.00      | 26    | —        |
+| bicycle        | 0          | 0.00       | 0     | —        |
+| car            | 40         | 40.00      | 40    | —        |
+| motorcycle     | 13         | 13.00      | 13    | —        |
+| bus            | 4          | 4.00       | 4     | —        |
+| truck          | 3          | 3.00       | 3     | —        |
++----------------+------------+------------+-------+----------+
+  * unique is indicative, from a lightweight IoU/velocity tracker.
+
+  LATENCY / THROUGHPUT
++----------------+-----------+----------+----------+---------+
+| stage          | mean ms   | p50 ms   | p95 ms   | FPS     |
++================+===========+==========+==========+=========+
+| model infer    | 547.65    | 547.65   | 547.65   | 1.83    |
+| preprocess     | 13.32     | 13.32    | 13.32    | 75.07   |
+| decode + NMS   | 21.15     | 21.15    | 21.15    | 47.29   |
+| frame read     | 17.56     | 17.56    | 17.56    | 56.95   |
+| annotate/save  | 0.00      | 0.00     | 0.00     | 0.00    |
+| pipeline total | 599.67    | 599.67   | 599.67   | 1.67    |
++----------------+-----------+----------+----------+---------+
+  Model-only 1.83 FPS · pipeline 1.67 FPS · wall 0.60 s
+
+  EXPOSURE (clip-level, descriptive)
+  person-seconds 0.00 · vehicle-seconds 0.00 · frames with both 1 (100.0%)
+
+  REFERENCE (not measured here)
+  Arm model card, Raspberry Pi 5 (Cortex-A76, 4 cores @ 2.4 GHz): 134.10 ms p50 · 7.46 FPS · 59.17 MB peak
+  Cite this only as a reference; replace it with your own Pi run at the event.
+==============================================================================
