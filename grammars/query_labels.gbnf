@@ -1,0 +1,1 @@
+root ::= "count" | "unique_count" | "list_frames" | "fastest" | "direction_count" | "dwell" | "colour" | "co_presence" | "compare" | "peak" | "unsupported"

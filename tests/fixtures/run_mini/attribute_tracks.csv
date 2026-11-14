@@ -1,0 +1,5 @@
+class,track_id,color,direction,speed_px_s,dwell_s,hits,score
+person,1,,right,50.0,4.0,5,0.9
+car,2,blue,stationary,0.0,5.0,5,0.8
+bus,3,white,stationary,0.0,0.2,1,0.7
+person,4,,left,50.0,2.0,3,0.85

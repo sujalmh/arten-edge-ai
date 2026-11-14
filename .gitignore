@@ -17,3 +17,17 @@ results/organiser_*/
 *.log
 wheels/
 wheelhouse
+
+# Local LLM artefacts (large; fetch with scripts/setup_llm.sh)
+models/llm/*.gguf
+models/llm/*.bin
+models/llm/install.json
+
+# Generated query indexes and pages
+results/**/evidence.db
+results/**/evidence.db-*
+results/**/index_meta.json
+results/**/ask_*.html
+
+# llama.cpp build tree
+vendor/llama.cpp/

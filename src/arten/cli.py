@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import platform
+import shutil
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -18,8 +19,6 @@ from .constants import (
     PI5_REFERENCE,
 )
 from .metrics import environment_info, write_json
-from .model import ExecuTorchDetector, ModelLoadError
-from .pipeline import benchmark_model, run_input
 
 
 def _parse_classes(value: str) -> tuple[str, ...]:
@@ -113,10 +112,41 @@ def build_parser() -> argparse.ArgumentParser:
     doctor = sub.add_parser("doctor", help="check the environment and sample assets")
     doctor.add_argument("--model", default=str(DEFAULT_MODEL_PATH))
 
+    index = sub.add_parser("index", help="build evidence.db from a completed run directory")
+    index.add_argument("--run", required=True, help="run directory containing detections.jsonl")
+    index.add_argument("--out", default=None, help="output .db path (default: <run>/evidence.db)")
+    index.add_argument(
+        "--start-time",
+        default=None,
+        help="optional ISO-8601 wall-clock start, e.g. 2026-11-14T08:00:00+05:30",
+    )
+    index.add_argument("--force", action="store_true", help="rebuild an existing index")
+
+    ask = sub.add_parser("ask", help="ask a question about an indexed run")
+    ask.add_argument("question", nargs="+", help="natural-language question")
+    ask.add_argument("--db", required=True, help="path to evidence.db")
+    ask.add_argument(
+        "--parser",
+        choices=["auto", "rules", "llm"],
+        default="auto",
+        help="auto uses rules first, then the local model; rules never needs a model",
+    )
+    ask.add_argument("--model", default=None, help="path to a GGUF model")
+    ask.add_argument("--llama-bin", default=None, help="path to llama-cli")
+    ask.add_argument("--grammar", default=None, help="path to the label GBNF grammar")
+    ask.add_argument("--timeout", type=float, default=120.0, help="LLM timeout in seconds")
+    ask.add_argument("--limit", type=int, default=None, help="override the plan's row limit")
+    ask.add_argument("--explain", action="store_true", help="print the full resolved QueryPlan")
+    ask.add_argument("--json", action="store_true", help="print machine-readable JSON")
+    ask.add_argument("--html", default=None, help="write a self-contained HTML evidence page")
+    ask.add_argument("--md", default=None, help="write a Markdown answer")
+
     return parser
 
 
 def cmd_run(args: argparse.Namespace) -> int:
+    from .pipeline import run_input
+
     output = Path(args.output).expanduser().resolve() if args.output else _default_output()
     run_input(
         input_path=args.input,
@@ -146,6 +176,8 @@ def cmd_run(args: argparse.Namespace) -> int:
 
 
 def cmd_benchmark(args: argparse.Namespace) -> int:
+    from .pipeline import benchmark_model
+
     result = benchmark_model(
         model_path=args.model,
         input_path=args.input,
@@ -176,6 +208,8 @@ def cmd_benchmark(args: argparse.Namespace) -> int:
 
 
 def cmd_info(args: argparse.Namespace) -> int:
+    from .model import ExecuTorchDetector
+
     detector = ExecuTorchDetector(args.model, warmup=0)
     info = detector.info()
     if args.json:
@@ -197,6 +231,83 @@ def cmd_info(args: argparse.Namespace) -> int:
     print(f"  load        {model['load_ms']:.2f} ms")
     print(f"  source      {model.get('source') or 'unknown (custom model)'}")
     print()
+    return 0
+
+
+def cmd_index(args: argparse.Namespace) -> int:
+    from .query.index import build_index
+
+    path = build_index(
+        args.run,
+        args.out,
+        start_time=args.start_time,
+        force=args.force,
+    )
+    print(f"Wrote {path}")
+    meta_path = path.with_name("index_meta.json")
+    if meta_path.exists():
+        meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        rows = meta.get("rows", {})
+        print(
+            f"  rows    {rows.get('frames', 0)} frames · "
+            f"{rows.get('detections', 0)} detections · {rows.get('tracks', 0)} tracks"
+        )
+        print(f"  classes {', '.join(meta.get('classes', []))}")
+        print(f"  meta    {meta_path.name}")
+        if meta.get("unsupported"):
+            print("  missing " + "; ".join(meta["unsupported"]))
+    print("\nTry:")
+    print(f'  arten ask "how many people?" --db {path}')
+    return 0
+
+
+def cmd_ask(args: argparse.Namespace) -> int:
+    from .query.execute import ask, format_answer
+    from .query.render import render_html, render_markdown
+
+    question = " ".join(args.question).strip()
+    result = ask(
+        args.db,
+        question,
+        parser=args.parser,
+        model_path=args.model,
+        llama_bin=args.llama_bin,
+        grammar_path=args.grammar,
+        timeout_s=args.timeout,
+        limit=args.limit,
+    )
+
+    if args.json:
+        payload = {
+            "question": result.question,
+            "parser": result.parser,
+            "model": result.model,
+            "unsupported": result.unsupported,
+            "notes": result.notes,
+            "elapsed_ms": result.elapsed_ms,
+            "plan": result.plan.to_dict() if result.plan else None,
+            "results": [
+                {
+                    "label": item.label,
+                    "columns": item.columns,
+                    "rows": item.rows,
+                    "sql": item.sql,
+                    "params": item.params,
+                    "elapsed_ms": item.elapsed_ms,
+                }
+                for item in result.results
+            ],
+        }
+        print(json.dumps(payload, indent=2, ensure_ascii=False))
+    else:
+        print(format_answer(result, explain=args.explain))
+
+    if args.html:
+        out = render_html(result, args.html, db_path=args.db)
+        print(f"Wrote {out}")
+    if args.md:
+        Path(args.md).write_text(render_markdown(result, db_path=args.db), encoding="utf-8")
+        print(f"Wrote {args.md}")
     return 0
 
 
@@ -232,6 +343,20 @@ def cmd_doctor(args: argparse.Namespace) -> int:
     sample = DEFAULT_DATA_DIR / "pedestrians_15s.mp4"
     print(f"  sample       {'OK' if sample.exists() else 'MISSING'} ({sample})")
 
+    llama = shutil.which("llama-cli")
+    if not llama:
+        local = Path("vendor/llama.cpp/build/bin/llama-cli")
+        llama = str(local) if local.exists() else None
+    print(f"  llama-cli    {llama or 'missing (optional, needed for --parser llm)'}")
+
+    ggufs = sorted(Path("models/llm").glob("*.gguf"))
+    if ggufs:
+        for gguf in ggufs:
+            size = gguf.stat().st_size / (1024 * 1024)
+            print(f"  gguf         {gguf.name} · {size:.0f} MB")
+    else:
+        print("  gguf         missing (optional, needed for --parser llm)")
+
     if not ok:
         print("\nFix the items above, then run `bash scripts/setup_pi.sh` if needed.\n")
         return 1
@@ -252,7 +377,11 @@ def main(argv: list[str] | None = None) -> int:
             return cmd_info(args)
         if args.command == "doctor":
             return cmd_doctor(args)
-    except (ModelLoadError, FileNotFoundError, ValueError, RuntimeError) as exc:
+        if args.command == "index":
+            return cmd_index(args)
+        if args.command == "ask":
+            return cmd_ask(args)
+    except (FileNotFoundError, OSError, ValueError, RuntimeError) as exc:
         print(f"\nError: {exc}\n", file=sys.stderr)
         return 2
     return 2

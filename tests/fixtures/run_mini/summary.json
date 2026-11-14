@@ -1,0 +1,40 @@
+{
+ "run": {
+  "input": "fixture.mp4",
+  "input_type": "video",
+  "frames_processed": 5,
+  "source_frames": 5,
+  "stride": 1,
+  "tile_grid": 0,
+  "duration_s": 0.4,
+  "source_fps": 10.0,
+  "source_size": [
+   640,
+   480
+  ],
+  "classes": [
+   "person",
+   "car",
+   "bus",
+   "truck"
+  ],
+  "annotate_every": 1
+ },
+ "model": {
+  "name": "fixture",
+  "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "size_mb": 4.7
+ },
+ "latency": {
+  "model_inference": {
+   "mean_ms": 10.0
+  },
+  "pipeline_total": {
+   "mean_ms": 12.0
+  }
+ },
+ "throughput": {
+  "pipeline_fps_from_mean": 83.3
+ },
+ "peak_rss_mb": 100
+}

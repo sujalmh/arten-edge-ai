@@ -199,6 +199,70 @@ results/<run>/
 └── annotated.mp4        # optional annotated clip
 ```
 
+## Ask the crossing (offline investigation)
+
+A run is also a queryable evidence bundle. `arten index` turns it into SQLite;
+`arten ask` compiles a plain-English question into a closed query plan, executes
+it, and returns rows plus the matching annotated frames. Everything stays local.
+
+```bash
+# Build the evidence index once per run
+arten index --run results/demo_pi5_pedestrians
+
+# Ask questions
+arten ask "how many people crossed?" \
+  --db results/demo_pi5_pedestrians/evidence.db
+
+arten ask "show frames where a person and a car were within 2 seconds" \
+  --db results/demo_pi5_pedestrians/evidence.db \
+  --html results/demo_pi5_pedestrians/ask.html
+
+# Show the resolved plan, or emit machine-readable JSON
+arten ask "which track moved fastest?" --db .../evidence.db --explain
+arten ask "how many cars?" --db .../evidence.db --json
+```
+
+How it works:
+
+- **YOLO produces the facts.** The query layer never re-perceives an image and
+  never counts with a language model.
+- **The parser emits a validated `QueryPlan`, never SQL.** The model may choose
+  the intent; classes, times and numbers are extracted deterministically.
+- **SQL is compiled with bound parameters** and whitelisted identifiers. A
+  `DROP TABLE` question is refused.
+- **`--parser rules` needs no model.** It handles counts, unique tracks, peaks,
+  frames, directions, dwell, colours, co-presence and crossings.
+- **`--parser llm` adds a local GGUF** (Qwen2.5-0.5B Q4) with a GBNF label
+  grammar. It is optional and falls back to rules.
+- **Unsupported questions are refused with a reason** — e.g. auto-rickshaws are
+  not a COCO class, so the answer is "not in this index", not a fake zero.
+
+Optional local-model setup (the GGUF is not committed):
+
+```bash
+bash scripts/setup_llm.sh --check-only
+bash scripts/setup_llm.sh
+```
+
+To copy the model and code to a Pi over LAN:
+
+```bash
+PI_HOST=pi@raspberrypi.local bash scripts/sync_to_pi.sh
+```
+
+The macOS `llama-cli` binary is not transferred; the Pi builds its own Linux
+aarch64 binary with `scripts/setup_llm.sh`.
+
+Example questions:
+
+- `how many people crossed?`
+- `show frames with more than 5 people`
+- `which track moved fastest?`
+- `how many tracks moved left?`
+- `was there a bus and a person within 2 seconds?`
+- `which vehicles were blue?`
+- `how many auto-rickshaws?` → refused, with the reason
+
 ## How it works
 
 ![Pipeline](assets/architecture.svg)
@@ -222,6 +286,7 @@ against the expected transform.
 - **It measures the whole pipeline, not just the model.** Preprocess, inference, decode/NMS, tracking and annotation are timed separately, so the throughput claim is auditable.
 - **It is privacy-preserving by construction.** No faces, no plates, no identities, no network calls. The default output is aggregate counts and a handful of annotated frames.
 - **Attributes, not just boxes.** Direction, dwell, relative speed and optional colour ride along with the same detections and the same tracker — no second model, no cloud, no identity attributes.
+- **Askable evidence, not a dashboard.** `arten ask` compiles a plain-English question into a validated, auditable query over the detections. The language model never counts and never writes SQL; unsupported questions are refused with a reason.
 - **It is honest about accuracy.** Arten reports COCO reference mAP, not a made-up “accuracy” on the organiser clip, and shows the model's India-specific failure mode (auto-rickshaws are not a COCO class).
 - **It is a kit, not a one-off script.** One-command setup, tests, sample media, checksum verification, model-agnostic `.pte` loading, and a documented fallback export path.
 
@@ -243,17 +308,24 @@ The full mapping, including what to say at the booth, is in
 ```
 .
 ├── src/arten/        # package: preprocess, model, decode, tracker, attributes, zone, pipeline
-├── tests/                    # 29 unit tests for preprocessing, NMS, tracking, attributes, zone, metrics
+│   └── query/        # offline evidence index + natural-language query compiler
+├── tests/                    # unit tests for preprocessing, NMS, tracking, attributes, zone, metrics, query
 ├── scripts/
 │   ├── setup_pi.sh           # one-command Pi setup
+│   ├── setup_llm.sh          # optional local GGUF + llama.cpp (macOS/Pi)
+│   ├── sync_to_pi.sh         # copy GGUF + code to the Pi over LAN
 │   ├── download_model.sh     # fetch + verify the Arm .pte
 │   ├── export_model.py       # optional YOLO11n → ExecuTorch FP32 fallback
 │   ├── fetch_samples.sh      # re-fetch the public sample media
 │   └── make_demo_video.py    # title + annotated clip + end card
 ├── models/                   # 4.73 MB INT8 .pte, model card, AGPL notice
+│   └── llm/                  # optional Qwen2.5-0.5B GGUF (not committed)
 ├── data/samples/             # 15 s pedestrian clip + two CC0/PD Bengaluru images
 ├── results/                  # committed evidence bundles and demo video
 ├── docs/                     # project report, Pi runbook, pitch, form answers, checklist
+│   ├── measurement-protocol-pi5.md
+│   ├── natural-language-investigation.md
+│   └── plan-vlm-yolo.md
 └── assets/                   # icon and architecture diagram
 ```
 
@@ -273,8 +345,10 @@ The full mapping, including what to say at the booth, is in
   counts are indicative, not production MOT.
 - **Memory:** `ru_maxrss` for the process is reported separately from Arm's
   model-only peak memory; Python/PyTorch overhead makes process RSS higher.
-- **Tests:** `make test` — 29 passing tests on preprocessing, NMS, decode, tracker
-  identity, attributes, zone metrics and latency statistics.
+- **Tests:** `make test` — 29 pipeline tests plus 25 query-layer tests covering
+  preprocessing, NMS, decode, tracker identity, attributes, zone metrics, latency
+  statistics, the query schema, rule parsing, SQL compilation and the evidence
+  index.
 - **Runtime parity:** the exact Pi stack (ExecuTorch 1.1.0 + torch 2.10.0) was
   smoke-tested on the dev host: 20-run model-only benchmark, 23.83 ms mean
   (22.52 ms p50), plus a 3-frame end-to-end run. Only the Pi timing remains to
