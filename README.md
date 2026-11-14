@@ -134,6 +134,8 @@ proof, run `bash scripts/run_pi5_hardware_proof.sh`.
 
 Support-model details and cadence: [`docs/support-models.md`](docs/support-models.md).
 
+Model sweep and manual checks: [`docs/model-exploration.md`](docs/model-exploration.md).
+
 Hackathon setup, best operating points and the offline checklist:
 [`docs/hackathon-runbook.md`](docs/hackathon-runbook.md).
 

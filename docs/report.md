@@ -23,7 +23,9 @@ frames, peaks at 11 people
 in one frame and produces 31 indicative person tracks plus two background
 vehicles. A 50-run benchmark on the Pi 5 measures **136.73 ms p50 / 7.31 FPS**
 with **435.6 MB** process RSS; Arm's card reports **134.10 ms / 7.46 FPS** and
-**38.90% mAP@0.5:0.95**.
+**38.90% mAP@0.5:0.95**. A detector sweep on the dense frame found YOLOv5s the
+best speed/recall balance: **29 people and 15 motorcycles at 149.74 ms**, versus
+17/14 at 233.81 ms for YOLOv8s.
 
 ## 1. Problem and application
 
@@ -68,7 +70,7 @@ The design makes six choices:
 
 | Property | Value |
 |---|---|
-| Model | YOLO11n (default); YOLOv8s accuracy option |
+| Model | YOLO11n default · YOLOv5s domain option · YOLOv8s COCO option |
 | Quantization | INT8 static PTQ; stem conv and detection head FP32 |
 | Runtime (Pi 4/5) | ExecuTorch 1.1.0, XNNPACK + KleidiAI |
 | Runtime (Pi 3/4 fallback) | source-built ExecuTorch 1.1.0, torch 2.9.0, XNNPACK |
@@ -144,6 +146,22 @@ A manual count of the same frame finds roughly **30–40 people, 45–55 cars an
 25–30 motorcycles**, so the full-frame pass recovers about half. The scene also
 has three auto-rickshaws, which COCO cannot label.
 
+A detector sweep on this frame (confidence 0.2) shows the domain trade-off:
+
+| Detector | Mode | p50 | person | car | motorcycle |
+|---|---|---:|---:|---:|---:|
+| YOLO11n | full | 136.73 ms | 8 | 25 | 3 |
+| **YOLOv5s** | **full** | **149.74 ms** | **29** | **26** | **15** |
+| **YOLOv5s** | **2×2** | **601.73 ms** | **29** | **41** | **25** |
+| YOLOv8s | 2×2 | 935.22 ms | 27 | 41 | 19 |
+| YOLOv9s | 2×2 | 2036.9 ms | 25 | 33 | 16 |
+| YOLO12l | 2×2 | 6102.9 ms | 23 | 20 | 24 |
+
+YOLOv5s is faster and has higher person/two-wheeler recall than YOLOv8s on this
+scene, despite a lower COCO mAP (36.09 vs 43.86). Tiled, it is 1.5× faster than
+tiled YOLOv8s and close to the manual 30–40/45–55/25–30. This is a domain
+result, not a general accuracy claim.
+
 Tiled inference changes the picture. On the Pi 5, a 2×2 pass with YOLO11n finds
 **26 people, 40 cars and 13 motorcycles** at **547.65 ms/frame**; YOLOv8s finds
 **27 people, 41 cars and 19 motorcycles** at **935.22 ms/frame**. A 3×3 pass
@@ -187,7 +205,8 @@ Support models add detail on a cadence. Lite-HRNet18 costs **142 ms per person
 crop** and DDRNet **86 ms per frame**. With pose every 10 frames (three people)
 and segmentation every 30, the 150-frame clip measures **190.6 ms mean /
 5.25 FPS** with YOLO11n and **291.1 ms / 3.43 FPS** with YOLOv8s. Support frames
-cost about 454 ms; the other nine frames are detector-only.
+cost about 454 ms; the other nine frames are detector-only. YOLOv5s measures
+149.74 ms full-frame and 601.73 ms at 2×2, faster than YOLOv8s at both.
 
 ### 3.4 Mandatory deliverables
 
@@ -205,6 +224,9 @@ cost about 454 ms; the other nine frames are detector-only.
   are not COCO classes. At 0.2 the dense frame finds 25 cars and 3 motorcycles,
   against a manual count of roughly 45–55 and 25–30; tiling raises that to
   41/19 (2×2) or 44/21 (3×3). The three auto-rickshaws remain unlabelled.
+- **COCO mAP and domain recall diverge.** YOLOv5s has lower COCO mAP than
+  YOLOv8s but higher person/two-wheeler recall on this dense frame. Verify on
+  organiser data before treating that as a general result.
 - **Tiling is a latency trade.** A 2×2 pass costs about 4× and a 3×3 pass about
   9×. Bus and truck counts become less reliable because large vehicles produce
   partial boxes across crops.
@@ -241,6 +263,8 @@ arten run -i data/samples/pedestrians_15s.mp4 --conf 0.2 \
   -o results/pi_run --save-video --estimate-vehicle-colors
 arten run -i data/samples/bengaluru_traffic.jpg --conf 0.2 --tile 2 \
   -o results/pi_tiled
+arten run -i data/samples/bengaluru_traffic.jpg \
+  --model models/yolov5s_int8_xnnpack.pte --conf 0.2 -o results/pi_v5s
 arten run -i data/samples/pedestrians_15s.mp4 \
   --pose-model models/lite_hrnet18_int8_xnnpack.pte --pose-every 10 \
   --seg-model models/ddrnet23_slim_int8_xnnpack.pte --seg-every 30 \

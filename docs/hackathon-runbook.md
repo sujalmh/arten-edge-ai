@@ -55,7 +55,11 @@ frames; it runs four native-resolution crops and merges them, at about 4x cost.
 
 Recommended:
 
-- **Best accuracy:** YOLOv8s `--conf 0.2`, with `--tile 2` for stills. Add pose
+- **Best domain accuracy/speed:** YOLOv5s
+  (`models/yolov5s_int8_xnnpack.pte`), full-frame at 149.74 ms or 2×2 at
+  601.73 ms. It had higher person/two-wheeler recall than YOLOv8s on the dense
+  frame, despite a lower COCO mAP.
+- **Highest COCO mAP:** YOLOv8s `--conf 0.2`, with `--tile 2` for stills. Add pose
   and DDRNet only on sampled frames (not every frame).
 - **Best live throughput:** YOLO11n `--conf 0.15`, full-frame; `--tile 2` only
   when the source is 1080p and the demo is offline.
