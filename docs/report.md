@@ -112,11 +112,11 @@ with **mean dwell 2.83 s** and **mean relative speed 38.69 px/s**. The car
 count is indicative: tracker IDs switch when people cross or leave frame. The
 per-frame counts are the stable output.
 
-![Pedestrian contact sheet](../results/demo_pedestrians/contact_sheet.jpg)
+![Pedestrian contact sheet](../results/demo_pi5_pedestrians/contact_sheet.jpg)
 
 ### 3.2 Dense Bengaluru traffic — stress test
 
-![Dense traffic](../results/demo_traffic/annotated/bengaluru_traffic.jpg)
+![Dense traffic](../results/demo_pi5_traffic/annotated/bengaluru_traffic.jpg)
 
 At the calibrated 0.2 threshold the Pi 5 frame yields **8 people, 25 cars,
 3 motorcycles, 2 buses and 2 trucks**. The colour heuristic labels the 25 cars
