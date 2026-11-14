@@ -486,7 +486,6 @@ def run_input(
                 frame, detections, processed, pose_estimator, segmenter,
                 pose_every, seg_every, pose_max_persons, last_seg_mask,
             )
-            _accumulate_support(detections, surface_totals, posture_totals)
             t_post = time.perf_counter()
             if estimate_vehicle_colors:
                 for detection in detections:
@@ -521,6 +520,7 @@ def run_input(
                 tracked_counts = tracker.unique_counts_for(classes)
             if attribute_acc is not None:
                 attribute_acc.update(detections, processed)
+            _accumulate_support(detections, surface_totals, posture_totals)
 
             annotate_ms = 0.0
             annotated_for_video: np.ndarray | None = None
