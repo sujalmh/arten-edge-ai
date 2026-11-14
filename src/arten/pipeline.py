@@ -509,6 +509,14 @@ def run_input(
                 tracker.update(detections, processed)
                 if attributes:
                     tracker.annotate_motion_attributes(detections, source_fps, stride)
+                    for detection in detections:
+                        if (
+                            detection.class_name == "person"
+                            and detection.attributes.get("posture") == "standing"
+                        ):
+                            speed = detection.attributes.get("speed_px_s")
+                            if speed is not None and float(speed) > 10.0:
+                                detection.attributes["posture"] = "walking"
                 track_ms = (time.perf_counter() - t_track) * 1000.0
                 tracked_counts = tracker.unique_counts_for(classes)
             if attribute_acc is not None:
@@ -700,7 +708,10 @@ def run_input(
     postprocess_latency = summarise_latencies([r.postprocess_ms for r in records])
     read_latency = summarise_latencies([r.read_ms for r in records])
     annotate_latency = summarise_latencies([r.annotate_ms for r in records])
-    support_latency = summarise_latencies([r.support_ms for r in records])
+    support_values = [r.support_ms for r in records if r.support_ms > 0]
+    support_latency = (
+        summarise_latencies(support_values) if support_values else summarise_latencies([0.0])
+    )
 
     person_series = [r.counts.get("person", 0) for r in records]
     vehicle_series = [
@@ -769,6 +780,7 @@ def run_input(
             "read": read_latency,
             "annotate": annotate_latency,
             "support": support_latency,
+            "support_frames": len(support_values),
             "pipeline_total": pipeline_latency,
         },
         "throughput": {
