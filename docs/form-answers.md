@@ -33,9 +33,10 @@ edge-AI PoC that processes a 10–20 second clip or images on a Raspberry Pi 4 o
 A 4.73 MB YOLO11n INT8 model runs through ExecuTorch with XNNPACK (7.31 FPS measured on the Pi 5),
 detecting people, cars, motorcycles, buses, trucks and bicycles. It outputs
 per-frame counts, on-device motion attributes and optional vehicle colour,
-annotated frames, a CSV/JSON evidence bundle and honest latency percentiles. No footage leaves the device and no identities are
-extracted. The practical use case is a school-zone safety audit: compare
-dismissal-time clips and make a case for a crossing guard or zebra crossing.
+annotated frames, an evidence bundle and latency percentiles. Optional pose and
+segmentation detail adds posture and surface. No footage leaves the device and no identities are
+extracted. Use case: a school-zone safety audit. Compare
+dismissal clips for a crossing guard or zebra crossing.
 
 ## 300-word solution description
 
@@ -52,8 +53,7 @@ crops for dense scenes at about four times the cost. The pipeline
 letterboxes each frame to 640×640, runs the `.pte` through the ExecuTorch
 runtime, decodes the 4 xywh + 80 class outputs, applies per-class NMS, and maps
 boxes back to the original image. Counts are written per frame to CSV and JSONL;
-annotated frames, a contact sheet and an optional annotated video make the result
-auditable. An optional IoU/velocity tracker adds indicative unique counts plus image-plane
+annotated frames and a contact sheet make the result auditable. An optional IoU/velocity tracker adds indicative unique counts plus image-plane
 direction, dwell time and relative speed; an optional HSV pass adds a coarse
 vehicle colour. All are derived attributes, not learned predictions.
 
@@ -64,9 +64,8 @@ observed person-seconds gives a ward officer or school committee concrete
 evidence for a crossing guard, a zebra crossing or a no-parking zone. The footage
 never leaves the school, and the output is aggregate counts, not identities.
 
-The repository contains a working pipeline, 37 tests, a one-command Pi setup, a
-checksum-verified model, evidence and a 21-second demo. The organiser clip can
-replace the reference numbers with on-device measurements.
+The repository contains the pipeline, 37 tests, a one-command Pi setup,
+checksum-verified models, evidence and a demo.
 
 
 ## Approach and overall plan (application answer)
@@ -76,26 +75,24 @@ image set into a clear picture of pedestrian and vehicle movement. The problem
 is not a lack of cameras; it is a lack of affordable, trustworthy data. A school
 or ward office cannot justify an expensive camera platform or cloud subscription
 just to count people crossing a road. Arten runs a compact pretrained detector
-through ExecuTorch on a low-cost Raspberry Pi. It counts people, bicycles, cars,
-motorcycles, buses and trucks per frame, then adds movement context: direction
-across the image, dwell time, and relative speed. For vehicles, it also estimates
-a coarse colour. The output is a count table and annotated frames a
-non-specialist can read.
+through ExecuTorch on a low-cost Raspberry Pi. It counts six road categories per
+frame, then adds direction, dwell, relative speed and coarse vehicle colour.
+Optional pose and segmentation models add posture, rider tags and a
+road/sidewalk surface on a cadence. The output is a count table and annotated
+frames a non-specialist can read.
 
 The novelty is that the count is explained, not just reported. Most demos stop at
 boxes and a total. Direction, dwell and speed come from the same lightweight
-tracker used for counting, not a second model, so the system stays small and
-transparent. It is edge-first: the model is compact, footage stays on the
+tracker used for counting; detail models run on a cadence and do not slow the
+per-frame path. It is edge-first: the model is compact, footage stays on the
 device, and no identities are recognised. The attribute layer is deliberately
 classical, and its limits are stated with the output.
 
-The plan is to build the smallest reliable end-to-end path first: run the
-pretrained detector on a sample clip, confirm the counts, then add tracking and
-the attribute layer. Next, package the pipeline so the same command handles
-video or images, writes counts and annotated evidence, and reports latency.
-Then validate it on the supplied material, document the limits and prepare the
-short demonstration. A fallback model path and pre-generated evidence keep the
-demonstration reproducible if the hardware or the clip changes. The detector now
+The path is built end to end: run the pretrained detector on a clip, confirm the
+counts, add tracking and attributes, then package one command for video or
+images with counts, evidence and latency. A fallback model path and
+pre-generated evidence keep the demonstration reproducible if the hardware or
+clip changes. The detector now
 defaults to a calibrated 0.2 threshold, runs on Pi 4 through a source-built
 ARMv8.0 runtime and on Pi 5 with the prebuilt one, supports tiled
 native-resolution inference for dense scenes, and installs offline from a local
