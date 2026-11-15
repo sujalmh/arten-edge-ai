@@ -155,8 +155,10 @@ def parse(question: str, meta: dict[str, Any]) -> tuple[QueryPlan, list[str]]:
         notes.append("rank tracks by speed")
         return plan, notes
 
-    # --- mean dwell / speed / confidence -------------------------------- #
-    if re.search(r"\b(how long|stay|dwell|wait)\b", q):
+    # --- dwell threshold / mean dwell / speed / confidence -------------- #
+    dwell_min = _find_dwell_bound(q)
+
+    if dwell_min is None and re.search(r"\b(how long|average (?:dwell|stay|wait))\b", q):
         plan = QueryPlan(intent="count", metric="mean_dwell", classes=classes, output=["count"])
         notes.append("mean dwell over tracks")
         return plan, notes
@@ -211,13 +213,13 @@ def parse(question: str, meta: dict[str, Any]) -> tuple[QueryPlan, list[str]]:
         return plan, notes
 
     # --- peak ----------------------------------------------------------- #
-    if re.search(r"\bpeak\b|\bmost\b.*\bat (once|a time)\b|\bmaximum\b", q):
+    if re.search(r"\b(peak|maximum)\b|\b(most|how many)\b.*\bat (once|a time)\b|\bat once\b", q):
         plan = QueryPlan(intent="count", metric="peak", classes=classes, output=["count"])
         notes.append("peak per-frame count")
         return plan, notes
 
     # --- generic count -------------------------------------------------- #
-    if re.search(r"\b(how many|count|number of|total)\b", q):
+    if re.search(r"\b(how many|count|number of|total)\b", q) or dwell_min is not None:
         unique = bool(re.search(r"\b(unique|distinct)\b", q))
         instances = bool(re.search(r"\b(detections?|instances?|boxes|per frame)\b", q))
         metric = "unique_tracks" if unique or not instances else "detections"
@@ -227,10 +229,13 @@ def parse(question: str, meta: dict[str, Any]) -> tuple[QueryPlan, list[str]]:
             classes=classes,
             direction=direction,
             colour=colour,
+            dwell_s_min=dwell_min,
             time_start_s=time_window[0] if time_window else None,
             time_end_s=time_window[1] if time_window else None,
             output=["count"],
         )
+        if dwell_min is not None:
+            notes.append(f"dwell >= {dwell_min:g} s")
         notes.append("unique tracks" if metric == "unique_tracks" else "detections")
         return plan, notes
 
@@ -336,6 +341,18 @@ def _find_count_bounds(q: str) -> tuple[int | None, int | None]:
     if match:
         return (None, int(float(match.group(1))))
     return (None, None)
+
+
+def _find_dwell_bound(q: str) -> float | None:
+    match = re.search(
+        rf"\b(?:stay(?:ed)?|dwell(?:ed)?|visible)?\s*(?:for\s+)?(?:more than|>|at least|over)\s+{_NUMBER}\s*(?:s|sec|secs|second|seconds)\b",
+        q,
+    )
+    if match:
+        return float(match.group(1))
+    if re.search(r"\b(sustained)\b", q):
+        return 1.0
+    return None
 
 
 def extract_slots(question: str, meta: dict[str, Any]) -> dict[str, Any]:

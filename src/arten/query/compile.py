@@ -46,7 +46,12 @@ def _compile_count(plan: QueryPlan, meta: dict[str, Any]) -> CompiledQuery:
     where, params = _where(plan, meta)
 
     if plan.metric == "unique_tracks":
-        sql = f"SELECT COUNT(DISTINCT d.track_id) AS count FROM detections d {where} AND d.track_id IS NOT NULL"
+        min_frames = 2 if (meta.get("rows") or {}).get("frames", 0) > 1 else 1
+        sql = (
+            f"SELECT COUNT(DISTINCT d.track_id) AS count FROM detections d {where} "
+            "AND d.track_id IS NOT NULL "
+            f"AND d.track_id IN (SELECT track_id FROM tracks WHERE frames >= {min_frames})"
+        )
         return CompiledQuery(sql, params, "unique tracks")
     if plan.metric == "frames":
         sql = f"SELECT COUNT(DISTINCT d.frame_idx) AS count FROM detections d {where}"

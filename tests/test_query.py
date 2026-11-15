@@ -72,6 +72,17 @@ def test_rules_peak(meta: dict) -> None:
     assert plan.metric == "peak"
 
 
+def test_rules_peak_at_once(meta: dict) -> None:
+    plan, _ = parse("how many people at once?", meta)
+    assert plan.metric == "peak"
+
+
+def test_rules_dwell_filter(meta: dict) -> None:
+    plan, _ = parse("how many people stayed for more than 1 second?", meta)
+    assert plan.metric == "unique_tracks"
+    assert plan.dwell_s_min == 1.0
+
+
 def test_rules_list_frames(meta: dict) -> None:
     plan, _ = parse("show frames with more than 1 people", meta)
     assert plan.intent == "list_frames"

@@ -1,0 +1,330 @@
+{
+  "project": "Arten",
+  "tagline": "Offline edge AI for safer streets",
+  "run": {
+    "input": "/home/pi/judge_demo.mp4",
+    "input_type": "video",
+    "output_dir": "/home/pi/arten/results/judge_demo_smoke",
+    "frames_processed": 250,
+    "source_frames": 1191,
+    "stride": 1,
+    "tile_grid": 0,
+    "duration_s": 47.64,
+    "wall_time_s": 45.511,
+    "source_fps": 25.0,
+    "source_size": [
+      854,
+      480
+    ],
+    "classes": [
+      "person",
+      "bicycle",
+      "car",
+      "motorcycle",
+      "bus",
+      "truck"
+    ],
+    "confidence_threshold": 0.2,
+    "iou_threshold": 0.5,
+    "tracking": true,
+    "attributes": true,
+    "threads": null,
+    "annotate_every": 50,
+    "save_video": true,
+    "vehicle_color_estimate": false
+  },
+  "model": {
+    "name": "YOLOv5s (COCO) — Arm-optimized INT8",
+    "description": "Ultralytics YOLOv5s, 80-class COCO detector, statically quantized to INT8 by Arm and exported to ExecuTorch .pte with the XNNPACK delegate.",
+    "path": "/home/pi/arten/models/yolov5s_int8_xnnpack.pte",
+    "size_mb": 7.133,
+    "sha256": "40763869f4cd0dfb41b7d13e2d1f5c1b5f446dda34719e75d09bb87a352306c9",
+    "expected_sha256": "40763869f4cd0dfb41b7d13e2d1f5c1b5f446dda34719e75d09bb87a352306c9",
+    "sha256_match": true,
+    "format": "ExecuTorch .pte",
+    "backend": "XNNPACK (CPU)",
+    "quantization": "INT8 static post-training quantization; stem conv and detection head remain FP32 (per Arm model card)",
+    "input_shape": [
+      1,
+      3,
+      640,
+      640
+    ],
+    "input_range": [
+      0.0,
+      1.0
+    ],
+    "classes": 80,
+    "dataset": "COCO 2017",
+    "source": "https://huggingface.co/Arm/yolov5s-int8-xnnpack-executorch",
+    "load_ms": 23.34,
+    "torch": "2.10.0+cpu",
+    "executorch": "1.1.0"
+  },
+  "environment": {
+    "platform": "Linux-6.12.25+rpt-rpi-2712-aarch64-with-glibc2.36",
+    "machine": "aarch64",
+    "processor": "unknown",
+    "python": "3.11.2",
+    "timestamp_utc": "2026-11-14T10:23:04+00:00",
+    "peak_rss_mb": 537.5,
+    "threads": null,
+    "torch": "2.10.0+cpu",
+    "executorch": "1.1.0",
+    "opencv": "5.0.0"
+  },
+  "counts": {
+    "person": {
+      "peak": 2,
+      "mean": 0.93,
+      "p95": 1,
+      "total_detections": 233,
+      "unique_tracked": 3
+    },
+    "bicycle": {
+      "peak": 0,
+      "mean": 0.0,
+      "p95": 0,
+      "total_detections": 0,
+      "unique_tracked": 0
+    },
+    "car": {
+      "peak": 10,
+      "mean": 5.87,
+      "p95": 8,
+      "total_detections": 1468,
+      "unique_tracked": 25
+    },
+    "motorcycle": {
+      "peak": 1,
+      "mean": 0.02,
+      "p95": 0,
+      "total_detections": 6,
+      "unique_tracked": 2
+    },
+    "bus": {
+      "peak": 1,
+      "mean": 0.12,
+      "p95": 1,
+      "total_detections": 29,
+      "unique_tracked": 2
+    },
+    "truck": {
+      "peak": 2,
+      "mean": 0.6,
+      "p95": 1,
+      "total_detections": 151,
+      "unique_tracked": 8
+    }
+  },
+  "latency": {
+    "model_inference": {
+      "count": 250.0,
+      "mean_ms": 151.1,
+      "p50_ms": 151.08,
+      "p95_ms": 151.78,
+      "p99_ms": 152.15,
+      "min_ms": 150.13,
+      "max_ms": 152.43,
+      "std_ms": 0.4,
+      "fps_from_mean": 6.62
+    },
+    "preprocess": {
+      "count": 250.0,
+      "mean_ms": 4.07,
+      "p50_ms": 4.07,
+      "p95_ms": 4.36,
+      "p99_ms": 4.48,
+      "min_ms": 3.6,
+      "max_ms": 4.75,
+      "std_ms": 0.18,
+      "fps_from_mean": 245.82
+    },
+    "postprocess": {
+      "count": 250.0,
+      "mean_ms": 5.46,
+      "p50_ms": 5.45,
+      "p95_ms": 5.56,
+      "p99_ms": 5.61,
+      "min_ms": 5.18,
+      "max_ms": 5.63,
+      "std_ms": 0.05,
+      "fps_from_mean": 183.22
+    },
+    "read": {
+      "count": 250.0,
+      "mean_ms": 1.4,
+      "p50_ms": 1.17,
+      "p95_ms": 2.2,
+      "p99_ms": 2.56,
+      "min_ms": 0.92,
+      "max_ms": 8.91,
+      "std_ms": 0.64,
+      "fps_from_mean": 714.94
+    },
+    "annotate": {
+      "count": 250.0,
+      "mean_ms": 14.17,
+      "p50_ms": 14.06,
+      "p95_ms": 15.74,
+      "p99_ms": 16.93,
+      "min_ms": 12.44,
+      "max_ms": 17.5,
+      "std_ms": 0.79,
+      "fps_from_mean": 70.55
+    },
+    "support": {
+      "count": 1.0,
+      "mean_ms": 0.0,
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "p99_ms": 0.0,
+      "min_ms": 0.0,
+      "max_ms": 0.0,
+      "std_ms": 0.0,
+      "fps_from_mean": 0.0
+    },
+    "support_frames": 0,
+    "pipeline_total": {
+      "count": 250.0,
+      "mean_ms": 177.56,
+      "p50_ms": 177.4,
+      "p95_ms": 180.15,
+      "p99_ms": 181.12,
+      "min_ms": 175.49,
+      "max_ms": 187.43,
+      "std_ms": 1.38,
+      "fps_from_mean": 5.63
+    }
+  },
+  "throughput": {
+    "model_fps_from_mean": 6.62,
+    "pipeline_fps_from_mean": 5.63,
+    "processed_frames_per_wall_second": 5.49
+  },
+  "exposure": {
+    "person_seconds": 9.32,
+    "vehicle_seconds": 66.16,
+    "frames_with_person_and_vehicle": 226,
+    "share_frames_with_person_and_vehicle": 0.904
+  },
+  "zone": null,
+  "attributes": {
+    "note": "Image-plane motion, coarse colour, surface and posture are derived attributes, not trained model outputs. Speed is uncalibrated pixels/second; surface and posture are sampled on a cadence.",
+    "by_class": {
+      "truck": {
+        "tracks": 8,
+        "directions": {
+          "down": 1,
+          "right": 1,
+          "stationary": 3,
+          "up": 3
+        },
+        "colors": {},
+        "surfaces": {},
+        "postures": {},
+        "riders": {},
+        "mean_dwell_s": 0.78,
+        "mean_speed_px_s": 69.88
+      },
+      "car": {
+        "tracks": 25,
+        "directions": {
+          "down": 4,
+          "left": 3,
+          "right": 1,
+          "stationary": 14,
+          "up": 3
+        },
+        "colors": {},
+        "surfaces": {},
+        "postures": {},
+        "riders": {},
+        "mean_dwell_s": 2.39,
+        "mean_speed_px_s": 26.78
+      },
+      "person": {
+        "tracks": 3,
+        "directions": {
+          "stationary": 3
+        },
+        "colors": {},
+        "surfaces": {},
+        "postures": {},
+        "riders": {
+          "motorcycle": 1
+        },
+        "mean_dwell_s": 3.19,
+        "mean_speed_px_s": 10.4
+      },
+      "motorcycle": {
+        "tracks": 2,
+        "directions": {
+          "left": 1,
+          "up": 1
+        },
+        "colors": {},
+        "surfaces": {},
+        "postures": {},
+        "riders": {},
+        "mean_dwell_s": 0.16,
+        "mean_speed_px_s": 116.5
+      },
+      "bus": {
+        "tracks": 2,
+        "directions": {
+          "up": 2
+        },
+        "colors": {},
+        "surfaces": {},
+        "postures": {},
+        "riders": {},
+        "mean_dwell_s": 0.88,
+        "mean_speed_px_s": 181.95
+      }
+    },
+    "total_tracks": 40
+  },
+  "surfaces": {},
+  "postures": {},
+  "support_models": {
+    "pose": null,
+    "segmentation": null,
+    "pose_every": null,
+    "seg_every": null
+  },
+  "peak_rss_mb": 537.5,
+  "reference": {
+    "device": "Raspberry Pi 5 (Cortex-A76, 4 cores @ 2.4 GHz)",
+    "runtime": "ExecuTorch 1.1.0, XNNPACK + KleidiAI",
+    "p50_latency_ms": 258.07,
+    "fps": 3.88,
+    "peak_memory_mb": 109.44,
+    "map_50_95": 36.09,
+    "map_50": 54.97,
+    "model_size_mb": 7.13,
+    "source": "https://huggingface.co/Arm/yolov5s-int8-xnnpack-executorch"
+  },
+  "outputs": {
+    "counts_csv": "/home/pi/arten/results/judge_demo_smoke/counts.csv",
+    "zone_counts_csv": null,
+    "attribute_tracks_csv": "/home/pi/arten/results/judge_demo_smoke/attribute_tracks.csv",
+    "attribute_summary_json": "/home/pi/arten/results/judge_demo_smoke/attribute_summary.json",
+    "detections_jsonl": "/home/pi/arten/results/judge_demo_smoke/detections.jsonl",
+    "summary_json": "/home/pi/arten/results/judge_demo_smoke/summary.json",
+    "summary_txt": "/home/pi/arten/results/judge_demo_smoke/summary.txt",
+    "annotated_dir": "/home/pi/arten/results/judge_demo_smoke/annotated",
+    "annotated_video": "/home/pi/arten/results/judge_demo_smoke/annotated.mp4",
+    "contact_sheet": "/home/pi/arten/results/judge_demo_smoke/contact_sheet.jpg"
+  },
+  "notes": [
+    "Inference ran as a single 640x640 pass per frame.",
+    "Counts are per processed frame, not unique objects, unless the 'unique_tracked' field is used.",
+    "unique_tracked is indicative: a lightweight IoU/velocity tracker, not a production multi-object tracking system.",
+    "Latency is measured on the device that produced this run. Compare only with runs on the same hardware and thread count.",
+    "The model detects 80 COCO classes. Auto-rickshaws, carts and other India-specific categories are not guaranteed to be recognised.",
+    "No faces, licence plates or identities are extracted. Frames are processed locally and only the requested evidence is written.",
+    "Annotated-video encoding is an output convenience and is not included in the pipeline latency; model-only and per-stage timings are unaffected.",
+    "Direction and speed are image-plane attributes from the tracker. Speed is uncalibrated pixels/second, not km/h. Colour is an optional HSV heuristic on vehicle crops, not a trained attribute model."
+  ]
+}

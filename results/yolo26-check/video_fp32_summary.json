@@ -1,0 +1,35 @@
+{
+  "video": "/Users/sujal/.t3/userdata/attachments/e1af5d72-b90d-466b-b6b5-dcdeb59e5525-a5b353fc-79d0-4861-b1cb-634b59e0f58c-mp4.mp4",
+  "stride": 5,
+  "processed_frames": 239,
+  "wall_s": 6.0,
+  "class_peaks": {
+    "person": 3,
+    "car": 14,
+    "truck": 2,
+    "bus": 4,
+    "motorcycle": 2,
+    "traffic light": 1
+  },
+  "class_mean_per_frame": {
+    "person": 0.56,
+    "car": 7.89,
+    "truck": 0.28,
+    "bus": 1.39,
+    "motorcycle": 0.03,
+    "traffic light": 0.01
+  },
+  "model_ms": {
+    "p50": 18.7,
+    "mean": 18.8,
+    "p95": 20.1
+  },
+  "e2e_ms": {
+    "p50": 19.7,
+    "mean": 19.9,
+    "p95": 21.2
+  },
+  "model": "YOLO26n ExecuTorch FP32",
+  "runtime": "ExecuTorch 1.6.0",
+  "device": "Apple M4 CPU (local, not Pi 5)"
+}
