@@ -1,0 +1,1442 @@
+[
+  {
+    "image": "clip_frame_000.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.7,
+    "counts": {
+      "person": 3,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 149.57
+  },
+  {
+    "image": "clip_frame_000.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.5,
+    "counts": {
+      "person": 3,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 152.0
+  },
+  {
+    "image": "clip_frame_000.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.45,
+    "counts": {
+      "person": 3,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 149.72
+  },
+  {
+    "image": "clip_frame_000.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.7,
+    "counts": {
+      "person": 3,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 150.94
+  },
+  {
+    "image": "clip_frame_000.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.5,
+    "counts": {
+      "person": 3,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 149.93
+  },
+  {
+    "image": "clip_frame_000.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.45,
+    "counts": {
+      "person": 3,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 149.94
+  },
+  {
+    "image": "clip_frame_050.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.7,
+    "counts": {
+      "person": 8,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 150.41
+  },
+  {
+    "image": "clip_frame_050.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.5,
+    "counts": {
+      "person": 7,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 151.93
+  },
+  {
+    "image": "clip_frame_050.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.45,
+    "counts": {
+      "person": 7,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 151.59
+  },
+  {
+    "image": "clip_frame_050.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.7,
+    "counts": {
+      "person": 6,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 151.49
+  },
+  {
+    "image": "clip_frame_050.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.5,
+    "counts": {
+      "person": 6,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 149.95
+  },
+  {
+    "image": "clip_frame_050.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.45,
+    "counts": {
+      "person": 6,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 149.67
+  },
+  {
+    "image": "clip_frame_100.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.7,
+    "counts": {
+      "person": 10,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 150.87
+  },
+  {
+    "image": "clip_frame_100.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.5,
+    "counts": {
+      "person": 7,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 150.96
+  },
+  {
+    "image": "clip_frame_100.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.45,
+    "counts": {
+      "person": 7,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 150.83
+  },
+  {
+    "image": "clip_frame_100.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.7,
+    "counts": {
+      "person": 7,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 150.05
+  },
+  {
+    "image": "clip_frame_100.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.5,
+    "counts": {
+      "person": 7,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 150.39
+  },
+  {
+    "image": "clip_frame_100.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.45,
+    "counts": {
+      "person": 7,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 149.75
+  },
+  {
+    "image": "clip_frame_149.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.7,
+    "counts": {
+      "person": 10,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 150.46
+  },
+  {
+    "image": "clip_frame_149.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.5,
+    "counts": {
+      "person": 9,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 149.06
+  },
+  {
+    "image": "clip_frame_149.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.45,
+    "counts": {
+      "person": 9,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 149.43
+  },
+  {
+    "image": "clip_frame_149.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.7,
+    "counts": {
+      "person": 9,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 151.12
+  },
+  {
+    "image": "clip_frame_149.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.5,
+    "counts": {
+      "person": 9,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 150.42
+  },
+  {
+    "image": "clip_frame_149.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.45,
+    "counts": {
+      "person": 9,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 150.01
+  },
+  {
+    "image": "crowd_hungary.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.7,
+    "counts": {
+      "person": 23,
+      "bicycle": 0,
+      "car": 0,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 0
+    },
+    "p50_ms": 151.76
+  },
+  {
+    "image": "crowd_hungary.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.5,
+    "counts": {
+      "person": 18,
+      "bicycle": 0,
+      "car": 0,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 0
+    },
+    "p50_ms": 151.91
+  },
+  {
+    "image": "crowd_hungary.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.45,
+    "counts": {
+      "person": 18,
+      "bicycle": 0,
+      "car": 0,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 0
+    },
+    "p50_ms": 151.52
+  },
+  {
+    "image": "crowd_hungary.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.7,
+    "counts": {
+      "person": 39,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 0
+    },
+    "p50_ms": 606.65
+  },
+  {
+    "image": "crowd_hungary.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.5,
+    "counts": {
+      "person": 39,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 0
+    },
+    "p50_ms": 601.25
+  },
+  {
+    "image": "crowd_hungary.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.45,
+    "counts": {
+      "person": 39,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 0
+    },
+    "p50_ms": 602.71
+  },
+  {
+    "image": "fog_traffic.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.7,
+    "counts": {
+      "person": 22,
+      "bicycle": 0,
+      "car": 8,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 2
+    },
+    "p50_ms": 151.79
+  },
+  {
+    "image": "fog_traffic.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.5,
+    "counts": {
+      "person": 15,
+      "bicycle": 0,
+      "car": 8,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 2
+    },
+    "p50_ms": 151.2
+  },
+  {
+    "image": "fog_traffic.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.45,
+    "counts": {
+      "person": 14,
+      "bicycle": 0,
+      "car": 8,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 2
+    },
+    "p50_ms": 149.41
+  },
+  {
+    "image": "fog_traffic.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.7,
+    "counts": {
+      "person": 11,
+      "bicycle": 1,
+      "car": 9,
+      "motorcycle": 4,
+      "bus": 0,
+      "truck": 3
+    },
+    "p50_ms": 606.95
+  },
+  {
+    "image": "fog_traffic.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.5,
+    "counts": {
+      "person": 11,
+      "bicycle": 1,
+      "car": 9,
+      "motorcycle": 4,
+      "bus": 0,
+      "truck": 3
+    },
+    "p50_ms": 602.1
+  },
+  {
+    "image": "fog_traffic.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.45,
+    "counts": {
+      "person": 11,
+      "bicycle": 1,
+      "car": 9,
+      "motorcycle": 4,
+      "bus": 0,
+      "truck": 3
+    },
+    "p50_ms": 601.11
+  },
+  {
+    "image": "night_quezon.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.7,
+    "counts": {
+      "person": 6,
+      "bicycle": 0,
+      "car": 17,
+      "motorcycle": 0,
+      "bus": 3,
+      "truck": 2
+    },
+    "p50_ms": 150.86
+  },
+  {
+    "image": "night_quezon.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.5,
+    "counts": {
+      "person": 4,
+      "bicycle": 0,
+      "car": 15,
+      "motorcycle": 0,
+      "bus": 3,
+      "truck": 2
+    },
+    "p50_ms": 149.14
+  },
+  {
+    "image": "night_quezon.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.45,
+    "counts": {
+      "person": 4,
+      "bicycle": 0,
+      "car": 15,
+      "motorcycle": 0,
+      "bus": 3,
+      "truck": 2
+    },
+    "p50_ms": 151.08
+  },
+  {
+    "image": "night_quezon.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.7,
+    "counts": {
+      "person": 14,
+      "bicycle": 0,
+      "car": 30,
+      "motorcycle": 0,
+      "bus": 2,
+      "truck": 6
+    },
+    "p50_ms": 604.33
+  },
+  {
+    "image": "night_quezon.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.5,
+    "counts": {
+      "person": 14,
+      "bicycle": 0,
+      "car": 29,
+      "motorcycle": 0,
+      "bus": 2,
+      "truck": 6
+    },
+    "p50_ms": 600.89
+  },
+  {
+    "image": "night_quezon.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.45,
+    "counts": {
+      "person": 11,
+      "bicycle": 0,
+      "car": 29,
+      "motorcycle": 0,
+      "bus": 2,
+      "truck": 6
+    },
+    "p50_ms": 606.18
+  },
+  {
+    "image": "rain_varvarka.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.7,
+    "counts": {
+      "person": 12,
+      "bicycle": 0,
+      "car": 26,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 0
+    },
+    "p50_ms": 150.37
+  },
+  {
+    "image": "rain_varvarka.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.5,
+    "counts": {
+      "person": 7,
+      "bicycle": 0,
+      "car": 17,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 0
+    },
+    "p50_ms": 150.28
+  },
+  {
+    "image": "rain_varvarka.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.45,
+    "counts": {
+      "person": 7,
+      "bicycle": 0,
+      "car": 16,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 0
+    },
+    "p50_ms": 150.58
+  },
+  {
+    "image": "rain_varvarka.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.7,
+    "counts": {
+      "person": 12,
+      "bicycle": 0,
+      "car": 30,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 0
+    },
+    "p50_ms": 605.23
+  },
+  {
+    "image": "rain_varvarka.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.5,
+    "counts": {
+      "person": 11,
+      "bicycle": 0,
+      "car": 27,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 0
+    },
+    "p50_ms": 602.6
+  },
+  {
+    "image": "rain_varvarka.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.45,
+    "counts": {
+      "person": 11,
+      "bicycle": 0,
+      "car": 26,
+      "motorcycle": 0,
+      "bus": 0,
+      "truck": 0
+    },
+    "p50_ms": 598.47
+  },
+  {
+    "image": "street_close.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.7,
+    "counts": {
+      "person": 9,
+      "bicycle": 0,
+      "car": 2,
+      "motorcycle": 1,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 150.68
+  },
+  {
+    "image": "street_close.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.5,
+    "counts": {
+      "person": 7,
+      "bicycle": 0,
+      "car": 2,
+      "motorcycle": 1,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 149.2
+  },
+  {
+    "image": "street_close.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.45,
+    "counts": {
+      "person": 7,
+      "bicycle": 0,
+      "car": 2,
+      "motorcycle": 1,
+      "bus": 0,
+      "truck": 1
+    },
+    "p50_ms": 148.97
+  },
+  {
+    "image": "street_close.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.7,
+    "counts": {
+      "person": 4,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 1,
+      "bus": 0,
+      "truck": 0
+    },
+    "p50_ms": 605.79
+  },
+  {
+    "image": "street_close.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.5,
+    "counts": {
+      "person": 4,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 1,
+      "bus": 0,
+      "truck": 0
+    },
+    "p50_ms": 604.37
+  },
+  {
+    "image": "street_close.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.45,
+    "counts": {
+      "person": 4,
+      "bicycle": 0,
+      "car": 1,
+      "motorcycle": 1,
+      "bus": 0,
+      "truck": 0
+    },
+    "p50_ms": 600.07
+  },
+  {
+    "image": "synth_blur.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.7,
+    "counts": {
+      "person": 8,
+      "bicycle": 0,
+      "car": 17,
+      "motorcycle": 17,
+      "bus": 1,
+      "truck": 0
+    },
+    "p50_ms": 151.09
+  },
+  {
+    "image": "synth_blur.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.5,
+    "counts": {
+      "person": 7,
+      "bicycle": 0,
+      "car": 15,
+      "motorcycle": 13,
+      "bus": 1,
+      "truck": 0
+    },
+    "p50_ms": 150.78
+  },
+  {
+    "image": "synth_blur.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.45,
+    "counts": {
+      "person": 6,
+      "bicycle": 0,
+      "car": 15,
+      "motorcycle": 12,
+      "bus": 1,
+      "truck": 0
+    },
+    "p50_ms": 151.17
+  },
+  {
+    "image": "synth_blur.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.7,
+    "counts": {
+      "person": 11,
+      "bicycle": 0,
+      "car": 14,
+      "motorcycle": 12,
+      "bus": 2,
+      "truck": 0
+    },
+    "p50_ms": 601.4
+  },
+  {
+    "image": "synth_blur.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.5,
+    "counts": {
+      "person": 11,
+      "bicycle": 0,
+      "car": 14,
+      "motorcycle": 12,
+      "bus": 2,
+      "truck": 0
+    },
+    "p50_ms": 601.21
+  },
+  {
+    "image": "synth_blur.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.45,
+    "counts": {
+      "person": 11,
+      "bicycle": 0,
+      "car": 14,
+      "motorcycle": 12,
+      "bus": 2,
+      "truck": 0
+    },
+    "p50_ms": 603.13
+  },
+  {
+    "image": "synth_fog.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.7,
+    "counts": {
+      "person": 9,
+      "bicycle": 0,
+      "car": 22,
+      "motorcycle": 0,
+      "bus": 6,
+      "truck": 3
+    },
+    "p50_ms": 150.65
+  },
+  {
+    "image": "synth_fog.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.5,
+    "counts": {
+      "person": 9,
+      "bicycle": 0,
+      "car": 22,
+      "motorcycle": 0,
+      "bus": 6,
+      "truck": 3
+    },
+    "p50_ms": 150.56
+  },
+  {
+    "image": "synth_fog.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.45,
+    "counts": {
+      "person": 9,
+      "bicycle": 0,
+      "car": 22,
+      "motorcycle": 0,
+      "bus": 6,
+      "truck": 3
+    },
+    "p50_ms": 151.32
+  },
+  {
+    "image": "synth_fog.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.7,
+    "counts": {
+      "person": 22,
+      "bicycle": 2,
+      "car": 35,
+      "motorcycle": 6,
+      "bus": 3,
+      "truck": 4
+    },
+    "p50_ms": 601.38
+  },
+  {
+    "image": "synth_fog.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.5,
+    "counts": {
+      "person": 22,
+      "bicycle": 2,
+      "car": 34,
+      "motorcycle": 6,
+      "bus": 3,
+      "truck": 4
+    },
+    "p50_ms": 596.4
+  },
+  {
+    "image": "synth_fog.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.45,
+    "counts": {
+      "person": 22,
+      "bicycle": 2,
+      "car": 34,
+      "motorcycle": 6,
+      "bus": 3,
+      "truck": 4
+    },
+    "p50_ms": 605.91
+  },
+  {
+    "image": "synth_lowres.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.7,
+    "counts": {
+      "person": 10,
+      "bicycle": 0,
+      "car": 19,
+      "motorcycle": 5,
+      "bus": 4,
+      "truck": 1
+    },
+    "p50_ms": 152.31
+  },
+  {
+    "image": "synth_lowres.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.5,
+    "counts": {
+      "person": 9,
+      "bicycle": 0,
+      "car": 18,
+      "motorcycle": 4,
+      "bus": 4,
+      "truck": 1
+    },
+    "p50_ms": 151.23
+  },
+  {
+    "image": "synth_lowres.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.45,
+    "counts": {
+      "person": 9,
+      "bicycle": 0,
+      "car": 18,
+      "motorcycle": 4,
+      "bus": 4,
+      "truck": 1
+    },
+    "p50_ms": 150.72
+  },
+  {
+    "image": "synth_lowres.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.7,
+    "counts": {
+      "person": 15,
+      "bicycle": 1,
+      "car": 36,
+      "motorcycle": 12,
+      "bus": 3,
+      "truck": 8
+    },
+    "p50_ms": 602.07
+  },
+  {
+    "image": "synth_lowres.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.5,
+    "counts": {
+      "person": 15,
+      "bicycle": 1,
+      "car": 36,
+      "motorcycle": 12,
+      "bus": 3,
+      "truck": 8
+    },
+    "p50_ms": 606.03
+  },
+  {
+    "image": "synth_lowres.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.45,
+    "counts": {
+      "person": 15,
+      "bicycle": 1,
+      "car": 36,
+      "motorcycle": 12,
+      "bus": 3,
+      "truck": 8
+    },
+    "p50_ms": 603.57
+  },
+  {
+    "image": "synth_night.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.7,
+    "counts": {
+      "person": 13,
+      "bicycle": 0,
+      "car": 25,
+      "motorcycle": 2,
+      "bus": 1,
+      "truck": 1
+    },
+    "p50_ms": 150.03
+  },
+  {
+    "image": "synth_night.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.5,
+    "counts": {
+      "person": 9,
+      "bicycle": 0,
+      "car": 25,
+      "motorcycle": 2,
+      "bus": 1,
+      "truck": 1
+    },
+    "p50_ms": 150.16
+  },
+  {
+    "image": "synth_night.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.45,
+    "counts": {
+      "person": 9,
+      "bicycle": 0,
+      "car": 24,
+      "motorcycle": 2,
+      "bus": 1,
+      "truck": 1
+    },
+    "p50_ms": 150.3
+  },
+  {
+    "image": "synth_night.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.7,
+    "counts": {
+      "person": 24,
+      "bicycle": 0,
+      "car": 30,
+      "motorcycle": 4,
+      "bus": 1,
+      "truck": 5
+    },
+    "p50_ms": 600.81
+  },
+  {
+    "image": "synth_night.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.5,
+    "counts": {
+      "person": 24,
+      "bicycle": 0,
+      "car": 30,
+      "motorcycle": 4,
+      "bus": 1,
+      "truck": 5
+    },
+    "p50_ms": 602.22
+  },
+  {
+    "image": "synth_night.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.45,
+    "counts": {
+      "person": 24,
+      "bicycle": 0,
+      "car": 30,
+      "motorcycle": 3,
+      "bus": 1,
+      "truck": 5
+    },
+    "p50_ms": 600.44
+  },
+  {
+    "image": "synth_night_rain_blur.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.7,
+    "counts": {
+      "person": 0,
+      "bicycle": 0,
+      "car": 3,
+      "motorcycle": 0,
+      "bus": 1,
+      "truck": 1
+    },
+    "p50_ms": 150.23
+  },
+  {
+    "image": "synth_night_rain_blur.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.5,
+    "counts": {
+      "person": 0,
+      "bicycle": 0,
+      "car": 3,
+      "motorcycle": 0,
+      "bus": 1,
+      "truck": 1
+    },
+    "p50_ms": 150.28
+  },
+  {
+    "image": "synth_night_rain_blur.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.45,
+    "counts": {
+      "person": 0,
+      "bicycle": 0,
+      "car": 3,
+      "motorcycle": 0,
+      "bus": 1,
+      "truck": 1
+    },
+    "p50_ms": 151.68
+  },
+  {
+    "image": "synth_night_rain_blur.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.7,
+    "counts": {
+      "person": 0,
+      "bicycle": 0,
+      "car": 0,
+      "motorcycle": 0,
+      "bus": 1,
+      "truck": 0
+    },
+    "p50_ms": 602.95
+  },
+  {
+    "image": "synth_night_rain_blur.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.5,
+    "counts": {
+      "person": 0,
+      "bicycle": 0,
+      "car": 0,
+      "motorcycle": 0,
+      "bus": 1,
+      "truck": 0
+    },
+    "p50_ms": 598.12
+  },
+  {
+    "image": "synth_night_rain_blur.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.45,
+    "counts": {
+      "person": 0,
+      "bicycle": 0,
+      "car": 0,
+      "motorcycle": 0,
+      "bus": 1,
+      "truck": 0
+    },
+    "p50_ms": 602.36
+  },
+  {
+    "image": "synth_rain.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.7,
+    "counts": {
+      "person": 12,
+      "bicycle": 0,
+      "car": 24,
+      "motorcycle": 3,
+      "bus": 9,
+      "truck": 2
+    },
+    "p50_ms": 150.76
+  },
+  {
+    "image": "synth_rain.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.5,
+    "counts": {
+      "person": 11,
+      "bicycle": 0,
+      "car": 23,
+      "motorcycle": 3,
+      "bus": 8,
+      "truck": 2
+    },
+    "p50_ms": 150.4
+  },
+  {
+    "image": "synth_rain.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.45,
+    "counts": {
+      "person": 11,
+      "bicycle": 0,
+      "car": 23,
+      "motorcycle": 3,
+      "bus": 8,
+      "truck": 2
+    },
+    "p50_ms": 151.83
+  },
+  {
+    "image": "synth_rain.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.7,
+    "counts": {
+      "person": 24,
+      "bicycle": 4,
+      "car": 37,
+      "motorcycle": 9,
+      "bus": 5,
+      "truck": 1
+    },
+    "p50_ms": 598.85
+  },
+  {
+    "image": "synth_rain.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.5,
+    "counts": {
+      "person": 24,
+      "bicycle": 4,
+      "car": 37,
+      "motorcycle": 9,
+      "bus": 5,
+      "truck": 1
+    },
+    "p50_ms": 606.51
+  },
+  {
+    "image": "synth_rain.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.45,
+    "counts": {
+      "person": 24,
+      "bicycle": 4,
+      "car": 37,
+      "motorcycle": 9,
+      "bus": 5,
+      "truck": 1
+    },
+    "p50_ms": 597.95
+  },
+  {
+    "image": "traffic_dense.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.7,
+    "counts": {
+      "person": 29,
+      "bicycle": 0,
+      "car": 26,
+      "motorcycle": 15,
+      "bus": 2,
+      "truck": 2
+    },
+    "p50_ms": 151.58
+  },
+  {
+    "image": "traffic_dense.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.5,
+    "counts": {
+      "person": 22,
+      "bicycle": 0,
+      "car": 25,
+      "motorcycle": 11,
+      "bus": 2,
+      "truck": 2
+    },
+    "p50_ms": 150.65
+  },
+  {
+    "image": "traffic_dense.jpg",
+    "model": "yolov5s",
+    "mode": "full",
+    "iou": 0.45,
+    "counts": {
+      "person": 21,
+      "bicycle": 0,
+      "car": 25,
+      "motorcycle": 11,
+      "bus": 2,
+      "truck": 2
+    },
+    "p50_ms": 150.34
+  },
+  {
+    "image": "traffic_dense.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.7,
+    "counts": {
+      "person": 29,
+      "bicycle": 0,
+      "car": 41,
+      "motorcycle": 25,
+      "bus": 7,
+      "truck": 4
+    },
+    "p50_ms": 606.29
+  },
+  {
+    "image": "traffic_dense.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.5,
+    "counts": {
+      "person": 29,
+      "bicycle": 0,
+      "car": 40,
+      "motorcycle": 24,
+      "bus": 7,
+      "truck": 4
+    },
+    "p50_ms": 606.24
+  },
+  {
+    "image": "traffic_dense.jpg",
+    "model": "yolov5s",
+    "mode": "tile2",
+    "iou": 0.45,
+    "counts": {
+      "person": 29,
+      "bicycle": 0,
+      "car": 38,
+      "motorcycle": 24,
+      "bus": 7,
+      "truck": 4
+    },
+    "p50_ms": 597.9
+  }
+]
